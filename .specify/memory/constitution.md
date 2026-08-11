@@ -1,5 +1,51 @@
 <!--
-Sync Impact Report — v1.1.1 (enmienda vigente)
+Sync Impact Report — v1.2.0 (enmienda vigente)
+- Version change: 1.1.1 → 1.2.0
+- Motivo: las versiones de Riverpod que el Principio I fijaba son irrealizables junto a drift.
+  Verificado el 2026-08-10 con `flutter pub get`: riverpod_generator 4.0.6+ exige analyzer 13,
+  lo que arrastra el paquete `test` —dependencia de riverpod— a una versión que necesita
+  io 0.3.0, mientras toda versión de drift_dev depende de io 1.0.3. El resolutor concluye
+  literalmente que riverpod_generator >= 4.0.6 es incompatible con drift_dev. No existía
+  ninguna combinación que cumpliera el documento anterior.
+
+- Modified principles:
+  - I. Plataforma y Arquitectura (título sin cambios; una regla actualizada, una añadida)
+    - Versiones de Riverpod rebajadas a la única combinación que resuelve con drift:
+      flutter_riverpod 3.4.2 → 3.3.2 · riverpod_annotation 4.0.6 → 4.0.3 ·
+      riverpod_generator 4.0.8 → 4.0.4 · riverpod_lint 3.1.8 → 3.1.4.
+      drift 2.34.3 se mantiene sin cambios.
+
+- Added sections:
+  - Principio I, viñeta nueva: "Techo de versiones impuesto por el ecosistema, no por
+    preferencia". Documenta la cadena exacta de la incompatibilidad y exige que cualquier
+    subida futura vaya acompañada de una resolución verificada con drift presente.
+
+- Removed sections: n/a
+
+- Verificaciones que sostienen la rebaja:
+  - `package:riverpod/experimental/mutation.dart` EXISTE en riverpod 3.3.2, de modo que la
+    enmienda C1 de v1.1.0 (escrituras como objetos Mutation) sigue siendo ejecutable.
+  - riverpod_lint 3.1.4 es posterior a 3.1.0, así que sigue usando analysis_server_plugin y
+    la clave `plugins:`; la enmienda C2 de v1.1.0 no se ve afectada.
+
+- Bump rationale: MINOR y no PATCH. Los cuatro números por sí solos habrían sido PATCH, como
+  lo fue el ajuste de toolchain en v1.1.1. Lo que eleva el bump es la viñeta nueva, que
+  introduce una obligación normativa que antes no existía: subir estas versiones exige
+  verificar la resolución con drift presente y enmendar. No es MAJOR porque ninguna regla se
+  elimina ni se invierte y no hay código previo que quede fuera de cumplimiento.
+
+- Templates requiring updates: los templates dependientes leen la constitución en tiempo de
+  ejecución; no se modifican desde este comando.
+
+- Follow-up TODOs:
+  - specs/001-proyectos-interesados-sesiones/plan.md declara en Technical Context las
+    versiones antiguas de Riverpod. Esta enmienda las invalida, pero el archivo no se edita
+    desde este comando por el guard de alcance.
+  - tasks.md T003 y T004 citan las versiones antiguas en sus descripciones.
+-->
+
+<!--
+Sync Impact Report — v1.1.1 (histórico)
 - Version change: 1.1.0 → 1.1.1
 - Motivo: el toolchain declarado quedó por detrás del instalado. Verificado el 2026-08-10:
   la máquina de desarrollo corre Flutter 3.44.9 con Dart 3.12.2, mientras el Principio I
@@ -93,8 +139,8 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
 - Cliente e interfaz: Flutter 3.44.9 con Dart 3.12.2, Material 3, navegación con go_router.
   Objetivo Android 10+ e iOS 16+. No existe backend propio, cuentas, login, roles ni
   sincronización en la nube.
-- Riverpod moderno y estado de pantalla: flutter_riverpod 3.4.2, riverpod_annotation 4.0.6,
-  riverpod_generator 4.0.8 y riverpod_lint 3.1.8 activo en CI, declarado bajo la clave plugins
+- Riverpod moderno y estado de pantalla: flutter_riverpod 3.3.2, riverpod_annotation 4.0.3,
+  riverpod_generator 4.0.4 y riverpod_lint 3.1.4 activo en CI, declarado bajo la clave plugins
   de analysis_options.yaml y ejecutado con dart analyze. Todo provider se
   declara con @riverpod y se genera con build_runner; el estado mutable vive solo en Notifier y
   AsyncNotifier generados; autoDispose por defecto y keepAlive justificado en el código;
@@ -103,6 +149,16 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
   package:riverpod/experimental/mutation.dart, y nunca como una bandera dentro del estado de
   pantalla. Cada pantalla consume un único provider que devuelve AsyncValue\<T>
   o una clase sealed inmutable, y resuelve de forma exhaustiva cargando, datos, vacío y error.
+- Techo de versiones impuesto por el ecosistema, no por preferencia: las cuatro versiones de
+  Riverpod anteriores están ancladas por debajo de lo último publicado por una
+  incompatibilidad real y verificada con `flutter pub get`. riverpod_generator 4.0.6 o
+  superior exige analyzer 13, lo que arrastra el paquete `test` —del que depende riverpod— a
+  una versión que necesita io 0.3.0, mientras que toda versión de drift_dev depende de
+  io 1.0.3; la resolución de dependencias falla sin salida posible. Subir cualquiera de las
+  cuatro MUST ir acompañado de una resolución que se complete con drift presente, y de la
+  enmienda correspondiente a este documento. La restricción se revisa cuando `test` publique
+  soporte de analyzer 13. Nadie sube estas versiones porque pub informe de que existen más
+  recientes: informará de ello en cada resolución y seguirá sin ser motivo suficiente.
 - Dependencia experimental aceptada de forma consciente: la API de mutaciones de Riverpod está
   marcada como experimental por su documentación oficial y puede romper sin cambio de versión
   mayor. El proyecto la acepta porque es lo único que mantiene el progreso de una escritura
@@ -267,4 +323,4 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
   Calidad verifican el cumplimiento de los principios y prohibiciones aquí definidos. Cualquier
   desviación DEBE justificarse por escrito o corregirse antes del merge.
 
-**Version**: 1.1.1 | **Ratified**: 2026-08-10 | **Last Amended**: 2026-08-10
+**Version**: 1.2.0 | **Ratified**: 2026-08-10 | **Last Amended**: 2026-08-10
