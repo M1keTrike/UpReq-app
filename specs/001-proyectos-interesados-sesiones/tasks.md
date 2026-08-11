@@ -82,24 +82,24 @@ incumpliría. Es una consecuencia deliberada del requisito, no un atajo.
 
 ### Base de datos (esquema versión 1 completo)
 
-- [ ] T017 Declarar las seis tablas drift en `lib/core/database/tables/`: `projects.dart`, `stakeholders.dart`, `sessions.dart` (con `session_participants`), `script_points.dart`, `glossary_terms.dart`, `audit_entries.dart`, con las columnas, tipos, nulabilidad e índices exactos de data-model.md. **Ninguna clave foránea usa `onDelete: cascade`**: nada se borra físicamente
-- [ ] T018 Crear `AppDatabase` en `lib/core/database/app_database.dart` con `schemaVersion => 1`, `MigrationStrategy` con `onCreate: (m) async => m.createAll()` **declarado explícitamente** aunque sea el comportamiento por defecto (FR-017), y `beforeOpen` que activa `PRAGMA foreign_keys = ON` y llama a `validateDatabaseSchema()` en modo debug. El constructor acepta un `QueryExecutor` inyectable para poder abrirla en memoria en pruebas
-- [ ] T019 Generar el snapshot del esquema con `dart run drift_dev make-migrations` y versionar `drift_schemas/drift_schema_v1.json` más la prueba generada en `test/drift/`
-- [ ] T020 Escribir la prueba de esquema en `test/drift/schema_v1_test.dart` con `SchemaVerifier` de `package:drift_dev/api/migrations_native.dart`, que verifica que una base creada desde cero coincide con el snapshot de la versión 1
-- [ ] T021 Registrar el provider de `AppDatabase` en `lib/core/database/database_provider.dart` con `@Riverpod(keepAlive: true)` y justificación escrita en el propio archivo (la conexión debe sobrevivir a la navegación)
+- [X] T017 Declarar las seis tablas drift en `lib/core/database/tables/`: `projects.dart`, `stakeholders.dart`, `sessions.dart` (con `session_participants`), `script_points.dart`, `glossary_terms.dart`, `audit_entries.dart`, con las columnas, tipos, nulabilidad e índices exactos de data-model.md. **Ninguna clave foránea usa `onDelete: cascade`**: nada se borra físicamente
+- [X] T018 Crear `AppDatabase` en `lib/core/database/app_database.dart` con `schemaVersion => 1`, `MigrationStrategy` con `onCreate: (m) async => m.createAll()` **declarado explícitamente** aunque sea el comportamiento por defecto (FR-017), y `beforeOpen` que activa `PRAGMA foreign_keys = ON` y llama a `validateDatabaseSchema()` en modo debug. El constructor acepta un `QueryExecutor` inyectable para poder abrirla en memoria en pruebas
+- [X] T019 Generar el snapshot del esquema con `dart run drift_dev make-migrations` y versionar `drift_schemas/drift_schema_v1.json` más la prueba generada en `test/drift/`
+- [X] T020 Escribir la prueba de esquema en `test/drift/schema_v1_test.dart` con `SchemaVerifier` de `package:drift_dev/api/migrations_native.dart`, que verifica que una base creada desde cero coincide con el snapshot de la versión 1
+- [X] T021 Registrar el provider de `AppDatabase` en `lib/core/database/database_provider.dart` con `@Riverpod(keepAlive: true)` y justificación escrita en el propio archivo (la conexión debe sobrevivir a la navegación)
 
 ### Navegación, tema y widgets compartidos
 
-- [ ] T022 [P] Definir el tema Material 3 en `lib/core/theme/app_theme.dart`
-- [ ] T023 [P] Implementar `AsyncScaffoldBody<T>` en `lib/core/widgets/async_scaffold_body.dart`: el **único** lugar del código donde vive el `switch` exhaustivo sobre `AsyncValue` sealed, resolviendo cargando, datos, vacío y error, con el caso vacío dentro de la rama de datos (FR-020)
-- [ ] T024 Definir el árbol de rutas de `go_router` en `lib/core/router/app_router.dart` con la jerarquía de FR-021 y `projectId` presente en toda ruta interior, apuntando de momento a pantallas de marcador de posición
-- [ ] T025 Escribir `lib/main.dart` con `ProviderScope` en la raíz, el tema y el router
+- [X] T022 [P] Definir el tema Material 3 en `lib/core/theme/app_theme.dart`
+- [X] T023 [P] Implementar `AsyncScaffoldBody<T>` en `lib/core/widgets/async_scaffold_body.dart`: el **único** lugar del código donde vive el `switch` exhaustivo sobre `AsyncValue` sealed, resolviendo cargando, datos, vacío y error, con el caso vacío dentro de la rama de datos (FR-020)
+- [X] T024 Definir el árbol de rutas de `go_router` en `lib/core/router/app_router.dart` con la jerarquía de FR-021 y `projectId` presente en toda ruta interior, apuntando de momento a pantallas de marcador de posición
+- [X] T025 Escribir `lib/main.dart` con `ProviderScope` en la raíz, el tema y el router
 
 ### Andamiaje de pruebas
 
-- [ ] T026 [P] Escribir el helper `test/support/test_database.dart` que abre una `AppDatabase` sobre `NativeDatabase.memory()` con `closeStreamsSynchronously: true`, imprescindible para no dejar timers pendientes en `testWidgets`
-- [ ] T027 [P] Escribir el helper `test/support/test_container.dart` sobre `ProviderContainer.test()`, con overrides de repositorio, del reloj y del generador de identificadores, y con `retry: (_, __) => null` para desactivar el reintento automático de Riverpod 3 en las pruebas del camino de error, que de lo contrario reintentarían indefinidamente
-- [ ] T028 [P] Escribir `test/support/seed.dart` con constructores de datos de prueba para las seis entidades, de modo que cada historia pueda probarse sin depender de las demás
+- [X] T026 [P] Escribir el helper `test/support/test_database.dart` que abre una `AppDatabase` sobre `NativeDatabase.memory()` con `closeStreamsSynchronously: true`, imprescindible para no dejar timers pendientes en `testWidgets`
+- [X] T027 [P] Escribir el helper `test/support/test_container.dart` sobre `ProviderContainer.test()`, con overrides de repositorio, del reloj y del generador de identificadores, y con `retry: (_, __) => null` para desactivar el reintento automático de Riverpod 3 en las pruebas del camino de error, que de lo contrario reintentarían indefinidamente
+- [X] T028 [P] Escribir `test/support/seed.dart` con constructores de datos de prueba para las seis entidades, de modo que cada historia pueda probarse sin depender de las demás
 
 **Checkpoint**: base de datos en v1 verificada contra su snapshot, tipos compartidos listos y
 andamiaje de pruebas operativo. Las historias pueden empezar.

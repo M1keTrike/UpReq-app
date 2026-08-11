@@ -23,7 +23,7 @@ dependencies:
   riverpod_annotation: 4.0.3
 
   # Persistencia
-  drift: 2.34.3
+  drift: 2.34.0
 
   # Navegación
   go_router: ^17.2.1
@@ -31,6 +31,13 @@ dependencies:
   # Utilidades de dominio
   uuid: ^4.5.1
   clock: ^1.1.2
+
+  # Resuelve el directorio de datos de la app para el archivo de SQLite.
+  # No es `drift_flutter`: ese paquete arrastra `sqlite3_flutter_libs`, que
+  # T003 excluye a propósito porque drift ≥ 2.32.0 ya empaqueta SQLite.
+  # `path_provider` en cambio solo resuelve una ruta de directorio: cero
+  # dependencias de red, no reintroduce sqlite3_flutter_libs.
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +54,15 @@ dev_dependencies:
 
   # Solo para los scripts de tool/: parsear pubspec.lock
   yaml: ^3.1.3
+
+  # Solo para test/drift/: SchemaVerifier usa package:test directamente, no
+  # flutter_test (T020)
+  test: ^1.31.0
+
+  # Solo para test/support/: el tipo `Override` de los overrides de
+  # ProviderContainer.test() vive en package:riverpod/misc.dart, no en el
+  # barrel principal de flutter_riverpod (T027)
+  riverpod: 3.3.2
 
 flutter:
   uses-material-design: true
