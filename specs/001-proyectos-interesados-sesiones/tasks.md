@@ -47,13 +47,13 @@ constitución exige, antes de escribir una sola línea de dominio.
 - [X] T001 Verificar el toolchain con `flutter --version`: debe ser Flutter 3.44.9 con Dart 3.12.2 según la constitución v1.1.1. Si no coincide, detenerse y resolver antes de continuar
 - [X] T002 Crear el proyecto Flutter en la raíz del repositorio con `flutter create --project-name up_req --org com.upreq --platforms android,ios .`, conservando `.specify/`, `specs/` y `.claude/`
 - [X] T003 Declarar las dependencias exactas en `pubspec.yaml`: flutter_riverpod 3.3.2, riverpod_annotation 4.0.3, drift 2.34.3, go_router, uuid, clock; y en dev_dependencies riverpod_generator 4.0.4, riverpod_lint 3.1.4, drift_dev ^2.34.0, build_runner ^2.15.1, flutter_lints, integration_test. **Ninguna dependencia de red** (FR-019) y **sin** `sqlite3_flutter_libs`, que drift ≥ 2.32.0 hace innecesario. ⚠️ **No subir las cuatro versiones de Riverpod**: `riverpod_generator` ≥ 4.0.6 exige `analyzer 13` y resulta incompatible con `drift_dev` por la cadena `test → io`; es la restricción del Principio I de la constitución v1.2.0
-- [ ] T004 [P] Configurar `analysis_options.yaml` con `include: package:flutter_lints/flutter.yaml` y la clave `plugins: riverpod_lint: 3.1.4` (mecanismo `plugins:` vigente desde riverpod_lint 3.1.0, **no** `custom_lint`)
-- [ ] T005 [P] Configurar `build.yaml` con las opciones de drift_dev: `databases: {app_database: lib/core/database/app_database.dart}`, `schema_dir: drift_schemas/` y `test_dir: test/drift/`
-- [ ] T006 [P] Crear la estructura de carpetas vacías de `lib/core/{database,domain,router,theme,widgets}/` y `lib/features/{projects,stakeholders,sessions,glossary,audit_log}/{domain,data,presentation}/`
-- [ ] T007 [P] Escribir `tool/check_no_network_deps.dart`: falla si aparece cualquier paquete de red (dio, http, web_socket_channel, grpc) en el árbol resuelto de `pubspec.lock`. Es la verificación estructural de FR-019
-- [ ] T008 [P] Escribir `tool/check_dependencies.dart`: falla si alguna dependencia resuelta carece de null safety, no ha tenido publicación en los últimos 12 meses, o tiene licencia GPL/AGPL. Es la verificación automática de la prohibición constitucional de dependencias, que hasta ahora solo se había comprobado a mano
-- [ ] T009 [P] Escribir `tool/check_coverage.dart`: lee `coverage/lcov.info` y falla si la cobertura de las rutas `lib/features/*/domain/` baja del 80%
-- [ ] T010 Crear el workflow `.github/workflows/ci.yml` con seis puertas que bloqueen el merge: versión del toolchain, `dart analyze --fatal-infos`, código generado al día (`build_runner` + `git diff --exit-code`), `flutter test --coverage`, los tres scripts de `tool/`, y `flutter build ios --no-codesign` como verificación de que no entran dependencias exclusivas de Android (FR-023)
+- [X] T004 [P] Configurar `analysis_options.yaml` con `include: package:flutter_lints/flutter.yaml` y la clave `plugins: riverpod_lint: 3.1.4` (mecanismo `plugins:` vigente desde riverpod_lint 3.1.0, **no** `custom_lint`)
+- [X] T005 [P] Configurar `build.yaml` con las opciones de drift_dev: `databases: {app_database: lib/core/database/app_database.dart}`, `schema_dir: drift_schemas/` y `test_dir: test/drift/`
+- [X] T006 [P] Crear la estructura de carpetas vacías de `lib/core/{database,domain,router,theme,widgets}/` y `lib/features/{projects,stakeholders,sessions,glossary,audit_log}/{domain,data,presentation}/`
+- [X] T007 [P] Escribir `tool/check_no_network_deps.dart`: falla si aparece cualquier paquete de red (dio, http, web_socket_channel, grpc) en el árbol resuelto de `pubspec.lock`. Es la verificación estructural de FR-019
+- [X] T008 [P] Escribir `tool/check_dependencies.dart`: falla si alguna dependencia resuelta carece de null safety, no ha tenido publicación en los últimos 12 meses, o tiene licencia GPL/AGPL. Es la verificación automática de la prohibición constitucional de dependencias, que hasta ahora solo se había comprobado a mano
+- [X] T009 [P] Escribir `tool/check_coverage.dart`: lee `coverage/lcov.info` y falla si la cobertura de las rutas `lib/features/*/domain/` baja del 80%
+- [X] T010 Crear el workflow `.github/workflows/ci.yml` con seis puertas que bloqueen el merge: versión del toolchain, `dart analyze --fatal-infos`, código generado al día (`build_runner` + `git diff --exit-code`), `flutter test --coverage`, los tres scripts de `tool/`, y `flutter build ios --no-codesign` como verificación de que no entran dependencias exclusivas de Android (FR-023)
 
 **Checkpoint**: `flutter analyze` pasa sobre un proyecto vacío y CI está en verde.
 
@@ -73,12 +73,12 @@ incumpliría. Es una consecuencia deliberada del requisito, no un atajo.
 
 ### Tipos compartidos de dominio
 
-- [ ] T011 [P] Definir `Result<T>` sealed con `Ok<T>` y `Err` en `lib/core/domain/result.dart`
-- [ ] T012 [P] Definir `sealed class Failure` con las siete variantes de data-model.md (`ValidationFailure`, `ProjectClosedFailure`, `InvalidSessionTransitionFailure`, `SessionHeaderFrozenFailure`, `CrossProjectReferenceFailure`, `NotFoundFailure`, `StorageFailure`) en `lib/core/domain/failures.dart`
-- [ ] T013 [P] Definir los tipos de identificador (`ProjectId`, `StakeholderId`, `SessionId`, `ScriptPointId`, `GlossaryTermId`, `AuditEntryId`) como extension types sobre `String` en `lib/core/domain/ids.dart`
-- [ ] T014 [P] Declarar el contrato `ProjectStatusReader` en `lib/core/domain/project_status_reader.dart`: es el **único** punto por el que una feature conoce el estado de un proyecto sin importar otra feature
-- [ ] T015 [P] Exponer el reloj como provider inyectable con `package:clock` en `lib/core/domain/clock_provider.dart`, para que `created_at`, `updated_at` y el orden de la bitácora sean deterministas en pruebas
-- [ ] T016 [P] Exponer un generador de identificadores inyectable en `lib/core/domain/id_generator.dart`, que acuña UUID v4 con `package:uuid` y admite override con una secuencia fija en pruebas. **Sin esto los identificadores persistidos serían impredecibles y ninguna prueba podría afirmar sobre ellos**, igual que ocurriría con las fechas sin el reloj de T015
+- [X] T011 [P] Definir `Result<T>` sealed con `Ok<T>` y `Err` en `lib/core/domain/result.dart`
+- [X] T012 [P] Definir `sealed class Failure` con las siete variantes de data-model.md (`ValidationFailure`, `ProjectClosedFailure`, `InvalidSessionTransitionFailure`, `SessionHeaderFrozenFailure`, `CrossProjectReferenceFailure`, `NotFoundFailure`, `StorageFailure`) en `lib/core/domain/failures.dart`
+- [X] T013 [P] Definir los tipos de identificador (`ProjectId`, `StakeholderId`, `SessionId`, `ScriptPointId`, `GlossaryTermId`, `AuditEntryId`) como extension types sobre `String` en `lib/core/domain/ids.dart`
+- [X] T014 [P] Declarar el contrato `ProjectStatusReader` en `lib/core/domain/project_status_reader.dart`: es el **único** punto por el que una feature conoce el estado de un proyecto sin importar otra feature
+- [X] T015 [P] Exponer el reloj como provider inyectable con `package:clock` en `lib/core/domain/clock_provider.dart`, para que `created_at`, `updated_at` y el orden de la bitácora sean deterministas en pruebas
+- [X] T016 [P] Exponer un generador de identificadores inyectable en `lib/core/domain/id_generator.dart`, que acuña UUID v4 con `package:uuid` y admite override con una secuencia fija en pruebas. **Sin esto los identificadores persistidos serían impredecibles y ninguna prueba podría afirmar sobre ellos**, igual que ocurriría con las fechas sin el reloj de T015
 
 ### Base de datos (esquema versión 1 completo)
 

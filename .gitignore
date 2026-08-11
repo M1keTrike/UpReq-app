@@ -36,9 +36,10 @@ Thumbs.db
 /build/
 coverage/
 
-# Código generado por build_runner
-*.g.dart
-*.freezed.dart
+# El código generado por build_runner (*.g.dart) SÍ se versiona a propósito:
+# la puerta de CI "código generado al día" (T010) compara `git diff
+# --exit-code` tras regenerar, y eso solo tiene sentido si estos archivos
+# están en el árbol de git.
 
 # Symbolication y obfuscación
 app.*.symbols

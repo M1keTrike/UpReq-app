@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  FLUTTER_VERSION: "3.44.9"
+
+jobs:
+  gates:
+    name: Puertas de calidad
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Verificar versión del toolchain
+        run: |
+          flutter --version
+          dart --version
+          FLUTTER_ACTUAL=$(flutter --version | head -n1 | awk '{print $2}')
+          if [ "$FLUTTER_ACTUAL" != "$FLUTTER_VERSION" ]; then
+            echo "Flutter $FLUTTER_ACTUAL no coincide con la versión fijada $FLUTTER_VERSION"
+            exit 1
+          fi
+
+      - name: Instalar dependencias
+        run: flutter pub get
+
+      - name: dart analyze --fatal-infos
+        run: dart analyze --fatal-infos
+
+      - name: Generar código y verificar que está al día
+        run: |
+          dart run build_runner build --delete-conflicting-outputs
+          git diff --exit-code -- . ':!pubspec.lock' || {
+            echo "Hay código generado sin confirmar. Ejecuta build_runner y confirma el resultado.";
+            exit 1;
+          }
+
+      - name: flutter test --coverage
+        run: flutter test --coverage
+
+      - name: Verificar dependencias de red (FR-019)
+        run: dart run tool/check_no_network_deps.dart
+
+      - name: Verificar dependencias prohibidas (null safety, licencia, antigüedad)
+        run: dart run tool/check_dependencies.dart
+
+      - name: Verificar cobertura de domain (mínimo 80%)
+        run: dart run tool/check_coverage.dart --min 80
+
+      - name: flutter build ios --no-codesign (FR-023, sin dependencias exclusivas de Android)
+        run: flutter build ios --no-codesign
