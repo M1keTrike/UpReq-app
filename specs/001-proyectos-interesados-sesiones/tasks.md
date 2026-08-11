@@ -120,7 +120,7 @@ reabrirlo para comprobar que vuelve a ser editable.
 > Escribir estas pruebas PRIMERO y verificar que fallan antes de implementar.
 
 - [ ] T029 [P] [US1] Pruebas de los casos de uso de proyecto en `test/unit/domain/projects/project_usecases_test.dart`: validación de `name` obligatorio, transición `active↔closed`, y que `UpdateProject` devuelve `ProjectClosedFailure` sobre un proyecto cerrado (invariante I5)
-- [ ] T030 [P] [US1] Prueba del DAO en `test/data/projects_dao_test.dart` sobre base en memoria: cerrar un proyecto **no borra ninguna fila** y deja exactamente un asiento en `audit_entries` dentro de la misma transacción (invariantes I1 e I2); `updated_at` cambia en toda escritura y `created_at` nunca (FR-016); y `ProjectCounters` devuelve los tres conteos correctos tras altas y bajas lógicas (FR-013)
+- [ ] T030 [P] [US1] Prueba del DAO en `test/data/projects_dao_test.dart` sobre base en memoria: cerrar un proyecto **no borra ninguna fila** y deja exactamente un asiento en `audit_entries` dentro de la misma transacción (invariantes I1 e I2); `updated_at` cambia en toda escritura y `created_at` nunca (FR-016); `ProjectCounters` devuelve los tres conteos correctos tras altas y bajas lógicas (FR-013); y **`entity_label` conserva el nombre que el proyecto tenía al asentarse**, comprobado cerrando un proyecto, renombrándolo después de reabrirlo y verificando que el asiento antiguo sigue mostrando el nombre viejo
 - [ ] T031 [P] [US1] Prueba de Notifier en `test/unit/notifiers/project_list_test.dart` con `ProviderContainer.test()` y repositorio doble, cubriendo el filtro activos/cerrados
 - [ ] T032 [P] [US1] Prueba de widget en `test/widget/projects/project_list_screen_test.dart` que verifica las **cuatro** situaciones: cargando, con datos, vacía (con invitación a crear, no mensaje de ausencia) y con error
 - [ ] T033 [P] [US1] Prueba de widget del formulario en `test/widget/projects/project_form_screen_test.dart`: al fallar la validación no se guarda, se señala el campo y **se conserva lo escrito en el resto de campos** (FR-022)
@@ -134,7 +134,7 @@ reabrirlo para comprobar que vuelve a ser editable.
 - [ ] T038 [P] [US1] Casos de uso `WatchActiveProjects`, `WatchClosedProjects` y `WatchProjectDetail` en `lib/features/projects/domain/usecases/`, uno por archivo
 - [ ] T039 [P] [US1] Casos de uso `CreateProject`, `UpdateProject`, `CloseProject` y `ReopenProject` en `lib/features/projects/domain/usecases/`, uno por archivo
 - [ ] T040 [US1] `ProjectsDao` en `lib/features/projects/data/projects_dao.dart` con el helper de filtrado por estado y la consulta de contadores por `COUNT` en SQL, nunca contando en Dart
-- [ ] T041 [US1] `ProjectRepositoryImpl` en `lib/features/projects/data/project_repository_impl.dart`: `setStatus` escribe el cambio de estado **y** su asiento de bitácora en una única transacción de drift
+- [ ] T041 [US1] `ProjectRepositoryImpl` en `lib/features/projects/data/project_repository_impl.dart`: `setStatus` escribe el cambio de estado **y** su asiento de bitácora en una única transacción de drift, copiando en `entity_label` el nombre del proyecto en ese momento. **Este es el patrón que siguen las cinco implementaciones que escriben asientos** (T041, T057, T075, T089, T101): misma transacción y etiqueta copiada
 - [ ] T042 [US1] Implementar `ProjectStatusReader` sobre el DAO en `lib/features/projects/data/project_status_reader_impl.dart` y registrarlo en el provider declarado en T014
 - [ ] T043 [P] [US1] Pantalla y provider de lista en `lib/features/projects/presentation/project_list_{screen,provider}.dart`, con filtro activos/cerrados y un único provider que devuelve `AsyncValue<ProjectListState>`
 - [ ] T044 [P] [US1] Pantalla y provider de formulario en `lib/features/projects/presentation/project_form_{screen,provider}.dart`, conservando lo escrito cuando la validación falla (FR-022)
@@ -168,7 +168,7 @@ muestra interesados de otro proyecto.
 - [ ] T054 [US2] Contrato `StakeholderRepository` en `lib/features/stakeholders/domain/stakeholder_repository.dart`, con `watchByProject` y `watchSelectableByProject` separados: el segundo devuelve solo activos y es lo que consumirá el selector de participantes de US3
 - [ ] T055 [P] [US2] Casos de uso `WatchStakeholders`, `CreateStakeholder`, `UpdateStakeholder` y `DeactivateStakeholder` en `lib/features/stakeholders/domain/usecases/`, uno por archivo, todos comprobando `ProjectStatusReader` antes de escribir
 - [ ] T056 [US2] `StakeholdersDao` en `lib/features/stakeholders/data/stakeholders_dao.dart` con el helper de filtrado por proyecto y estado
-- [ ] T057 [US2] `StakeholderRepositoryImpl` en `lib/features/stakeholders/data/stakeholder_repository_impl.dart`, con la desactivación y su asiento en una sola transacción
+- [ ] T057 [US2] `StakeholderRepositoryImpl` en `lib/features/stakeholders/data/stakeholder_repository_impl.dart`, con la desactivación y su asiento `stakeholderDeactivated` en una sola transacción, copiando en `entity_label` el nombre del interesado (patrón de T041)
 - [ ] T058 [P] [US2] Pantalla, provider y mutaciones de lista en `lib/features/stakeholders/presentation/stakeholder_list_{screen,provider}.dart` y `stakeholder_mutations.dart`, distinguiendo visiblemente los inactivos
 - [ ] T059 [P] [US2] Pantalla y provider de formulario en `lib/features/stakeholders/presentation/stakeholder_form_{screen,provider}.dart`
 - [ ] T060 [US2] Conectar las rutas de interesados en `lib/core/router/app_router.dart`
@@ -209,7 +209,7 @@ end-to-end requiere US2 terminada.
 - [ ] T072 [P] [US3] Casos de uso `WatchSessions`, `WatchSessionDetail` y `CreateSession` en `lib/features/sessions/domain/usecases/`, uno por archivo
 - [ ] T073 [P] [US3] Casos de uso `UpdateSessionHeader`, `UpdateSessionNotes`, `AdvanceSessionStatus` y `DeleteSession` en `lib/features/sessions/domain/usecases/`, uno por archivo
 - [ ] T074 [US3] `SessionsDao` en `lib/features/sessions/data/sessions_dao.dart`, incluyendo la tabla de unión de participantes y la consulta de contadores de guion por estado
-- [ ] T075 [US3] `SessionRepositoryImpl` en `lib/features/sessions/data/session_repository_impl.dart`, con inserción de sesión y participantes en una transacción y con el sellado de `closed_at` al cerrar
+- [ ] T075 [US3] `SessionRepositoryImpl` en `lib/features/sessions/data/session_repository_impl.dart`, con inserción de sesión y participantes en una transacción y el sellado de `closed_at` al cerrar. `softDelete` marca `deleted_at` y escribe **un solo** asiento `sessionDeleted` con `entity_label` en la misma transacción, y **no toca los puntos de guion** (patrón de T041 y cascada por visibilidad transitiva de data-model.md)
 - [ ] T076 [P] [US3] Pantalla, provider y mutaciones de lista en `lib/features/sessions/presentation/session_list_{screen,provider}.dart` y `session_mutations.dart`
 - [ ] T077 [P] [US3] Pantalla y provider de formulario en `lib/features/sessions/presentation/session_form_{screen,provider}.dart`, con el selector alimentado por `watchSelectableByProject` para que estructuralmente no pueda ofrecer interesados de otro proyecto
 - [ ] T078 [US3] Control de estado en `lib/features/sessions/presentation/session_status_control.dart`, que ofrece **solo** las transiciones válidas desde el estado actual
@@ -243,7 +243,7 @@ como cubiertos y uno como omitido, y comprobar que el orden y los estados persis
 - [ ] T086 [P] [US4] Casos de uso `AddScriptPoint`, `UpdateScriptPointText` y `MarkScriptPoint` en `lib/features/sessions/domain/usecases/`, uno por archivo
 - [ ] T087 [P] [US4] Casos de uso `ReorderScriptPoint` y `DeleteScriptPoint` en `lib/features/sessions/domain/usecases/`, uno por archivo
 - [ ] T088 [US4] `ScriptPointsDao` en `lib/features/sessions/data/script_points_dao.dart` con el desplazamiento en bloque dentro de una transacción y la compactación de posiciones al eliminar, según la decisión 8 de research.md. El helper `alive()` **debe llevar dos condiciones**: `deleted_at IS NULL` del punto **y** que su sesión esté viva. Un simple filtro por el `deleted_at` del punto resucitaría los puntos de sesiones eliminadas (visibilidad transitiva, data-model.md)
-- [ ] T089 [US4] `ScriptPointRepositoryImpl` en `lib/features/sessions/data/script_point_repository_impl.dart`, con la eliminación lógica, la compactación y el asiento de bitácora en una sola transacción
+- [ ] T089 [US4] `ScriptPointRepositoryImpl` en `lib/features/sessions/data/script_point_repository_impl.dart`, con la eliminación lógica, la compactación de posiciones y el asiento `scriptPointDeleted` en una sola transacción, copiando en `entity_label` el texto del punto (patrón de T041)
 - [ ] T090 [US4] Ampliar el provider de detalle de sesión en `lib/features/sessions/presentation/session_detail_provider.dart` para que un **único** provider devuelva sesión, participantes, puntos y contadores, evitando multiplicar las re-consultas que provoca la invalidación por tabla de drift
 - [ ] T091 [US4] Widget de guion con `ReorderableListView` en `lib/features/sessions/presentation/script_point_list.dart`
 - [ ] T092 [US4] Mutaciones del guion en `lib/features/sessions/presentation/script_point_mutations.dart`
@@ -272,7 +272,7 @@ lista los muestra ordenados ignorando mayúsculas y acentos.
 - [ ] T098 [P] [US5] Función pura de normalización de `term_sort_key` (minúsculas y sin acentos) en `lib/features/glossary/domain/term_sort_key.dart`
 - [ ] T099 [US5] Contrato `GlossaryRepository` en `lib/features/glossary/domain/glossary_repository.dart`
 - [ ] T100 [P] [US5] Casos de uso `WatchGlossary`, `CreateGlossaryTerm`, `UpdateGlossaryTerm` y `DeleteGlossaryTerm` en `lib/features/glossary/domain/usecases/`, uno por archivo
-- [ ] T101 [US5] `GlossaryDao` y `GlossaryRepositoryImpl` en `lib/features/glossary/data/`, con el orden resuelto en SQL y nunca en Dart
+- [ ] T101 [US5] `GlossaryDao` y `GlossaryRepositoryImpl` en `lib/features/glossary/data/`, con el orden resuelto en SQL y nunca en Dart, y con la eliminación lógica y su asiento `glossaryTermDeleted` en una sola transacción, copiando en `entity_label` el término (patrón de T041)
 - [ ] T102 [P] [US5] Pantallas, providers y mutaciones de lista y formulario en `lib/features/glossary/presentation/`
 - [ ] T103 [US5] Conectar las rutas de glosario en `lib/core/router/app_router.dart`
 
