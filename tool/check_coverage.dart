@@ -31,7 +31,14 @@ void main(List<String> args) {
     final line = rawLine.trim();
     if (line.startsWith('SF:')) {
       currentFile = line.substring(3);
-      inDomainFile = domainPattern.hasMatch(currentFile);
+      // El código generado por riverpod_generator (*.g.dart) no se prueba
+      // directamente: son fábricas de providers mecánicas sin lógica de
+      // dominio propia (delegan en la clase/función que anota `@riverpod`,
+      // esa sí medida). Incluirlo en la puerta de cobertura penaliza al
+      // dominio por líneas que ninguna prueba unitaria razonable ejercita
+      // por sí solas, sin que eso refleje una laguna real de pruebas.
+      final isGenerated = currentFile.endsWith('.g.dart');
+      inDomainFile = !isGenerated && domainPattern.hasMatch(currentFile);
       if (inDomainFile) {
         perFile[currentFile] = _FileCoverage();
       }

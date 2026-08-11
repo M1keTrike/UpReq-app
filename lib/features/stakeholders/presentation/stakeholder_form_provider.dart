@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:up_req/core/domain/failures.dart';
 import 'package:up_req/core/domain/ids.dart';
+import 'package:up_req/core/domain/project_status_reader.dart';
 
 import '../data/stakeholder_repository_impl.dart';
 import '../domain/entities/stakeholder.dart';
@@ -16,6 +17,7 @@ final class StakeholderFormState {
     this.area,
     this.influence = InfluenceLevel.medium,
     this.notes,
+    this.isReadOnly = false,
   });
 
   final ProjectId projectId;
@@ -27,6 +29,10 @@ final class StakeholderFormState {
   final String? area;
   final InfluenceLevel influence;
   final String? notes;
+
+  /// Deriva de `ProjectStatusReader.isActive` (FR-004a): con el proyecto
+  /// cerrado, el formulario se muestra en solo lectura.
+  final bool isReadOnly;
 
   bool get isEditing => stakeholderId != null;
 
@@ -45,6 +51,7 @@ final class StakeholderFormState {
       area: area ?? this.area,
       influence: influence ?? this.influence,
       notes: notes ?? this.notes,
+      isReadOnly: isReadOnly,
     );
   }
 }
@@ -53,8 +60,11 @@ final class StakeholderFormState {
 class StakeholderForm extends _$StakeholderForm {
   @override
   Future<StakeholderFormState> build(String projectId, String? stakeholderId) async {
+    final statusReader = ref.watch(projectStatusReaderProvider);
+
     if (stakeholderId == null) {
-      return StakeholderFormState(projectId: ProjectId(projectId));
+      final isActive = await statusReader.isActive(ProjectId(projectId));
+      return StakeholderFormState(projectId: ProjectId(projectId), isReadOnly: !isActive);
     }
 
     final repository = ref.watch(stakeholderRepositoryProvider);
@@ -62,6 +72,7 @@ class StakeholderForm extends _$StakeholderForm {
     if (stakeholder == null) {
       throw NotFoundFailure('No se encontró el interesado $stakeholderId.');
     }
+    final isActive = await statusReader.isActive(stakeholder.projectId);
 
     return StakeholderFormState(
       projectId: stakeholder.projectId,
@@ -71,6 +82,7 @@ class StakeholderForm extends _$StakeholderForm {
       area: stakeholder.area,
       influence: stakeholder.influence,
       notes: stakeholder.notes,
+      isReadOnly: !isActive,
     );
   }
 

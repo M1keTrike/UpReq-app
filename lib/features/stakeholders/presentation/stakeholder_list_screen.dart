@@ -18,11 +18,13 @@ class StakeholderListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Interesados')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go('/projects/$projectId/stakeholders/new'),
-        tooltip: 'Nuevo interesado',
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: state.value?.isReadOnly ?? false
+          ? null
+          : FloatingActionButton(
+              onPressed: () => context.go('/projects/$projectId/stakeholders/new'),
+              tooltip: 'Nuevo interesado',
+              child: const Icon(Icons.add),
+            ),
       body: AsyncScaffoldBody<StakeholderListState>(
         value: state,
         isEmpty: (data) => data.stakeholders.isEmpty,
@@ -44,7 +46,7 @@ class StakeholderListScreen extends ConsumerWidget {
               ),
               onTap: () =>
                   context.go('/projects/$projectId/stakeholders/${stakeholder.id.value}/edit'),
-              trailing: isInactive
+              trailing: isInactive || data.isReadOnly
                   ? null
                   : IconButton(
                       icon: const Icon(Icons.person_off_outlined),

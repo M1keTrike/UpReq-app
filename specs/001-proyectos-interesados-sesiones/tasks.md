@@ -192,28 +192,28 @@ end-to-end requiere US2 terminada.
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T061 [P] [US3] **Prueba exhaustiva de la máquina de estados** en `test/unit/domain/sessions/session_transition_test.dart`: las nueve combinaciones de la tabla de data-model.md, verificando que todo retroceso devuelve `InvalidSessionTransitionFailure` (invariante I6)
-- [ ] T062 [P] [US3] Pruebas de casos de uso en `test/unit/domain/sessions/session_usecases_test.dart`: sesión sin participantes rechazada, participante de otro proyecto rechazado con `CrossProjectReferenceFailure` (invariante I8), `SessionHeaderFrozenFailure` al editar la cabecera de una sesión cerrada mientras las notas sí se aceptan (invariante I7), y **rechazo con `ProjectClosedFailure` de toda escritura cuando el proyecto está cerrado** (invariante I5)
-- [ ] T063 [P] [US3] Prueba del DAO en `test/data/sessions_dao_test.dart`: creación de sesión y participantes en una sola transacción; `updated_at` en toda escritura (FR-016); `SessionCounters` correcto por estado (FR-013); **invariante I9**, que eliminar una sesión con cinco puntos de guion deja exactamente **un** asiento `sessionDeleted` y **cero** filas modificadas en `script_points`, y que esos puntos dejan de listarse por visibilidad transitiva; e **invariante I10**, que un interesado desactivado sigue apareciendo entre los participantes de una sesión ya registrada
-- [ ] T064 [P] [US3] Prueba de Notifier en `test/unit/notifiers/session_list_test.dart` con `ProviderContainer.test()` y repositorio doble
-- [ ] T065 [P] [US3] Prueba de widget en `test/widget/sessions/session_form_screen_test.dart`: el selector de participantes no ofrece interesados inactivos ni de otro proyecto, y la cabecera se renderiza deshabilitada con la sesión cerrada
-- [ ] T066 [P] [US3] Prueba de widget en `test/widget/sessions/session_list_screen_test.dart` con las cuatro situaciones
+- [X] T061 [P] [US3] **Prueba exhaustiva de la máquina de estados** en `test/unit/domain/sessions/session_transition_test.dart`: las nueve combinaciones de la tabla de data-model.md, verificando que todo retroceso devuelve `InvalidSessionTransitionFailure` (invariante I6)
+- [X] T062 [P] [US3] Pruebas de casos de uso en `test/unit/domain/sessions/session_usecases_test.dart`: sesión sin participantes rechazada, participante de otro proyecto rechazado con `CrossProjectReferenceFailure` (invariante I8), `SessionHeaderFrozenFailure` al editar la cabecera de una sesión cerrada mientras las notas sí se aceptan (invariante I7), y **rechazo con `ProjectClosedFailure` de toda escritura cuando el proyecto está cerrado** (invariante I5)
+- [X] T063 [P] [US3] Prueba del DAO en `test/data/sessions_dao_test.dart`: creación de sesión y participantes en una sola transacción; `updated_at` en toda escritura (FR-016); `SessionCounters` correcto por estado (FR-013); **invariante I9**, que eliminar una sesión con cinco puntos de guion deja exactamente **un** asiento `sessionDeleted` y **cero** filas modificadas en `script_points`, y que esos puntos dejan de listarse por visibilidad transitiva; e **invariante I10**, que un interesado desactivado sigue apareciendo entre los participantes de una sesión ya registrada
+- [X] T064 [P] [US3] Prueba de Notifier en `test/unit/notifiers/session_list_test.dart` con `ProviderContainer.test()` y repositorio doble
+- [X] T065 [P] [US3] Prueba de widget en `test/widget/sessions/session_form_screen_test.dart`: el selector de participantes no ofrece interesados inactivos ni de otro proyecto, y la cabecera se renderiza deshabilitada con la sesión cerrada
+- [X] T066 [P] [US3] Prueba de widget en `test/widget/sessions/session_list_screen_test.dart` con las cuatro situaciones
 
 ### Implementation for User Story 3
 
-- [ ] T067 [P] [US3] Entidad `ElicitationSession` con los enums `SessionTechnique` y `SessionStatus` en `lib/features/sessions/domain/entities/elicitation_session.dart`
-- [ ] T068 [P] [US3] `SessionDraft` con validaciones en `lib/features/sessions/domain/entities/session_draft.dart`
-- [ ] T069 [P] [US3] Clase inmutable `SessionCounters` (pendientes, cubiertos, omitidos, total) en `lib/features/sessions/domain/entities/session_counters.dart`
-- [ ] T070 [US3] **Función pura** `transitionSession(from, to)` en `lib/features/sessions/domain/session_transition.dart`, que concentra FR-008a en un único punto probable de forma exhaustiva
-- [ ] T071 [US3] Contrato `SessionRepository` en `lib/features/sessions/domain/session_repository.dart`
-- [ ] T072 [P] [US3] Casos de uso `WatchSessions`, `WatchSessionDetail` y `CreateSession` en `lib/features/sessions/domain/usecases/`, uno por archivo
-- [ ] T073 [P] [US3] Casos de uso `UpdateSessionHeader`, `UpdateSessionNotes`, `AdvanceSessionStatus` y `DeleteSession` en `lib/features/sessions/domain/usecases/`, uno por archivo
-- [ ] T074 [US3] `SessionsDao` en `lib/features/sessions/data/sessions_dao.dart`, incluyendo la tabla de unión de participantes y la consulta de contadores de guion por estado
-- [ ] T075 [US3] `SessionRepositoryImpl` en `lib/features/sessions/data/session_repository_impl.dart`, con inserción de sesión y participantes en una transacción y el sellado de `closed_at` al cerrar. `softDelete` marca `deleted_at` y escribe **un solo** asiento `sessionDeleted` con `entity_label` en la misma transacción, y **no toca los puntos de guion** (patrón de T041 y cascada por visibilidad transitiva de data-model.md)
-- [ ] T076 [P] [US3] Pantalla, provider y mutaciones de lista en `lib/features/sessions/presentation/session_list_{screen,provider}.dart` y `session_mutations.dart`
-- [ ] T077 [P] [US3] Pantalla y provider de formulario en `lib/features/sessions/presentation/session_form_{screen,provider}.dart`, con el selector alimentado por `watchSelectableByProject` para que estructuralmente no pueda ofrecer interesados de otro proyecto
-- [ ] T078 [US3] Control de estado en `lib/features/sessions/presentation/session_status_control.dart`, que ofrece **solo** las transiciones válidas desde el estado actual
-- [ ] T079 [US3] Conectar las rutas de sesiones en `lib/core/router/app_router.dart`
+- [X] T067 [P] [US3] Entidad `ElicitationSession` con los enums `SessionTechnique` y `SessionStatus` en `lib/features/sessions/domain/entities/elicitation_session.dart`
+- [X] T068 [P] [US3] `SessionDraft` con validaciones en `lib/features/sessions/domain/entities/session_draft.dart`
+- [X] T069 [P] [US3] Clase inmutable `SessionCounters` (pendientes, cubiertos, omitidos, total) en `lib/features/sessions/domain/entities/session_counters.dart`
+- [X] T070 [US3] **Función pura** `transitionSession(from, to)` en `lib/features/sessions/domain/session_transition.dart`, que concentra FR-008a en un único punto probable de forma exhaustiva
+- [X] T071 [US3] Contrato `SessionRepository` en `lib/features/sessions/domain/session_repository.dart`
+- [X] T072 [P] [US3] Casos de uso `WatchSessions`, `WatchSessionDetail` y `CreateSession` en `lib/features/sessions/domain/usecases/`, uno por archivo
+- [X] T073 [P] [US3] Casos de uso `UpdateSessionHeader`, `UpdateSessionNotes`, `AdvanceSessionStatus` y `DeleteSession` en `lib/features/sessions/domain/usecases/`, uno por archivo
+- [X] T074 [US3] `SessionsDao` en `lib/features/sessions/data/sessions_dao.dart`, incluyendo la tabla de unión de participantes y la consulta de contadores de guion por estado
+- [X] T075 [US3] `SessionRepositoryImpl` en `lib/features/sessions/data/session_repository_impl.dart`, con inserción de sesión y participantes en una transacción y el sellado de `closed_at` al cerrar. `softDelete` marca `deleted_at` y escribe **un solo** asiento `sessionDeleted` con `entity_label` en la misma transacción, y **no toca los puntos de guion** (patrón de T041 y cascada por visibilidad transitiva de data-model.md)
+- [X] T076 [P] [US3] Pantalla, provider y mutaciones de lista en `lib/features/sessions/presentation/session_list_{screen,provider}.dart` y `session_mutations.dart`
+- [X] T077 [P] [US3] Pantalla y provider de formulario en `lib/features/sessions/presentation/session_form_{screen,provider}.dart`, con el selector alimentado por `watchSelectableByProject` para que estructuralmente no pueda ofrecer interesados de otro proyecto
+- [X] T078 [US3] Control de estado en `lib/features/sessions/presentation/session_status_control.dart`, que ofrece **solo** las transiciones válidas desde el estado actual
+- [X] T079 [US3] Conectar las rutas de sesiones en `lib/core/router/app_router.dart`
 
 **Checkpoint**: US1, US2 y US3 funcionan.
 
@@ -231,22 +231,22 @@ como cubiertos y uno como omitido, y comprobar que el orden y los estados persis
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T080 [P] [US4] **Prueba del invariante de posición I3** en `test/data/script_points_position_test.dart`: tras cualquier secuencia de agregar, reordenar y eliminar, las posiciones vivas de la sesión son exactamente `{0..n-1}`, sin huecos ni duplicados. Incluir movimientos a los extremos y reordenamientos repetidos. Añadir el caso de **visibilidad transitiva**: con la sesión eliminada lógicamente, `watchBySession` devuelve lista vacía aunque los puntos conserven `deleted_at` nulo
-- [ ] T081 [P] [US4] Pruebas de casos de uso en `test/unit/domain/sessions/script_point_usecases_test.dart`: `text` obligatorio, marcado libre entre los tres estados, y que editar el guion **sí** se permite con la sesión cerrada pero **no** con el proyecto cerrado (invariante I5)
-- [ ] T082 [P] [US4] Prueba de Notifier en `test/unit/notifiers/session_detail_test.dart` con `ProviderContainer.test()` y repositorios dobles, cubriendo el reordenamiento y el marcado
-- [ ] T083 [P] [US4] Prueba de widget en `test/widget/sessions/session_detail_screen_test.dart` con las cuatro situaciones y el guion vacío invitando a agregar el primer punto
+- [X] T080 [P] [US4] **Prueba del invariante de posición I3** en `test/data/script_points_position_test.dart`: tras cualquier secuencia de agregar, reordenar y eliminar, las posiciones vivas de la sesión son exactamente `{0..n-1}`, sin huecos ni duplicados. Incluir movimientos a los extremos y reordenamientos repetidos. Añadir el caso de **visibilidad transitiva**: con la sesión eliminada lógicamente, `watchBySession` devuelve lista vacía aunque los puntos conserven `deleted_at` nulo
+- [X] T081 [P] [US4] Pruebas de casos de uso en `test/unit/domain/sessions/script_point_usecases_test.dart`: `text` obligatorio, marcado libre entre los tres estados, y que editar el guion **sí** se permite con la sesión cerrada pero **no** con el proyecto cerrado (invariante I5)
+- [X] T082 [P] [US4] Prueba de Notifier en `test/unit/notifiers/session_detail_test.dart` con `ProviderContainer.test()` y repositorios dobles, cubriendo el reordenamiento y el marcado
+- [X] T083 [P] [US4] Prueba de widget en `test/widget/sessions/session_detail_screen_test.dart` con las cuatro situaciones y el guion vacío invitando a agregar el primer punto
 
 ### Implementation for User Story 4
 
-- [ ] T084 [P] [US4] Entidad `ScriptPoint` con su enum `ScriptPointStatus` en `lib/features/sessions/domain/entities/script_point.dart`
-- [ ] T085 [US4] Contrato `ScriptPointRepository` en `lib/features/sessions/domain/script_point_repository.dart`
-- [ ] T086 [P] [US4] Casos de uso `AddScriptPoint`, `UpdateScriptPointText` y `MarkScriptPoint` en `lib/features/sessions/domain/usecases/`, uno por archivo
-- [ ] T087 [P] [US4] Casos de uso `ReorderScriptPoint` y `DeleteScriptPoint` en `lib/features/sessions/domain/usecases/`, uno por archivo
-- [ ] T088 [US4] `ScriptPointsDao` en `lib/features/sessions/data/script_points_dao.dart` con el desplazamiento en bloque dentro de una transacción y la compactación de posiciones al eliminar, según la decisión 8 de research.md. El helper `alive()` **debe llevar dos condiciones**: `deleted_at IS NULL` del punto **y** que su sesión esté viva. Un simple filtro por el `deleted_at` del punto resucitaría los puntos de sesiones eliminadas (visibilidad transitiva, data-model.md)
-- [ ] T089 [US4] `ScriptPointRepositoryImpl` en `lib/features/sessions/data/script_point_repository_impl.dart`, con la eliminación lógica, la compactación de posiciones y el asiento `scriptPointDeleted` en una sola transacción, copiando en `entity_label` el texto del punto (patrón de T041)
-- [ ] T090 [US4] Ampliar el provider de detalle de sesión en `lib/features/sessions/presentation/session_detail_provider.dart` para que un **único** provider devuelva sesión, participantes, puntos y contadores, evitando multiplicar las re-consultas que provoca la invalidación por tabla de drift
-- [ ] T091 [US4] Widget de guion con `ReorderableListView` en `lib/features/sessions/presentation/script_point_list.dart`
-- [ ] T092 [US4] Mutaciones del guion en `lib/features/sessions/presentation/script_point_mutations.dart`
+- [X] T084 [P] [US4] Entidad `ScriptPoint` con su enum `ScriptPointStatus` en `lib/features/sessions/domain/entities/script_point.dart`
+- [X] T085 [US4] Contrato `ScriptPointRepository` en `lib/features/sessions/domain/script_point_repository.dart`
+- [X] T086 [P] [US4] Casos de uso `AddScriptPoint`, `UpdateScriptPointText` y `MarkScriptPoint` en `lib/features/sessions/domain/usecases/`, uno por archivo
+- [X] T087 [P] [US4] Casos de uso `ReorderScriptPoint` y `DeleteScriptPoint` en `lib/features/sessions/domain/usecases/`, uno por archivo
+- [X] T088 [US4] `ScriptPointsDao` en `lib/features/sessions/data/script_points_dao.dart` con el desplazamiento en bloque dentro de una transacción y la compactación de posiciones al eliminar, según la decisión 8 de research.md. El helper `alive()` **debe llevar dos condiciones**: `deleted_at IS NULL` del punto **y** que su sesión esté viva. Un simple filtro por el `deleted_at` del punto resucitaría los puntos de sesiones eliminadas (visibilidad transitiva, data-model.md)
+- [X] T089 [US4] `ScriptPointRepositoryImpl` en `lib/features/sessions/data/script_point_repository_impl.dart`, con la eliminación lógica, la compactación de posiciones y el asiento `scriptPointDeleted` en una sola transacción, copiando en `entity_label` el texto del punto (patrón de T041)
+- [X] T090 [US4] Ampliar el provider de detalle de sesión en `lib/features/sessions/presentation/session_detail_provider.dart` para que un **único** provider devuelva sesión, participantes, puntos y contadores, evitando multiplicar las re-consultas que provoca la invalidación por tabla de drift
+- [X] T091 [US4] Widget de guion con `ReorderableListView` en `lib/features/sessions/presentation/script_point_list.dart`
+- [X] T092 [US4] Mutaciones del guion en `lib/features/sessions/presentation/script_point_mutations.dart`
 
 **Checkpoint**: el flujo completo del criterio de aceptación SC-001 ya es ejecutable.
 
@@ -261,20 +261,20 @@ lista los muestra ordenados ignorando mayúsculas y acentos.
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T093 [P] [US5] Prueba del DAO en `test/data/glossary_dao_test.dart`: el orden por `term_sort_key` ignora mayúsculas y acentos, con casos como "Ábaco", "abaco" y "Zeta"; eliminación lógica que conserva la fila y asienta bitácora; y `updated_at` en toda escritura (FR-016)
-- [ ] T094 [P] [US5] Pruebas de casos de uso en `test/unit/domain/glossary/glossary_usecases_test.dart`: `term` obligatorio, recálculo de `term_sort_key` en cada escritura, y rechazo con `ProjectClosedFailure` si el proyecto está cerrado (invariante I5)
-- [ ] T095 [P] [US5] Prueba de Notifier en `test/unit/notifiers/glossary_list_test.dart` con `ProviderContainer.test()` y repositorio doble
-- [ ] T096 [P] [US5] Pruebas de widget en `test/widget/glossary/glossary_{list,form}_screen_test.dart`: las cuatro situaciones en la lista, con el estado vacío invitando a agregar el primer término (FR-020, SC-005), y la conservación de lo escrito al fallar la validación del formulario (FR-022)
+- [X] T093 [P] [US5] Prueba del DAO en `test/data/glossary_dao_test.dart`: el orden por `term_sort_key` ignora mayúsculas y acentos, con casos como "Ábaco", "abaco" y "Zeta"; eliminación lógica que conserva la fila y asienta bitácora; y `updated_at` en toda escritura (FR-016)
+- [X] T094 [P] [US5] Pruebas de casos de uso en `test/unit/domain/glossary/glossary_usecases_test.dart`: `term` obligatorio, recálculo de `term_sort_key` en cada escritura, y rechazo con `ProjectClosedFailure` si el proyecto está cerrado (invariante I5)
+- [X] T095 [P] [US5] Prueba de Notifier en `test/unit/notifiers/glossary_list_test.dart` con `ProviderContainer.test()` y repositorio doble
+- [X] T096 [P] [US5] Pruebas de widget en `test/widget/glossary/glossary_{list,form}_screen_test.dart`: las cuatro situaciones en la lista, con el estado vacío invitando a agregar el primer término (FR-020, SC-005), y la conservación de lo escrito al fallar la validación del formulario (FR-022)
 
 ### Implementation for User Story 5
 
-- [ ] T097 [P] [US5] Entidades `GlossaryTerm` y `GlossaryTermDraft` en `lib/features/glossary/domain/entities/`
-- [ ] T098 [P] [US5] Función pura de normalización de `term_sort_key` (minúsculas y sin acentos) en `lib/features/glossary/domain/term_sort_key.dart`
-- [ ] T099 [US5] Contrato `GlossaryRepository` en `lib/features/glossary/domain/glossary_repository.dart`
-- [ ] T100 [P] [US5] Casos de uso `WatchGlossary`, `CreateGlossaryTerm`, `UpdateGlossaryTerm` y `DeleteGlossaryTerm` en `lib/features/glossary/domain/usecases/`, uno por archivo
-- [ ] T101 [US5] `GlossaryDao` y `GlossaryRepositoryImpl` en `lib/features/glossary/data/`, con el orden resuelto en SQL y nunca en Dart, y con la eliminación lógica y su asiento `glossaryTermDeleted` en una sola transacción, copiando en `entity_label` el término (patrón de T041)
-- [ ] T102 [P] [US5] Pantallas, providers y mutaciones de lista y formulario en `lib/features/glossary/presentation/`
-- [ ] T103 [US5] Conectar las rutas de glosario en `lib/core/router/app_router.dart`
+- [X] T097 [P] [US5] Entidades `GlossaryTerm` y `GlossaryTermDraft` en `lib/features/glossary/domain/entities/`
+- [X] T098 [P] [US5] Función pura de normalización de `term_sort_key` (minúsculas y sin acentos) en `lib/features/glossary/domain/term_sort_key.dart`
+- [X] T099 [US5] Contrato `GlossaryRepository` en `lib/features/glossary/domain/glossary_repository.dart`
+- [X] T100 [P] [US5] Casos de uso `WatchGlossary`, `CreateGlossaryTerm`, `UpdateGlossaryTerm` y `DeleteGlossaryTerm` en `lib/features/glossary/domain/usecases/`, uno por archivo
+- [X] T101 [US5] `GlossaryDao` y `GlossaryRepositoryImpl` en `lib/features/glossary/data/`, con el orden resuelto en SQL y nunca en Dart, y con la eliminación lógica y su asiento `glossaryTermDeleted` en una sola transacción, copiando en `entity_label` el término (patrón de T041)
+- [X] T102 [P] [US5] Pantallas, providers y mutaciones de lista y formulario en `lib/features/glossary/presentation/`
+- [X] T103 [US5] Conectar las rutas de glosario en `lib/core/router/app_router.dart`
 
 **Checkpoint**: US1 a US5 funcionan.
 
@@ -293,16 +293,16 @@ historia **solo lee** y no expone ninguna mutación.
 
 ### Tests for User Story 6 ⚠️
 
-- [ ] T104 [P] [US6] Prueba del DAO en `test/data/audit_dao_test.dart`: orden del más reciente al más antiguo y filtrado estricto por proyecto (invariante I4)
-- [ ] T105 [P] [US6] Prueba de Notifier en `test/unit/notifiers/audit_log_test.dart` con `ProviderContainer.test()` y repositorio doble
-- [ ] T106 [P] [US6] Prueba de widget en `test/widget/audit_log/audit_log_screen_test.dart`: el estado vacío **no** invita a crear nada, sino que explica que aún no hay operaciones asentadas, que es la excepción declarada a FR-020
+- [X] T104 [P] [US6] Prueba del DAO en `test/data/audit_dao_test.dart`: orden del más reciente al más antiguo y filtrado estricto por proyecto (invariante I4)
+- [X] T105 [P] [US6] Prueba de Notifier en `test/unit/notifiers/audit_log_test.dart` con `ProviderContainer.test()` y repositorio doble
+- [X] T106 [P] [US6] Prueba de widget en `test/widget/audit_log/audit_log_screen_test.dart`: el estado vacío **no** invita a crear nada, sino que explica que aún no hay operaciones asentadas, que es la excepción declarada a FR-020
 
 ### Implementation for User Story 6
 
-- [ ] T107 [P] [US6] Entidad `AuditEntry` con los enums `AuditOperation` y `AuditEntityType` en `lib/features/audit_log/domain/entities/audit_entry.dart`
-- [ ] T108 [US6] Contrato `AuditRepository` y caso de uso `WatchAuditLog` en `lib/features/audit_log/domain/`, **sin ninguna operación de escritura**
-- [ ] T109 [US6] `AuditDao` y `AuditRepositoryImpl` en `lib/features/audit_log/data/`
-- [ ] T110 [US6] Pantalla y provider en `lib/features/audit_log/presentation/audit_log_{screen,provider}.dart`, sin ninguna mutación, y conectar la ruta en `lib/core/router/app_router.dart`
+- [X] T107 [P] [US6] Entidad `AuditEntry` con los enums `AuditOperation` y `AuditEntityType` en `lib/features/audit_log/domain/entities/audit_entry.dart`
+- [X] T108 [US6] Contrato `AuditRepository` y caso de uso `WatchAuditLog` en `lib/features/audit_log/domain/`, **sin ninguna operación de escritura**
+- [X] T109 [US6] `AuditDao` y `AuditRepositoryImpl` en `lib/features/audit_log/data/`
+- [X] T110 [US6] Pantalla y provider en `lib/features/audit_log/presentation/audit_log_{screen,provider}.dart`, sin ninguna mutación, y conectar la ruta en `lib/core/router/app_router.dart`
 
 **Checkpoint**: las seis historias funcionan.
 
@@ -310,14 +310,14 @@ historia **solo lee** y no expone ninguna mutación.
 
 ## Phase 9: Polish & Cross-Cutting Concerns
 
-- [ ] T111 [P] Prueba de flujo completo en `integration_test/full_flow_test.dart` que ejecuta la validación V1 del quickstart: proyecto, tres interesados, sesión con dos participantes, guion de cinco puntos, reordenar y marcar dos como cubiertos
-- [ ] T112 [P] Prueba de persistencia en `integration_test/persistence_test.dart` (validación V2): cerrar y reabrir la aplicación conserva toda la información
-- [ ] T113 [P] Prueba de solo lectura y reapertura en `integration_test/closed_project_test.dart` (validación V3): con el proyecto cerrado ninguna acción de escritura está disponible en ninguna pantalla hija, y la reapertura restituye la edición
-- [ ] T114 [P] Prueba de aislamiento en `integration_test/project_isolation_test.dart` (validación V6): con dos proyectos poblados, ningún listado cruza datos
-- [ ] T115 Auditoría de importaciones: verificar que ningún archivo bajo `lib/features/*/domain/` importa `package:flutter`, que ningún widget importa `drift` ni DTOs, y que ninguna feature importa carpetas internas de otra
-- [ ] T116 Verificar la cobertura de `domain` con `dart run tool/check_coverage.dart --min 80` y completar las pruebas que falten hasta superar el umbral
+- [X] T111 [P] Prueba de flujo completo en `integration_test/full_flow_test.dart` que ejecuta la validación V1 del quickstart: proyecto, tres interesados, sesión con dos participantes, guion de cinco puntos, reordenar y marcar dos como cubiertos
+- [X] T112 [P] Prueba de persistencia en `integration_test/persistence_test.dart` (validación V2): cerrar y reabrir la aplicación conserva toda la información
+- [X] T113 [P] Prueba de solo lectura y reapertura en `integration_test/closed_project_test.dart` (validación V3): con el proyecto cerrado ninguna acción de escritura está disponible en ninguna pantalla hija, y la reapertura restituye la edición
+- [X] T114 [P] Prueba de aislamiento en `integration_test/project_isolation_test.dart` (validación V6): con dos proyectos poblados, ningún listado cruza datos
+- [X] T115 Auditoría de importaciones: verificar que ningún archivo bajo `lib/features/*/domain/` importa `package:flutter`, que ningún widget importa `drift` ni DTOs, y que ninguna feature importa carpetas internas de otra
+- [X] T116 Verificar la cobertura de `domain` con `dart run tool/check_coverage.dart --min 80` y completar las pruebas que falten hasta superar el umbral
 - [ ] T117 Ejecutar la validación manual completa del [quickstart.md](quickstart.md) (V1 a V8) en un dispositivo Android físico con modo avión activado
-- [ ] T118 [P] Documentar en `README.md` los comandos de puesta en marcha, generación de código y pruebas
+- [X] T118 [P] Documentar en `README.md` los comandos de puesta en marcha, generación de código y pruebas
 
 ---
 

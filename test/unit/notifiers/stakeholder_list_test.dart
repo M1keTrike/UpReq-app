@@ -1,11 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:up_req/core/domain/ids.dart';
+import 'package:up_req/core/domain/project_status_reader.dart';
 import 'package:up_req/features/stakeholders/data/stakeholder_repository_impl.dart';
 import 'package:up_req/features/stakeholders/domain/entities/stakeholder.dart';
 import 'package:up_req/features/stakeholders/domain/stakeholder_repository.dart';
 import 'package:up_req/features/stakeholders/presentation/stakeholder_list_provider.dart';
 
 import '../../support/test_container.dart';
+
+/// El provider consulta `projectStatusReaderProvider` para derivar
+/// `isReadOnly` (FR-004a); sin este doble lanzaría `UnimplementedError`.
+class _FakeProjectStatusReader implements ProjectStatusReader {
+  @override
+  Future<bool> isActive(ProjectId id) async => true;
+}
 
 class _FakeStakeholderRepository implements StakeholderRepository {
   List<Stakeholder> stakeholders = [];
@@ -46,12 +54,16 @@ void main() {
       ];
 
     final container = buildTestContainer(
-      overrides: [stakeholderRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        stakeholderRepositoryProvider.overrideWithValue(repository),
+        projectStatusReaderProvider.overrideWithValue(_FakeProjectStatusReader()),
+      ],
     );
     container.listen(stakeholderListProvider('p1'), (_, _) {});
 
     final state = await container.read(stakeholderListProvider('p1').future);
 
     expect(state.stakeholders.map((s) => s.name), ['Ana']);
+    expect(state.isReadOnly, isFalse);
   });
 }

@@ -85,12 +85,15 @@ class _StakeholderFormScreenState extends ConsumerState<StakeholderFormScreen> {
             _initialized = true;
           }
 
+          final fieldsEnabled = !data.isReadOnly;
+
           return Padding(
             padding: const EdgeInsets.all(16),
             child: ListView(
               children: [
                 TextField(
                   controller: _nameController,
+                  enabled: fieldsEnabled,
                   decoration: InputDecoration(
                     labelText: 'Nombre',
                     errorText: error == null
@@ -103,11 +106,13 @@ class _StakeholderFormScreenState extends ConsumerState<StakeholderFormScreen> {
                 const SizedBox(height: 12),
                 TextField(
                   controller: _roleController,
+                  enabled: fieldsEnabled,
                   decoration: const InputDecoration(labelText: 'Rol'),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _areaController,
+                  enabled: fieldsEnabled,
                   decoration: const InputDecoration(labelText: 'Área'),
                 ),
                 const SizedBox(height: 12),
@@ -118,27 +123,31 @@ class _StakeholderFormScreenState extends ConsumerState<StakeholderFormScreen> {
                     ButtonSegment(value: InfluenceLevel.low, label: Text('Baja')),
                   ],
                   selected: {data.influence},
-                  onSelectionChanged: (selection) => ref
-                      .read(stakeholderFormProvider(widget.projectId, widget.stakeholderId).notifier)
-                      .updateInfluence(selection.first),
+                  onSelectionChanged: fieldsEnabled
+                      ? (selection) => ref
+                          .read(stakeholderFormProvider(widget.projectId, widget.stakeholderId).notifier)
+                          .updateInfluence(selection.first)
+                      : null,
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: _notesController,
+                  enabled: fieldsEnabled,
                   decoration: const InputDecoration(labelText: 'Notas'),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 24),
-                FilledButton(
-                  onPressed: isPending ? null : () => _onSave(data.influence),
-                  child: isPending
-                      ? const SizedBox(
-                          height: 16,
-                          width: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Guardar'),
-                ),
+                if (fieldsEnabled)
+                  FilledButton(
+                    onPressed: isPending ? null : () => _onSave(data.influence),
+                    child: isPending
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Guardar'),
+                  ),
               ],
             ),
           );
