@@ -1,5 +1,39 @@
 <!--
-Sync Impact Report
+Sync Impact Report — v1.1.1 (enmienda vigente)
+- Version change: 1.1.0 → 1.1.1
+- Motivo: el toolchain declarado quedó por detrás del instalado. Verificado el 2026-08-10:
+  la máquina de desarrollo corre Flutter 3.44.9 con Dart 3.12.2, mientras el Principio I
+  fijaba 3.44.7 / 3.12.1. `flutter upgrade` sigue el canal stable y no admite un destino
+  exacto, de modo que la discrepancia no se cerraba repitiéndolo.
+
+- Modified principles:
+  - I. Plataforma y Arquitectura (título sin cambios; una regla actualizada)
+    - "Flutter 3.44.7 con Dart 3.12.1" → "Flutter 3.44.9 con Dart 3.12.2".
+
+- Added sections: n/a
+- Removed sections: n/a
+
+- Bump rationale: PATCH. Se actualizan dos números de versión y nada más. Ninguna regla
+  cambia de contenido, no se añade ni se retira gobernanza, y el estilo de anclaje exacto
+  se conserva: se descartó de forma explícita relajar la regla a "versión mínima dentro de
+  la misma minor", porque el anclaje exacto es lo que da reproducibilidad al resto del
+  árbol de paquetes y esa coherencia vale la enmienda ocasional.
+
+- Alternativa descartada: anclar el toolchain a 3.44.7 / 3.12.1 con FVM y dejar la
+  constitución intacta. Habría exigido renunciar a dos parches de correcciones ya
+  instalados para satisfacer un número escrito antes de que existieran.
+
+- Templates requiring updates: los templates dependientes leen la constitución en tiempo de
+  ejecución; no se modifican desde este comando.
+
+- Follow-up TODOs:
+  - specs/001-proyectos-interesados-sesiones/{plan.md,quickstart.md,research.md} declaran el
+    toolchain como salvedad abierta del gate. Esta enmienda la cierra, pero esos archivos no
+    se editan desde este comando por el guard de alcance.
+-->
+
+<!--
+Sync Impact Report — v1.1.0 (histórico)
 - Version change: 1.0.0 → 1.1.0
 - Motivo: dos reglas del Principio I nombraban mecanismos que ya no existen en las versiones
   de paquetes que esta misma constitución fija. Las enmiendas las realinean con la realidad
@@ -36,9 +70,9 @@ Sync Impact Report
   ejecución; no se modifican desde este comando.
 
 - Follow-up TODOs:
-  - specs/001-proyectos-interesados-sesiones/plan.md documenta C1 y C2 como conflictos
-    pendientes en su Constitution Check. Ese gate queda resuelto por esta enmienda, pero el
-    archivo no se edita desde este comando por el guard de alcance.
+  - [CERRADO 2026-08-10] specs/001-proyectos-interesados-sesiones/plan.md documentaba C1 y C2
+    como conflictos pendientes en su Constitution Check. El gate se actualizó a PASS y
+    Complexity Tracking dejó de listarlos como desviaciones.
 -->
 
 # Constitución de up-req
@@ -56,7 +90,7 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
 
 ### I. Plataforma y Arquitectura
 
-- Cliente e interfaz: Flutter 3.44.7 con Dart 3.12.1, Material 3, navegación con go_router.
+- Cliente e interfaz: Flutter 3.44.9 con Dart 3.12.2, Material 3, navegación con go_router.
   Objetivo Android 10+ e iOS 16+. No existe backend propio, cuentas, login, roles ni
   sincronización en la nube.
 - Riverpod moderno y estado de pantalla: flutter_riverpod 3.4.2, riverpod_annotation 4.0.6,
@@ -233,4 +267,4 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
   Calidad verifican el cumplimiento de los principios y prohibiciones aquí definidos. Cualquier
   desviación DEBE justificarse por escrito o corregirse antes del merge.
 
-**Version**: 1.1.0 | **Ratified**: 2026-08-10 | **Last Amended**: 2026-08-10
+**Version**: 1.1.1 | **Ratified**: 2026-08-10 | **Last Amended**: 2026-08-10
