@@ -31,9 +31,16 @@ implementar.
 
 **Language/Version**: Dart 3.12.2 sobre Flutter 3.44.9, verificado en el entorno local
 
-**Primary Dependencies**: flutter_riverpod 3.4.2 · riverpod_annotation 4.0.6 ·
-riverpod_generator 4.0.8 · riverpod_lint 3.1.8 · drift 2.34.3 · drift_dev · go_router ·
-uuid · clock · build_runner
+**Primary Dependencies**: flutter_riverpod 3.3.2 · riverpod_annotation 4.0.3 ·
+riverpod_generator 4.0.4 · riverpod_lint 3.1.4 · drift 2.34.3 · drift_dev 2.34.x ·
+go_router · uuid · clock · build_runner
+
+Las cuatro versiones de Riverpod están ancladas **por debajo** de lo último publicado, y no
+por preferencia: `riverpod_generator` 4.0.6 o superior exige `analyzer 13`, lo que arrastra
+el paquete `test` —del que depende `riverpod`— a una versión que necesita `io 0.3.0`,
+mientras toda versión de `drift_dev` depende de `io 1.0.3`. El resolutor concluye que
+`riverpod_generator >= 4.0.6` es incompatible con `drift_dev`. Verificado con
+`flutter pub get` y fijado en la constitución v1.2.0.
 
 **Storage**: SQLite mediante drift 2.34.3, esquema versión 1 con migración inicial
 explícita. Sin `sqlite3_flutter_libs`: drift ≥ 2.32.0 empaqueta SQLite por su cuenta.
@@ -111,7 +118,7 @@ transcripción o red entra en `pubspec.yaml`.
 | Ninguna prueba llama a la API real ni carga Whisper | ✅ | No existen en este incremento |
 | Widgets con flutter_test, flujos con integration_test | ✅ | Quickstart |
 | Cobertura mínima 80% en `domain` | ✅ | Puerta de CI |
-| Lint con flutter_lints y riverpod_lint 3.1.8 vía `plugins:` y `dart analyze` | ✅ | Puerta de CI; mecanismo vigente desde v1.1.0 (ver C2) |
+| Lint con flutter_lints y riverpod_lint 3.1.4 vía `plugins:` y `dart analyze` | ✅ | Puerta de CI; 3.1.4 es posterior a 3.1.0, así que conserva el mecanismo `plugins:` (ver C2) |
 | CI bloquea merge por lint, código generado, pruebas o cobertura | ✅ | Cuatro puertas en el quickstart |
 
 ### Prohibiciones
@@ -138,7 +145,7 @@ haber rozado:
 
 La constitución exige "escrituras expuestas con `@mutation`". Esa anotación existió solo en
 preversiones de `riverpod_generator` y **fue eliminada** antes de la estable; en
-`riverpod_annotation` 4.0.6 no se exporta. Las mutaciones existen como objeto
+ninguna versión de la serie 4.x de `riverpod_annotation` la exporta. Las mutaciones existen como objeto
 `Mutation<T>` en `package:riverpod/experimental/mutation.dart`, y la documentación oficial
 las declara **experimentales**, con API que puede romper sin cambio de versión mayor.
 
@@ -160,7 +167,7 @@ La intención —reglas verificadas automáticamente que bloquean el merge— se
 Solo el mecanismo nombrado quedó obsoleto.
 
 **Resolución aplicada** (v1.1.0): la constitución nombra ahora el mecanismo vigente,
-`riverpod_lint` 3.1.8 declarado bajo la clave `plugins` de `analysis_options.yaml` y
+`riverpod_lint` 3.1.4 declarado bajo la clave `plugins` de `analysis_options.yaml` y
 ejecutado con `dart analyze`. La exigencia de que el lint bloquee el merge no cambió.
 
 Ambas enmiendas se aplicaron con `/speckit-constitution`; el bump combinado fue **MINOR**

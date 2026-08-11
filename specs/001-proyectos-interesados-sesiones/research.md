@@ -38,8 +38,9 @@ el modo en que una regla se convierte en ruido que todo el mundo ignora.
 **Hallazgo verificado**: la constitución exige "escrituras expuestas con `@mutation`". La
 anotación `@mutation` existió solo en preversiones de `riverpod_generator`
 (3.0.0-dev.12, abril 2026) y **fue eliminada** en 3.0.0-dev.16 con la nota "Reworked
-Mutations to be independent from code-generation". En `riverpod_annotation` 4.0.6 —la
-versión que fija la constitución— no se exporta ninguna anotación `mutation`.
+Mutations to be independent from code-generation". Ninguna versión de la serie 4.x de
+`riverpod_annotation` —incluida la 4.0.3 que fija la constitución— exporta la anotación
+`mutation`.
 
 Las mutaciones **sí existen**, pero como objeto y no como anotación, y están marcadas como
 experimentales por la documentación oficial: "Mutations are experimental, and the API may
@@ -100,7 +101,7 @@ CI". Desde `riverpod_lint` 3.1.0 (diciembre 2025) el paquete dejó de implementa
 ```yaml
 # analysis_options.yaml
 plugins:
-  riverpod_lint: 3.1.8
+  riverpod_lint: 3.1.4
 ```
 
 Ya no se declara `custom_lint` en `dev_dependencies`, ya no se añade el bloque
