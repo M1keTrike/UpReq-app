@@ -194,7 +194,7 @@ end-to-end requiere US2 terminada.
 
 - [ ] T061 [P] [US3] **Prueba exhaustiva de la máquina de estados** en `test/unit/domain/sessions/session_transition_test.dart`: las nueve combinaciones de la tabla de data-model.md, verificando que todo retroceso devuelve `InvalidSessionTransitionFailure` (invariante I6)
 - [ ] T062 [P] [US3] Pruebas de casos de uso en `test/unit/domain/sessions/session_usecases_test.dart`: sesión sin participantes rechazada, participante de otro proyecto rechazado con `CrossProjectReferenceFailure` (invariante I8), `SessionHeaderFrozenFailure` al editar la cabecera de una sesión cerrada mientras las notas sí se aceptan (invariante I7), y **rechazo con `ProjectClosedFailure` de toda escritura cuando el proyecto está cerrado** (invariante I5)
-- [ ] T063 [P] [US3] Prueba del DAO en `test/data/sessions_dao_test.dart`: creación de sesión y participantes en una sola transacción; eliminación lógica que conserva filas y asienta bitácora; `updated_at` en toda escritura (FR-016); y `SessionCounters` correcto por estado (FR-013)
+- [ ] T063 [P] [US3] Prueba del DAO en `test/data/sessions_dao_test.dart`: creación de sesión y participantes en una sola transacción; `updated_at` en toda escritura (FR-016); `SessionCounters` correcto por estado (FR-013); **invariante I9**, que eliminar una sesión con cinco puntos de guion deja exactamente **un** asiento `sessionDeleted` y **cero** filas modificadas en `script_points`, y que esos puntos dejan de listarse por visibilidad transitiva; e **invariante I10**, que un interesado desactivado sigue apareciendo entre los participantes de una sesión ya registrada
 - [ ] T064 [P] [US3] Prueba de Notifier en `test/unit/notifiers/session_list_test.dart` con `ProviderContainer.test()` y repositorio doble
 - [ ] T065 [P] [US3] Prueba de widget en `test/widget/sessions/session_form_screen_test.dart`: el selector de participantes no ofrece interesados inactivos ni de otro proyecto, y la cabecera se renderiza deshabilitada con la sesión cerrada
 - [ ] T066 [P] [US3] Prueba de widget en `test/widget/sessions/session_list_screen_test.dart` con las cuatro situaciones
@@ -231,7 +231,7 @@ como cubiertos y uno como omitido, y comprobar que el orden y los estados persis
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T080 [P] [US4] **Prueba del invariante de posición I3** en `test/data/script_points_position_test.dart`: tras cualquier secuencia de agregar, reordenar y eliminar, las posiciones vivas de la sesión son exactamente `{0..n-1}`, sin huecos ni duplicados. Incluir movimientos a los extremos y reordenamientos repetidos
+- [ ] T080 [P] [US4] **Prueba del invariante de posición I3** en `test/data/script_points_position_test.dart`: tras cualquier secuencia de agregar, reordenar y eliminar, las posiciones vivas de la sesión son exactamente `{0..n-1}`, sin huecos ni duplicados. Incluir movimientos a los extremos y reordenamientos repetidos. Añadir el caso de **visibilidad transitiva**: con la sesión eliminada lógicamente, `watchBySession` devuelve lista vacía aunque los puntos conserven `deleted_at` nulo
 - [ ] T081 [P] [US4] Pruebas de casos de uso en `test/unit/domain/sessions/script_point_usecases_test.dart`: `text` obligatorio, marcado libre entre los tres estados, y que editar el guion **sí** se permite con la sesión cerrada pero **no** con el proyecto cerrado (invariante I5)
 - [ ] T082 [P] [US4] Prueba de Notifier en `test/unit/notifiers/session_detail_test.dart` con `ProviderContainer.test()` y repositorios dobles, cubriendo el reordenamiento y el marcado
 - [ ] T083 [P] [US4] Prueba de widget en `test/widget/sessions/session_detail_screen_test.dart` con las cuatro situaciones y el guion vacío invitando a agregar el primer punto
@@ -242,7 +242,7 @@ como cubiertos y uno como omitido, y comprobar que el orden y los estados persis
 - [ ] T085 [US4] Contrato `ScriptPointRepository` en `lib/features/sessions/domain/script_point_repository.dart`
 - [ ] T086 [P] [US4] Casos de uso `AddScriptPoint`, `UpdateScriptPointText` y `MarkScriptPoint` en `lib/features/sessions/domain/usecases/`, uno por archivo
 - [ ] T087 [P] [US4] Casos de uso `ReorderScriptPoint` y `DeleteScriptPoint` en `lib/features/sessions/domain/usecases/`, uno por archivo
-- [ ] T088 [US4] `ScriptPointsDao` en `lib/features/sessions/data/script_points_dao.dart` con el desplazamiento en bloque dentro de una transacción y la compactación de posiciones al eliminar, según la decisión 8 de research.md
+- [ ] T088 [US4] `ScriptPointsDao` en `lib/features/sessions/data/script_points_dao.dart` con el desplazamiento en bloque dentro de una transacción y la compactación de posiciones al eliminar, según la decisión 8 de research.md. El helper `alive()` **debe llevar dos condiciones**: `deleted_at IS NULL` del punto **y** que su sesión esté viva. Un simple filtro por el `deleted_at` del punto resucitaría los puntos de sesiones eliminadas (visibilidad transitiva, data-model.md)
 - [ ] T089 [US4] `ScriptPointRepositoryImpl` en `lib/features/sessions/data/script_point_repository_impl.dart`, con la eliminación lógica, la compactación y el asiento de bitácora en una sola transacción
 - [ ] T090 [US4] Ampliar el provider de detalle de sesión en `lib/features/sessions/presentation/session_detail_provider.dart` para que un **único** provider devuelva sesión, participantes, puntos y contadores, evitando multiplicar las re-consultas que provoca la invalidación por tabla de drift
 - [ ] T091 [US4] Widget de guion con `ReorderableListView` en `lib/features/sessions/presentation/script_point_list.dart`
@@ -347,8 +347,9 @@ antes de repartir trabajo:
 Cada historia sigue siendo **independientemente probable** con dobles y datos sembrados
 (`test/support/seed.dart`), pero la demo end-to-end sigue la cadena de la tabla.
 
-**US5 es la única que puede desarrollarse en paralelo real** con la cadena US2→US3→US4, ya
-que solo depende de que exista un proyecto.
+**US5 y US6 son las únicas que pueden desarrollarse en paralelo real** con la cadena
+US2→US3→US4, porque ambas dependen solo de que exista un proyecto. US6 se prueba con
+asientos sembrados, sin esperar a que US2–US5 los produzcan.
 
 ### Within Each User Story
 

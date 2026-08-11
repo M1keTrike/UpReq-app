@@ -94,11 +94,16 @@ abstract interface class SessionRepository {
   Future<void> updateNotes(SessionId id, String? notes, DateTime at);
   Future<void> setStatus(SessionId id, SessionStatus status, DateTime at);
   /// Marca deleted_at y asienta bitácora en la misma transacción. FR-014a, FR-015.
+  /// NO toca los puntos de guion: conservan su fila y su deleted_at nulo, y dejan de
+  /// verse por la condición sobre la sesión en `alive()`. Escribe UN solo asiento
+  /// `sessionDeleted`, nunca uno por punto.
   Future<void> softDelete(SessionId id, DateTime at);
 }
 
 abstract interface class ScriptPointRepository {
-  Stream<List<ScriptPoint>> watchBySession(SessionId id);          // vivos, ordenados por position
+  /// Vivos y ordenados por position. "Vivo" = deleted_at nulo Y sesión viva:
+  /// el helper `alive()` del DAO lleva ambas condiciones, no solo la primera.
+  Stream<List<ScriptPoint>> watchBySession(SessionId id);
   /// Inserta en position = n. FR-010.
   Future<void> append(ScriptPoint point);
   Future<void> updateText(ScriptPointId id, String text, DateTime at);
@@ -127,7 +132,7 @@ Result<SessionStatus> transitionSession(SessionStatus from, SessionStatus to);
 | `UpdateSessionHeader` | `Future<Result<void>> call(SessionId, SessionDraft)` | Proyecto activo; `SessionHeaderFrozenFailure` si la sesión está cerrada (FR-008b) |
 | `UpdateSessionNotes` | `Future<Result<void>> call(SessionId, String?)` | Proyecto activo; permitido con la sesión cerrada |
 | `AdvanceSessionStatus` | `Future<Result<void>> call(SessionId, SessionStatus)` | Usa `transitionSession`; sella `closed_at` al cerrar |
-| `DeleteSession` | `Future<Result<void>> call(SessionId)` | Proyecto activo; asienta `sessionDeleted` |
+| `DeleteSession` | `Future<Result<void>> call(SessionId)` | Proyecto activo; asienta **un** `sessionDeleted`; los puntos de guion conservan su fila y desaparecen por visibilidad transitiva |
 | `AddScriptPoint` | `Future<Result<ScriptPointId>> call(SessionId, String)` | Proyecto activo; `text` no vacío; `position = n` |
 | `UpdateScriptPointText` | `Future<Result<void>> call(ScriptPointId, String)` | Proyecto activo; permitido con la sesión cerrada (FR-011) |
 | `MarkScriptPoint` | `Future<Result<void>> call(ScriptPointId, ScriptPointStatus)` | Proyecto activo; libre entre los tres estados |
@@ -188,3 +193,5 @@ abstract interface class AuditRepository {
 | I6 | Ninguna transición de sesión retrocede | FR-008a |
 | I7 | La cabecera de una sesión cerrada no cambia; notas y guion sí | FR-008b |
 | I8 | Una sesión nunca queda sin participantes ni con participantes de otro proyecto | FR-009 |
+| I9 | Eliminar una sesión deja **un** asiento y **cero** filas modificadas en `script_points`; los puntos dejan de listarse por visibilidad transitiva | FR-014, FR-015 |
+| I10 | Un interesado inactivo desaparece del selector de participantes pero **sigue apareciendo** en las sesiones donde ya participaba | Caso borde de spec.md |

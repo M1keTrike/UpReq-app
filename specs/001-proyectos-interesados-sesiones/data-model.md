@@ -36,6 +36,21 @@ ninguna consulta pueda escribirse sin él por descuido.
 Ninguna fila se borra físicamente (FR-014). Las consultas de lista pasan siempre por el
 helper `alive()` del DAO correspondiente.
 
+**Visibilidad transitiva (cascada de baja)**: eliminar lógicamente una sesión **no** marca
+`deleted_at` en sus puntos de guion. Los puntos conservan su fila intacta y dejan de verse
+porque el helper `alive()` de `script_points` exige, además de su propio `deleted_at IS
+NULL`, que **su sesión también esté viva**.
+
+La alternativa —marcar en cascada el `deleted_at` de cada punto— se descartó por dos
+motivos. Produciría un asiento de bitácora por punto además del de la sesión, llenando de
+ruido la pantalla que FR-015a expone. Y dejaría la ocultación repartida entre dos columnas
+que hay que mantener sincronizadas, en vez de concentrarla en el único sitio por donde
+pasan todas las lecturas. La regla es: **una operación lógica, un asiento, un filtro**.
+
+Consecuencia que la implementación debe respetar: el helper `alive()` de `script_points`
+**no** es un simple `WHERE deleted_at IS NULL`; lleva la condición sobre la sesión. Escribir
+una consulta de puntos sin pasar por él resucitaría los puntos de sesiones eliminadas.
+
 ---
 
 ## Entidades
@@ -181,6 +196,11 @@ Tabla de unión que resuelve la relación muchos-a-muchos entre sesión e intere
 
 - FR-010, FR-011.
 - Índice: `CREATE INDEX script_points_session ON script_points (session_id, position) WHERE deleted_at IS NULL`.
+- **Visibilidad transitiva**: un punto se considera vivo si su `deleted_at` es nulo **y** su
+  sesión está viva. Al eliminar lógicamente la sesión, sus puntos conservan la fila y su
+  `deleted_at` sigue nulo; desaparecen de la vista por la condición sobre la sesión. Esto
+  cumple literalmente el escenario 7 de la historia 3, que exige que «su registro y el de su
+  guion se conservan».
 - **Sin restricción `UNIQUE (session_id, position)`** — decisión 8 de research: SQLite
   evalúa `UNIQUE` fila a fila durante un `UPDATE` masivo, lo que rompería el desplazamiento
   en bloque del reordenamiento.
@@ -264,6 +284,11 @@ siempre que el proyecto esté activo.
 
 Este incremento **no** asienta altas ni ediciones: FR-015 acota la bitácora a "toda
 operación lógica de cierre, desactivación o eliminación", y FR-004b añade la reapertura.
+
+**Un asiento por operación del usuario, nunca por entidad afectada**: eliminar una sesión
+con cinco puntos de guion escribe **un** asiento `sessionDeleted`, no uno más cinco
+`scriptPointDeleted`. `scriptPointDeleted` se reserva para la eliminación individual de un
+punto, que es la única que el usuario ejecuta directamente sobre él.
 
 ---
 
