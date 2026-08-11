@@ -12,15 +12,24 @@ Check en [plan.md](plan.md); no se resuelve en silencio.
 
 ## 0. Estado del entorno
 
-**Hallazgo**: el toolchain instalado es Flutter 3.44.0 / Dart 3.12.0. La constitución exige
-Flutter 3.44.7 con Dart 3.12.1.
+**Hallazgo inicial**: el toolchain instalado era Flutter 3.44.0 / Dart 3.12.0, mientras la
+constitución v1.1.0 exigía Flutter 3.44.7 con Dart 3.12.1.
 
-**Decisión**: ejecutar `flutter upgrade` como prerrequisito del incremento y fijar la
-versión en CI. No es una desviación constitucional, es una tarea de entorno.
+**Actualización del 2026-08-10**: ejecutado `flutter upgrade`, el toolchain quedó en Flutter
+3.44.9 / Dart 3.12.2, dos parches **por encima** de lo fijado. `flutter upgrade` sigue el
+canal stable y no admite un destino exacto, de modo que repetirlo no acercaba a 3.44.7.
 
-**Alternativas descartadas**: relajar la versión en la constitución (la constitución fija
-versiones exactas de forma deliberada); trabajar con 3.44.0 (dejaría CI y máquina local en
-versiones distintas de las declaradas).
+**Resuelto**: la constitución v1.1.1 fija ahora Flutter 3.44.9 con Dart 3.12.2. El entorno
+coincide con lo declarado y el gate de plataforma pasa sin salvedades.
+
+**Alternativa descartada**: anclar el toolchain a 3.44.7 / 3.12.1 con FVM y dejar la
+constitución intacta. Habría exigido renunciar a dos parches de correcciones ya instalados
+para satisfacer un número escrito antes de que existieran.
+
+**Regla que queda viva**: la constitución fija versiones exactas y CI las verifica. Cuando
+una actualización futura mueva el canal stable, hay que anclar o enmendar antes de seguir;
+convivir con la discrepancia dejaría esa puerta de CI fallando de forma permanente, que es
+el modo en que una regla se convierte en ruido que todo el mundo ignora.
 
 ---
 
@@ -444,7 +453,7 @@ probar exhaustivamente (las nueve combinaciones de transición caben en una tabl
 
 | # | Área | Decisión |
 |---|---|---|
-| 0 | Entorno | `flutter upgrade` a 3.44.7 / Dart 3.12.1 |
+| 0 | Entorno | Flutter 3.44.9 / Dart 3.12.2 — alineado en constitución v1.1.1 |
 | 1 | Escrituras | `Mutation<T>` experimental — conflicto resuelto en constitución v1.1.0 |
 | 2 | Lint | `plugins:` + `dart analyze` — conflicto resuelto en constitución v1.1.0 |
 | 3 | Estado | `@riverpod` codegen, autoDispose por defecto, `AsyncValue` sealed |

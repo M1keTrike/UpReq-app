@@ -12,19 +12,14 @@ detalles de implementación no viven aquí, sino en `tasks.md` y en el código.
 
 | Requisito | Valor exigido | Comprobación |
 |---|---|---|
-| Flutter | 3.44.7 | `flutter --version` |
-| Dart | 3.12.1 | `dart --version` |
+| Flutter | 3.44.9 | `flutter --version` |
+| Dart | 3.12.2 | `dart --version` |
 | Dispositivo | Android físico o emulador, Android 10+ | `flutter devices` |
 
-El entorno actual tiene Flutter 3.44.0 / Dart 3.12.0. Antes de empezar:
-
-```bash
-flutter upgrade
-```
-
-Si `flutter upgrade` deja una versión distinta de 3.44.7, hay que fijarla explícitamente
-(por ejemplo con FVM) antes de continuar: la constitución fija versiones exactas y CI las
-verifica.
+Verificado el 2026-08-10: el entorno cumple. Las versiones las fija la constitución v1.1.1 y
+CI las comprueba, así que si una actualización futura de Flutter mueve el canal stable, hay
+que anclar el toolchain o enmendar la constitución antes de seguir. No basta con que
+compile.
 
 ---
 

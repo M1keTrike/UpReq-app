@@ -29,8 +29,7 @@ implementar.
 
 ## Technical Context
 
-**Language/Version**: Dart 3.12.1 sobre Flutter 3.44.7
-(entorno actual: Dart 3.12.0 / Flutter 3.44.0 → requiere `flutter upgrade`)
+**Language/Version**: Dart 3.12.2 sobre Flutter 3.44.9, verificado en el entorno local
 
 **Primary Dependencies**: flutter_riverpod 3.4.2 · riverpod_annotation 4.0.6 ·
 riverpod_generator 4.0.8 · riverpod_lint 3.1.8 · drift 2.34.3 · drift_dev · go_router ·
@@ -48,8 +47,9 @@ dispositivo físico exigida por este incremento: solo Android (FR-023, SC-004).
 
 **Project Type**: Aplicación móvil monousuario, sin servidor, sin red
 
-**Performance Goals**: Sin metas propias declaradas. Expectativas habituales de aplicación
-móvil local: listas fluidas a 60 fps y arranque sin espera perceptible.
+**Performance Goals**: Ninguna. El spec no define ningún criterio de éxito de rendimiento y
+este plan no inventa uno: se asumen las expectativas habituales de una aplicación móvil
+local, tal como lo declara la sección Assumptions de [spec.md](spec.md).
 
 **Constraints**: Funciona por completo sin conexión; este incremento no realiza **ninguna**
 petición de red y no declara ninguna dependencia de red. Nada se borra físicamente.
@@ -61,15 +61,15 @@ y puntos de guion. 8 pantallas, 6 entidades, 5 features.
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Constitución evaluada**: v1.1.0 (2026-08-10)
+**Constitución evaluada**: v1.1.1 (2026-08-10)
 
 ### Resultado
 
-**PASS** — el diseño cumple todos los principios aplicables.
+**PASS sin salvedades** — el diseño cumple todos los principios aplicables y el entorno
+coincide con el toolchain declarado.
 
-Queda una sola salvedad, y es de entorno, no de diseño: el toolchain local está en Flutter
-3.44.0 / Dart 3.12.0 y la constitución fija 3.44.7 / 3.12.1. Se resuelve con
-`flutter upgrade` antes de la primera tarea de implementación.
+Verificado el 2026-08-10: Flutter 3.44.9 con Dart 3.12.2, instalado y fijado por la
+constitución v1.1.1.
 
 Este gate estuvo en **CONDICIONAL** durante la Fase 0: la investigación encontró dos reglas
 constitucionales que no eran ejecutables con las versiones de paquetes que la propia
@@ -81,7 +81,7 @@ porque explica por qué el diseño toma las decisiones que toma.
 
 | Regla | Estado | Cómo se cumple |
 |---|---|---|
-| Flutter 3.44.7 / Dart 3.12.1, Material 3, go_router | ⚠️ Entorno | Local en 3.44.0/3.12.0; requiere `flutter upgrade` |
+| Flutter 3.44.9 / Dart 3.12.2, Material 3, go_router | ✅ | Verificado en el entorno local; versiones fijadas por la constitución v1.1.1 |
 | Sin backend, cuentas, login, roles ni nube | ✅ | El incremento no declara ninguna dependencia de red |
 | Providers con `@riverpod` + build_runner | ✅ | Todos generados; ninguno escrito a mano |
 | Estado mutable solo en Notifier/AsyncNotifier generados | ✅ | Contratos de UI |
@@ -94,6 +94,8 @@ porque explica por qué el diseño toma las decisiones que toma.
 | `domain` sin Flutter ni infraestructura | ✅ | Verificable con lint de importaciones |
 | Ninguna feature importa carpetas internas de otra | ✅ | `ProjectStatusReader` en `core/domain` es el único punto de contacto |
 | drift como única fuente de verdad, esquema versionado, migraciones explícitas | ✅ | `schemaVersion 1` + `onCreate` explícito (FR-017) |
+| Audio e imágenes en el sandbox de la app | ⏸️ Diferido | Este incremento no captura audio ni imágenes; la regla entra en vigor con el Principio II |
+| Respaldo y restauración por archivo local cifrado, iniciada por el usuario | ⏸️ Diferido | El alcance declarado del incremento no lo incluye y el spec no lo pide. Se difiere de forma **explícita**: el esquema en versión 1 y los identificadores UUID ya lo dejan viable sin migración destructiva |
 
 ### Principios II a VI — Captura, LLM, Requisitos, Iteración, Exportación
 
