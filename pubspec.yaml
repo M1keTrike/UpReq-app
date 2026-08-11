@@ -21,6 +21,10 @@ dependencies:
   # analyzer 13 y resulta incompatible con drift_dev por la cadena test -> io.
   flutter_riverpod: 3.3.2
   riverpod_annotation: 4.0.3
+  # La API experimental de Mutation<T> (research.md, decisión 1) vive en
+  # package:riverpod/experimental/mutation.dart, no en el barrel de
+  # flutter_riverpod: toda escritura de formulario/operación lógica la usa.
+  riverpod: 3.3.2
 
   # Persistencia
   drift: 2.34.0
@@ -58,11 +62,6 @@ dev_dependencies:
   # Solo para test/drift/: SchemaVerifier usa package:test directamente, no
   # flutter_test (T020)
   test: ^1.31.0
-
-  # Solo para test/support/: el tipo `Override` de los overrides de
-  # ProviderContainer.test() vive en package:riverpod/misc.dart, no en el
-  # barrel principal de flutter_riverpod (T027)
-  riverpod: 3.3.2
 
 flutter:
   uses-material-design: true

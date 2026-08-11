@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:up_req/features/projects/presentation/project_detail_screen.dart';
+import 'package:up_req/features/projects/presentation/project_form_screen.dart';
+import 'package:up_req/features/projects/presentation/project_list_screen.dart';
+import 'package:up_req/features/stakeholders/presentation/stakeholder_form_screen.dart';
+import 'package:up_req/features/stakeholders/presentation/stakeholder_list_screen.dart';
 
 /// Árbol de rutas de FR-021: lista de proyectos, detalle de proyecto con
 /// acceso a interesados, sesiones, glosario y bitácora, y detalle de sesión
@@ -11,37 +16,43 @@ final appRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const _Placeholder('Lista de proyectos'),
+      builder: (context, state) => const ProjectListScreen(),
     ),
     GoRoute(
       path: '/projects/new',
-      builder: (context, state) =>
-          const _Placeholder('Formulario de proyecto (nuevo)'),
+      builder: (context, state) => const ProjectFormScreen(projectId: null),
     ),
     GoRoute(
       path: '/projects/:projectId',
-      builder: (context, state) => _Placeholder(
-        'Detalle de proyecto ${state.pathParameters['projectId']}',
+      builder: (context, state) => ProjectDetailScreen(
+        projectId: state.pathParameters['projectId']!,
       ),
       routes: [
         GoRoute(
           path: 'edit',
-          builder: (context, state) =>
-              const _Placeholder('Formulario de proyecto (editar)'),
+          builder: (context, state) => ProjectFormScreen(
+            projectId: state.pathParameters['projectId'],
+          ),
         ),
         GoRoute(
           path: 'stakeholders',
-          builder: (context, state) => const _Placeholder('Interesados'),
+          builder: (context, state) => StakeholderListScreen(
+            projectId: state.pathParameters['projectId']!,
+          ),
           routes: [
             GoRoute(
               path: 'new',
-              builder: (context, state) =>
-                  const _Placeholder('Formulario de interesado (nuevo)'),
+              builder: (context, state) => StakeholderFormScreen(
+                projectId: state.pathParameters['projectId']!,
+                stakeholderId: null,
+              ),
             ),
             GoRoute(
               path: ':stakeholderId/edit',
-              builder: (context, state) =>
-                  const _Placeholder('Formulario de interesado (editar)'),
+              builder: (context, state) => StakeholderFormScreen(
+                projectId: state.pathParameters['projectId']!,
+                stakeholderId: state.pathParameters['stakeholderId'],
+              ),
             ),
           ],
         ),

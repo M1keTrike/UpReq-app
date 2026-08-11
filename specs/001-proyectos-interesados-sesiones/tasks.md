@@ -119,28 +119,28 @@ reabrirlo para comprobar que vuelve a ser editable.
 
 > Escribir estas pruebas PRIMERO y verificar que fallan antes de implementar.
 
-- [ ] T029 [P] [US1] Pruebas de los casos de uso de proyecto en `test/unit/domain/projects/project_usecases_test.dart`: validación de `name` obligatorio, transición `active↔closed`, y que `UpdateProject` devuelve `ProjectClosedFailure` sobre un proyecto cerrado (invariante I5)
-- [ ] T030 [P] [US1] Prueba del DAO en `test/data/projects_dao_test.dart` sobre base en memoria: cerrar un proyecto **no borra ninguna fila** y deja exactamente un asiento en `audit_entries` dentro de la misma transacción (invariantes I1 e I2); `updated_at` cambia en toda escritura y `created_at` nunca (FR-016); `ProjectCounters` devuelve los tres conteos correctos tras altas y bajas lógicas (FR-013); y **`entity_label` conserva el nombre que el proyecto tenía al asentarse**, comprobado cerrando un proyecto, renombrándolo después de reabrirlo y verificando que el asiento antiguo sigue mostrando el nombre viejo
-- [ ] T031 [P] [US1] Prueba de Notifier en `test/unit/notifiers/project_list_test.dart` con `ProviderContainer.test()` y repositorio doble, cubriendo el filtro activos/cerrados
-- [ ] T032 [P] [US1] Prueba de widget en `test/widget/projects/project_list_screen_test.dart` que verifica las **cuatro** situaciones: cargando, con datos, vacía (con invitación a crear, no mensaje de ausencia) y con error
-- [ ] T033 [P] [US1] Prueba de widget del formulario en `test/widget/projects/project_form_screen_test.dart`: al fallar la validación no se guarda, se señala el campo y **se conserva lo escrito en el resto de campos** (FR-022)
+- [X] T029 [P] [US1] Pruebas de los casos de uso de proyecto en `test/unit/domain/projects/project_usecases_test.dart`: validación de `name` obligatorio, transición `active↔closed`, y que `UpdateProject` devuelve `ProjectClosedFailure` sobre un proyecto cerrado (invariante I5)
+- [X] T030 [P] [US1] Prueba del DAO en `test/data/projects_dao_test.dart` sobre base en memoria: cerrar un proyecto **no borra ninguna fila** y deja exactamente un asiento en `audit_entries` dentro de la misma transacción (invariantes I1 e I2); `updated_at` cambia en toda escritura y `created_at` nunca (FR-016); `ProjectCounters` devuelve los tres conteos correctos tras altas y bajas lógicas (FR-013); y **`entity_label` conserva el nombre que el proyecto tenía al asentarse**, comprobado cerrando un proyecto, renombrándolo después de reabrirlo y verificando que el asiento antiguo sigue mostrando el nombre viejo
+- [X] T031 [P] [US1] Prueba de Notifier en `test/unit/notifiers/project_list_test.dart` con `ProviderContainer.test()` y repositorio doble, cubriendo el filtro activos/cerrados
+- [X] T032 [P] [US1] Prueba de widget en `test/widget/projects/project_list_screen_test.dart` que verifica las **cuatro** situaciones: cargando, con datos, vacía (con invitación a crear, no mensaje de ausencia) y con error
+- [X] T033 [P] [US1] Prueba de widget del formulario en `test/widget/projects/project_form_screen_test.dart`: al fallar la validación no se guarda, se señala el campo y **se conserva lo escrito en el resto de campos** (FR-022)
 
 ### Implementation for User Story 1
 
-- [ ] T034 [P] [US1] Entidad `Project` inmutable con su enum `ProjectStatus` en `lib/features/projects/domain/entities/project.dart`
-- [ ] T035 [P] [US1] Objeto de valor `ProjectDraft` con las reglas de validación de data-model.md en `lib/features/projects/domain/entities/project_draft.dart`
-- [ ] T036 [P] [US1] Clase inmutable `ProjectCounters` (interesados, sesiones, términos) en `lib/features/projects/domain/entities/project_counters.dart`
-- [ ] T037 [US1] Contrato `ProjectRepository` en `lib/features/projects/domain/project_repository.dart` según [domain-contracts.md](contracts/domain-contracts.md)
-- [ ] T038 [P] [US1] Casos de uso `WatchActiveProjects`, `WatchClosedProjects` y `WatchProjectDetail` en `lib/features/projects/domain/usecases/`, uno por archivo
-- [ ] T039 [P] [US1] Casos de uso `CreateProject`, `UpdateProject`, `CloseProject` y `ReopenProject` en `lib/features/projects/domain/usecases/`, uno por archivo
-- [ ] T040 [US1] `ProjectsDao` en `lib/features/projects/data/projects_dao.dart` con el helper de filtrado por estado y la consulta de contadores por `COUNT` en SQL, nunca contando en Dart
-- [ ] T041 [US1] `ProjectRepositoryImpl` en `lib/features/projects/data/project_repository_impl.dart`: `setStatus` escribe el cambio de estado **y** su asiento de bitácora en una única transacción de drift, copiando en `entity_label` el nombre del proyecto en ese momento. **Este es el patrón que siguen las cinco implementaciones que escriben asientos** (T041, T057, T075, T089, T101): misma transacción y etiqueta copiada
-- [ ] T042 [US1] Implementar `ProjectStatusReader` sobre el DAO en `lib/features/projects/data/project_status_reader_impl.dart` y registrarlo en el provider declarado en T014
-- [ ] T043 [P] [US1] Pantalla y provider de lista en `lib/features/projects/presentation/project_list_{screen,provider}.dart`, con filtro activos/cerrados y un único provider que devuelve `AsyncValue<ProjectListState>`
-- [ ] T044 [P] [US1] Pantalla y provider de formulario en `lib/features/projects/presentation/project_form_{screen,provider}.dart`, conservando lo escrito cuando la validación falla (FR-022)
-- [ ] T045 [US1] Pantalla y provider de detalle en `lib/features/projects/presentation/project_detail_{screen,provider}.dart`, exponiendo `ProjectCounters` y la bandera `isReadOnly` que oculta las acciones de escritura en las pantallas hijas
-- [ ] T046 [US1] Mutaciones `createProject`, `saveProject`, `closeProject` y `reopenProject` en `lib/features/projects/presentation/project_mutations.dart`, como objetos `Mutation<T>` observables. **Prohibido** derivar el progreso de una bandera `isLoading` en el estado de pantalla
-- [ ] T047 [US1] Conectar las tres rutas de proyecto en `lib/core/router/app_router.dart`, sustituyendo los marcadores de posición
+- [X] T034 [P] [US1] Entidad `Project` inmutable con su enum `ProjectStatus` en `lib/features/projects/domain/entities/project.dart`
+- [X] T035 [P] [US1] Objeto de valor `ProjectDraft` con las reglas de validación de data-model.md en `lib/features/projects/domain/entities/project_draft.dart`
+- [X] T036 [P] [US1] Clase inmutable `ProjectCounters` (interesados, sesiones, términos) en `lib/features/projects/domain/entities/project_counters.dart`
+- [X] T037 [US1] Contrato `ProjectRepository` en `lib/features/projects/domain/project_repository.dart` según [domain-contracts.md](contracts/domain-contracts.md)
+- [X] T038 [P] [US1] Casos de uso `WatchActiveProjects`, `WatchClosedProjects` y `WatchProjectDetail` en `lib/features/projects/domain/usecases/`, uno por archivo
+- [X] T039 [P] [US1] Casos de uso `CreateProject`, `UpdateProject`, `CloseProject` y `ReopenProject` en `lib/features/projects/domain/usecases/`, uno por archivo
+- [X] T040 [US1] `ProjectsDao` en `lib/features/projects/data/projects_dao.dart` con el helper de filtrado por estado y la consulta de contadores por `COUNT` en SQL, nunca contando en Dart
+- [X] T041 [US1] `ProjectRepositoryImpl` en `lib/features/projects/data/project_repository_impl.dart`: `setStatus` escribe el cambio de estado **y** su asiento de bitácora en una única transacción de drift, copiando en `entity_label` el nombre del proyecto en ese momento. **Este es el patrón que siguen las cinco implementaciones que escriben asientos** (T041, T057, T075, T089, T101): misma transacción y etiqueta copiada
+- [X] T042 [US1] Implementar `ProjectStatusReader` sobre el DAO en `lib/features/projects/data/project_status_reader_impl.dart` y registrarlo en el provider declarado en T014
+- [X] T043 [P] [US1] Pantalla y provider de lista en `lib/features/projects/presentation/project_list_{screen,provider}.dart`, con filtro activos/cerrados y un único provider que devuelve `AsyncValue<ProjectListState>`
+- [X] T044 [P] [US1] Pantalla y provider de formulario en `lib/features/projects/presentation/project_form_{screen,provider}.dart`, conservando lo escrito cuando la validación falla (FR-022)
+- [X] T045 [US1] Pantalla y provider de detalle en `lib/features/projects/presentation/project_detail_{screen,provider}.dart`, exponiendo `ProjectCounters` y la bandera `isReadOnly` que oculta las acciones de escritura en las pantallas hijas
+- [X] T046 [US1] Mutaciones `createProject`, `saveProject`, `closeProject` y `reopenProject` en `lib/features/projects/presentation/project_mutations.dart`, como objetos `Mutation<T>` observables. **Prohibido** derivar el progreso de una bandera `isLoading` en el estado de pantalla
+- [X] T047 [US1] Conectar las tres rutas de proyecto en `lib/core/router/app_router.dart`, sustituyendo los marcadores de posición
 
 **Checkpoint**: US1 completa y demostrable por sí sola. Es el MVP.
 
@@ -156,22 +156,22 @@ muestra interesados de otro proyecto.
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T048 [P] [US2] Pruebas de casos de uso en `test/unit/domain/stakeholders/stakeholder_usecases_test.dart`: `name` e `influence` obligatorios, y rechazo con `ProjectClosedFailure` si el proyecto está cerrado (invariante I5)
-- [ ] T049 [P] [US2] Prueba del DAO en `test/data/stakeholders_dao_test.dart`: desactivar conserva la fila y asienta bitácora; `updated_at` cambia en toda escritura (FR-016); y **el invariante I4**, que una consulta con dos proyectos poblados nunca devuelve interesados del otro
-- [ ] T050 [P] [US2] Prueba de Notifier en `test/unit/notifiers/stakeholder_list_test.dart` con `ProviderContainer.test()` y repositorio doble
-- [ ] T051 [P] [US2] Prueba de widget en `test/widget/stakeholders/stakeholder_list_screen_test.dart` con las cuatro situaciones
+- [X] T048 [P] [US2] Pruebas de casos de uso en `test/unit/domain/stakeholders/stakeholder_usecases_test.dart`: `name` e `influence` obligatorios, y rechazo con `ProjectClosedFailure` si el proyecto está cerrado (invariante I5)
+- [X] T049 [P] [US2] Prueba del DAO en `test/data/stakeholders_dao_test.dart`: desactivar conserva la fila y asienta bitácora; `updated_at` cambia en toda escritura (FR-016); y **el invariante I4**, que una consulta con dos proyectos poblados nunca devuelve interesados del otro
+- [X] T050 [P] [US2] Prueba de Notifier en `test/unit/notifiers/stakeholder_list_test.dart` con `ProviderContainer.test()` y repositorio doble
+- [X] T051 [P] [US2] Prueba de widget en `test/widget/stakeholders/stakeholder_list_screen_test.dart` con las cuatro situaciones
 
 ### Implementation for User Story 2
 
-- [ ] T052 [P] [US2] Entidad `Stakeholder` con su enum `InfluenceLevel` en `lib/features/stakeholders/domain/entities/stakeholder.dart`
-- [ ] T053 [P] [US2] `StakeholderDraft` con validaciones en `lib/features/stakeholders/domain/entities/stakeholder_draft.dart`
-- [ ] T054 [US2] Contrato `StakeholderRepository` en `lib/features/stakeholders/domain/stakeholder_repository.dart`, con `watchByProject` y `watchSelectableByProject` separados: el segundo devuelve solo activos y es lo que consumirá el selector de participantes de US3
-- [ ] T055 [P] [US2] Casos de uso `WatchStakeholders`, `CreateStakeholder`, `UpdateStakeholder` y `DeactivateStakeholder` en `lib/features/stakeholders/domain/usecases/`, uno por archivo, todos comprobando `ProjectStatusReader` antes de escribir
-- [ ] T056 [US2] `StakeholdersDao` en `lib/features/stakeholders/data/stakeholders_dao.dart` con el helper de filtrado por proyecto y estado
-- [ ] T057 [US2] `StakeholderRepositoryImpl` en `lib/features/stakeholders/data/stakeholder_repository_impl.dart`, con la desactivación y su asiento `stakeholderDeactivated` en una sola transacción, copiando en `entity_label` el nombre del interesado (patrón de T041)
-- [ ] T058 [P] [US2] Pantalla, provider y mutaciones de lista en `lib/features/stakeholders/presentation/stakeholder_list_{screen,provider}.dart` y `stakeholder_mutations.dart`, distinguiendo visiblemente los inactivos
-- [ ] T059 [P] [US2] Pantalla y provider de formulario en `lib/features/stakeholders/presentation/stakeholder_form_{screen,provider}.dart`
-- [ ] T060 [US2] Conectar las rutas de interesados en `lib/core/router/app_router.dart`
+- [X] T052 [P] [US2] Entidad `Stakeholder` con su enum `InfluenceLevel` en `lib/features/stakeholders/domain/entities/stakeholder.dart`
+- [X] T053 [P] [US2] `StakeholderDraft` con validaciones en `lib/features/stakeholders/domain/entities/stakeholder_draft.dart`
+- [X] T054 [US2] Contrato `StakeholderRepository` en `lib/features/stakeholders/domain/stakeholder_repository.dart`, con `watchByProject` y `watchSelectableByProject` separados: el segundo devuelve solo activos y es lo que consumirá el selector de participantes de US3
+- [X] T055 [P] [US2] Casos de uso `WatchStakeholders`, `CreateStakeholder`, `UpdateStakeholder` y `DeactivateStakeholder` en `lib/features/stakeholders/domain/usecases/`, uno por archivo, todos comprobando `ProjectStatusReader` antes de escribir
+- [X] T056 [US2] `StakeholdersDao` en `lib/features/stakeholders/data/stakeholders_dao.dart` con el helper de filtrado por proyecto y estado
+- [X] T057 [US2] `StakeholderRepositoryImpl` en `lib/features/stakeholders/data/stakeholder_repository_impl.dart`, con la desactivación y su asiento `stakeholderDeactivated` en una sola transacción, copiando en `entity_label` el nombre del interesado (patrón de T041)
+- [X] T058 [P] [US2] Pantalla, provider y mutaciones de lista en `lib/features/stakeholders/presentation/stakeholder_list_{screen,provider}.dart` y `stakeholder_mutations.dart`, distinguiendo visiblemente los inactivos
+- [X] T059 [P] [US2] Pantalla y provider de formulario en `lib/features/stakeholders/presentation/stakeholder_form_{screen,provider}.dart`
+- [X] T060 [US2] Conectar las rutas de interesados en `lib/core/router/app_router.dart`
 
 **Checkpoint**: US1 y US2 funcionan de forma independiente.
 

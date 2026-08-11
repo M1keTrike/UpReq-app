@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 
+import '../utc_date_time_converter.dart';
+
 import 'projects.dart';
 
 /// `term_sort_key` es columna almacenada (no calculada en la consulta): el
@@ -12,9 +14,9 @@ class GlossaryTerms extends Table {
   TextColumn get definition => text().nullable()();
   TextColumn get notes => text().nullable()();
   TextColumn get termSortKey => text()();
-  DateTimeColumn get deletedAt => dateTime().nullable()();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get deletedAt => dateTime().map(const UtcDateTimeConverter()).nullable()();
+  DateTimeColumn get createdAt => dateTime().map(const UtcDateTimeConverter())();
+  DateTimeColumn get updatedAt => dateTime().map(const UtcDateTimeConverter())();
 
   @override
   Set<Column> get primaryKey => {id};

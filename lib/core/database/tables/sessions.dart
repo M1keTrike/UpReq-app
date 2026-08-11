@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 
+import '../utc_date_time_converter.dart';
+
 import 'projects.dart';
 import 'stakeholders.dart';
 
@@ -10,15 +12,15 @@ class Sessions extends Table {
   TextColumn get id => text()();
   TextColumn get projectId => text().references(Projects, #id)();
   TextColumn get title => text()();
-  DateTimeColumn get scheduledAt => dateTime()();
+  DateTimeColumn get scheduledAt => dateTime().map(const UtcDateTimeConverter())();
   TextColumn get technique => text()();
   TextColumn get location => text().nullable()();
   TextColumn get status => text().withDefault(const Constant('planned'))();
   TextColumn get notes => text().nullable()();
-  DateTimeColumn get closedAt => dateTime().nullable()();
-  DateTimeColumn get deletedAt => dateTime().nullable()();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get closedAt => dateTime().map(const UtcDateTimeConverter()).nullable()();
+  DateTimeColumn get deletedAt => dateTime().map(const UtcDateTimeConverter()).nullable()();
+  DateTimeColumn get createdAt => dateTime().map(const UtcDateTimeConverter())();
+  DateTimeColumn get updatedAt => dateTime().map(const UtcDateTimeConverter())();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -31,7 +33,7 @@ class SessionParticipants extends Table {
   TextColumn get sessionId => text().references(Sessions, #id)();
   TextColumn get stakeholderId => text().references(Stakeholders, #id)();
   TextColumn get projectId => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get createdAt => dateTime().map(const UtcDateTimeConverter())();
 
   @override
   Set<Column> get primaryKey => {sessionId, stakeholderId};

@@ -6,6 +6,7 @@ import 'tables/projects.dart';
 import 'tables/script_points.dart';
 import 'tables/sessions.dart';
 import 'tables/stakeholders.dart';
+import 'utc_date_time_converter.dart';
 
 part 'app_database.g.dart';
 

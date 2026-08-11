@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 
+import '../utc_date_time_converter.dart';
+
 import 'projects.dart';
 
 /// `influence`: `high` | `medium` | `low`. `status`: `active` | `inactive`.
@@ -12,8 +14,8 @@ class Stakeholders extends Table {
   TextColumn get influence => text()();
   TextColumn get notes => text().nullable()();
   TextColumn get status => text().withDefault(const Constant('active'))();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get createdAt => dateTime().map(const UtcDateTimeConverter())();
+  DateTimeColumn get updatedAt => dateTime().map(const UtcDateTimeConverter())();
 
   @override
   Set<Column> get primaryKey => {id};

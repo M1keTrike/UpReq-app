@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 
+import '../utc_date_time_converter.dart';
+
 import 'projects.dart';
 
 /// Inmutable y de solo lectura: sin `deleted_at` ni operación de escritura
@@ -14,9 +16,9 @@ class AuditEntries extends Table {
   TextColumn get entityType => text()();
   TextColumn get entityId => text()();
   TextColumn get entityLabel => text().nullable()();
-  DateTimeColumn get occurredAt => dateTime()();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get occurredAt => dateTime().map(const UtcDateTimeConverter())();
+  DateTimeColumn get createdAt => dateTime().map(const UtcDateTimeConverter())();
+  DateTimeColumn get updatedAt => dateTime().map(const UtcDateTimeConverter())();
 
   @override
   Set<Column> get primaryKey => {id};

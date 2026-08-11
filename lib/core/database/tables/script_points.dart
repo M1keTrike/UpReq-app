@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 
+import '../utc_date_time_converter.dart';
+
 import 'sessions.dart';
 
 /// `status`: `pending` | `covered` | `skipped`. `position`: contigua `0..n-1`
@@ -21,9 +23,9 @@ class ScriptPoints extends Table {
   TextColumn get body => text()();
   TextColumn get status => text().withDefault(const Constant('pending'))();
   IntColumn get position => integer()();
-  DateTimeColumn get deletedAt => dateTime().nullable()();
-  DateTimeColumn get createdAt => dateTime()();
-  DateTimeColumn get updatedAt => dateTime()();
+  DateTimeColumn get deletedAt => dateTime().map(const UtcDateTimeConverter()).nullable()();
+  DateTimeColumn get createdAt => dateTime().map(const UtcDateTimeConverter())();
+  DateTimeColumn get updatedAt => dateTime().map(const UtcDateTimeConverter())();
 
   @override
   Set<Column> get primaryKey => {id};
