@@ -1,20 +1,44 @@
 <!--
 Sync Impact Report
-- Version change: (template, sin versión) → 1.0.0
-- Adopción inicial de la constitución a partir de constitution-input.md (contenido trasladado
-  íntegramente, sin resumir, reordenar ni suavizar).
-- Modified principles: n/a (no existían principios previos; la plantilla estaba sin rellenar)
+- Version change: 1.0.0 → 1.1.0
+- Motivo: dos reglas del Principio I nombraban mecanismos que ya no existen en las versiones
+  de paquetes que esta misma constitución fija. Las enmiendas las realinean con la realidad
+  verificada, conservando intacta su intención original.
+
+- Modified principles:
+  - I. Plataforma y Arquitectura (título sin cambios; dos reglas reescritas)
+    - C1 — Escrituras: "escrituras expuestas con @mutation" → "toda escritura se expone como
+      un objeto Mutation<T> observable de package:riverpod/experimental/mutation.dart, y nunca
+      como una bandera dentro del estado de pantalla".
+      Hecho verificado: la anotación @mutation existió solo en preversiones de
+      riverpod_generator (3.0.0-dev.12) y fue eliminada en 3.0.0-dev.16; riverpod_annotation
+      4.0.6 no la exporta. La regla anterior no era ejecutable.
+    - C2 — Lint: "riverpod_lint sobre custom_lint activo en CI" → "riverpod_lint 3.1.8 activo
+      en CI, declarado bajo la clave plugins de analysis_options.yaml y ejecutado con
+      dart analyze".
+      Hecho verificado: desde riverpod_lint 3.1.0 el paquete dejó de implementarse sobre
+      custom_lint y pasó a analysis_server_plugin.
+
 - Added sections:
-  - Propósito y Alcance
-  - Core Principles: I. Plataforma y Arquitectura; II. Captura y Transcripción; III. LLM;
-    IV. Requisitos y Procedencia; V. Iteración y Medición; VI. Exportación
-  - Calidad (puertas de calidad)
-  - Prohibiciones
-  - Governance
+  - Principio I, viñeta nueva: "Dependencia experimental aceptada de forma consciente".
+    Documenta el riesgo asumido con la API de mutaciones y lo acota: ninguna otra API
+    experimental entra sin enmienda previa.
+
 - Removed sections: n/a
+
+- Bump rationale: MINOR y no PATCH porque C1 no es una aclaración de redacción sino la
+  sustitución del mecanismo que materializa una regla, más una viñeta nueva de gobernanza
+  sobre dependencias experimentales. No es MAJOR porque ninguna regla se elimina ni se
+  invierte, la intención de ambas se conserva íntegra y no existe código previo que quede
+  fuera de cumplimiento. C2 por sí solo habría sido PATCH; prevalece el bump más alto.
+
 - Templates requiring updates: los templates dependientes leen la constitución en tiempo de
   ejecución; no se modifican desde este comando.
-- Follow-up TODOs: ninguno
+
+- Follow-up TODOs:
+  - specs/001-proyectos-interesados-sesiones/plan.md documenta C1 y C2 como conflictos
+    pendientes en su Constitution Check. Ese gate queda resuelto por esta enmienda, pero el
+    archivo no se edita desde este comando por el guard de alcance.
 -->
 
 # Constitución de up-req
@@ -36,12 +60,21 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
   Objetivo Android 10+ e iOS 16+. No existe backend propio, cuentas, login, roles ni
   sincronización en la nube.
 - Riverpod moderno y estado de pantalla: flutter_riverpod 3.4.2, riverpod_annotation 4.0.6,
-  riverpod_generator 4.0.8 y riverpod_lint sobre custom_lint activo en CI. Todo provider se
+  riverpod_generator 4.0.8 y riverpod_lint 3.1.8 activo en CI, declarado bajo la clave plugins
+  de analysis_options.yaml y ejecutado con dart analyze. Todo provider se
   declara con @riverpod y se genera con build_runner; el estado mutable vive solo en Notifier y
   AsyncNotifier generados; autoDispose por defecto y keepAlive justificado en el código;
-  ref.watch solo en build, ref.listen para efectos, ref.read solo en callbacks; escrituras
-  expuestas con @mutation. Cada pantalla consume un único provider que devuelve AsyncValue\<T>
+  ref.watch solo en build, ref.listen para efectos, ref.read solo en callbacks; toda escritura
+  se expone como un objeto Mutation\<T> observable de
+  package:riverpod/experimental/mutation.dart, y nunca como una bandera dentro del estado de
+  pantalla. Cada pantalla consume un único provider que devuelve AsyncValue\<T>
   o una clase sealed inmutable, y resuelve de forma exhaustiva cargando, datos, vacío y error.
+- Dependencia experimental aceptada de forma consciente: la API de mutaciones de Riverpod está
+  marcada como experimental por su documentación oficial y puede romper sin cambio de versión
+  mayor. El proyecto la acepta porque es lo único que mantiene el progreso de una escritura
+  fuera del estado de pantalla, y porque el anclaje exacto de versiones que fija esta
+  constitución impide que una actualización llegue sin decisión previa. Ninguna otra API
+  experimental entra al proyecto sin enmendar antes esta constitución.
 - Arquitectura limpia por feature: lib/features/\<feature>/{domain,data,presentation} y lib/core
   para lo compartido. domain contiene entidades puras, contratos de repositorio y un caso de uso
   por operación, sin importar Flutter ni infraestructura. data contiene DTOs, mappers, la fuente
@@ -200,4 +233,4 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
   Calidad verifican el cumplimiento de los principios y prohibiciones aquí definidos. Cualquier
   desviación DEBE justificarse por escrito o corregirse antes del merge.
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-10 | **Last Amended**: 2026-08-10
+**Version**: 1.1.0 | **Ratified**: 2026-08-10 | **Last Amended**: 2026-08-10
