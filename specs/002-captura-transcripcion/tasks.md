@@ -78,31 +78,31 @@ reales. Una sola migración aditiva no puede perder nada.
 
 ### Tipos compartidos de dominio
 
-- [ ] T012 [P] Añadir `RecordingId`, `LiveMarkId`, `TranscriptId` y `SegmentId` como extension types sobre `String` en `lib/core/domain/ids.dart`, siguiendo el patrón ya existente
-- [ ] T013 [P] Añadir los fallos nuevos en `lib/core/domain/failures.dart`: `MicrophonePermissionDenied`, `SessionNotInProgressFailure`, `RecordingAlreadyActiveFailure`, `NoActiveRecordingFailure`, `StorageFullFailure`, `ModelUnavailableFailure`, `DownloadFailure`, `TranscriptionFailure`, según [domain-contracts.md](contracts/domain-contracts.md)
+- [X] T012 [P] Añadir `RecordingId`, `LiveMarkId`, `TranscriptId` y `SegmentId` como extension types sobre `String` en `lib/core/domain/ids.dart`, siguiendo el patrón ya existente
+- [X] T013 [P] Añadir los fallos nuevos en `lib/core/domain/failures.dart`: `MicrophonePermissionDenied`, `SessionNotInProgressFailure`, `RecordingAlreadyActiveFailure`, `NoActiveRecordingFailure`, `StorageFullFailure`, `ModelUnavailableFailure`, `DownloadFailure`, `TranscriptionFailure`, según [domain-contracts.md](contracts/domain-contracts.md)
 
 ### Esquema versión 2
 
-- [ ] T014 [P] Crear la tabla `Recordings` en `lib/core/database/tables/recordings.dart` con las columnas de [data-model.md](data-model.md): `id`, `session_id` (FK), `project_id`, `file_path` (relativa), `status`, `duration_ms`, `sample_rate`, `channels`, `started_at`, `stopped_at?`, `deleted_at?`, `created_at`, `updated_at`
-- [ ] T015 [P] Crear la tabla `LiveMarks` en `lib/core/database/tables/live_marks.dart` con `id`, `recording_id` (FK), `session_id`, `project_id`, `kind`, `at_ms`, `deleted_at?`, `created_at`, `updated_at`
-- [ ] T016 [P] Crear la tabla `Transcripts` en `lib/core/database/tables/transcripts.dart` con `id`, `recording_id` (FK), `session_id`, `project_id`, `pass`, `status`, `model_id`, `text?`, `failure_reason?`, `completed_at?`, `deleted_at?`, `created_at`, `updated_at`
-- [ ] T017 [P] Crear la tabla `TranscriptSegments` en `lib/core/database/tables/transcript_segments.dart` con `id`, `transcript_id` (FK), `recording_id`, `session_id`, `project_id`, `from_ms`, `to_ms`, `position`, `body`, `deleted_at?`, `created_at`, `updated_at`. ⚠️ La columna se llama `body` y **no** `text`: es la misma limitación de `drift_dev` ya documentada en `script_points.dart`
-- [ ] T018 Registrar las cuatro tablas en `@DriftDatabase` y subir `schemaVersion` a 2 en `lib/core/database/app_database.dart`, añadiendo un `onUpgrade` explícito que cree solo las tablas nuevas y sus índices cuando `from < 2`, sin tocar ninguna tabla del incremento 1
-- [ ] T019 Declarar los seis índices parciales de [data-model.md](data-model.md) en SQL crudo dentro de la migración, incluido el índice **único** `transcripts_one_per_pass` y el índice `segments_recording_time`, que no sirve a ninguna consulta de este incremento y se declara ahora para que el incremento 3 no necesite otra migración
-- [ ] T020 Ejecutar `dart run build_runner build --delete-conflicting-outputs` y luego `dart run drift_dev make-migrations` para generar `drift_schemas/drift_schema_v2.json`, **conservando** el v1 versionado
+- [X] T014 [P] Crear la tabla `Recordings` en `lib/core/database/tables/recordings.dart` con las columnas de [data-model.md](data-model.md): `id`, `session_id` (FK), `project_id`, `file_path` (relativa), `status`, `duration_ms`, `sample_rate`, `channels`, `started_at`, `stopped_at?`, `deleted_at?`, `created_at`, `updated_at`
+- [X] T015 [P] Crear la tabla `LiveMarks` en `lib/core/database/tables/live_marks.dart` con `id`, `recording_id` (FK), `session_id`, `project_id`, `kind`, `at_ms`, `deleted_at?`, `created_at`, `updated_at`
+- [X] T016 [P] Crear la tabla `Transcripts` en `lib/core/database/tables/transcripts.dart` con `id`, `recording_id` (FK), `session_id`, `project_id`, `pass`, `status`, `model_id`, `text?`, `failure_reason?`, `completed_at?`, `deleted_at?`, `created_at`, `updated_at`
+- [X] T017 [P] Crear la tabla `TranscriptSegments` en `lib/core/database/tables/transcript_segments.dart` con `id`, `transcript_id` (FK), `recording_id`, `session_id`, `project_id`, `from_ms`, `to_ms`, `position`, `body`, `deleted_at?`, `created_at`, `updated_at`. ⚠️ La columna se llama `body` y **no** `text`: es la misma limitación de `drift_dev` ya documentada en `script_points.dart`
+- [X] T018 Registrar las cuatro tablas en `@DriftDatabase` y subir `schemaVersion` a 2 en `lib/core/database/app_database.dart`, añadiendo un `onUpgrade` explícito que cree solo las tablas nuevas y sus índices cuando `from < 2`, sin tocar ninguna tabla del incremento 1
+- [X] T019 Declarar los seis índices parciales de [data-model.md](data-model.md) en SQL crudo dentro de la migración, incluido el índice **único** `transcripts_one_per_pass` y el índice `segments_recording_time`, que no sirve a ninguna consulta de este incremento y se declara ahora para que el incremento 3 no necesite otra migración
+- [X] T020 Ejecutar `dart run build_runner build --delete-conflicting-outputs` y luego `dart run drift_dev make-migrations` para generar `drift_schemas/drift_schema_v2.json`, **conservando** el v1 versionado
 
 ### Contratos de infraestructura
 
-- [ ] T021 [P] Declarar `AudioRecorder` y `RecorderState` en `lib/features/recordings/domain/contracts/audio_recorder.dart` según [domain-contracts.md](contracts/domain-contracts.md)
-- [ ] T022 [P] Declarar `WavSink` en `lib/features/recordings/domain/contracts/wav_sink.dart`
-- [ ] T023 [P] Declarar `AudioPlayback` en `lib/features/recordings/domain/contracts/audio_playback.dart`
-- [ ] T024 [P] Declarar `Transcriber`, `RawSegment`, `LiveTranscription` y `TranscriptionModel` en `lib/features/transcription/domain/contracts/transcriber.dart`
-- [ ] T025 [P] Declarar `ModelRepository`, `DownloadProgress` y `DownloadState` en `lib/features/transcription/domain/contracts/model_repository.dart`
+- [X] T021 [P] Declarar `AudioRecorder` y `RecorderState` en `lib/features/recordings/domain/contracts/audio_recorder.dart` según [domain-contracts.md](contracts/domain-contracts.md)
+- [X] T022 [P] Declarar `WavSink` en `lib/features/recordings/domain/contracts/wav_sink.dart`
+- [X] T023 [P] Declarar `AudioPlayback` en `lib/features/recordings/domain/contracts/audio_playback.dart`
+- [X] T024 [P] Declarar `Transcriber`, `RawSegment`, `LiveTranscription` y `TranscriptionModel` en `lib/features/transcription/domain/contracts/transcriber.dart`
+- [X] T025 [P] Declarar `ModelRepository`, `DownloadProgress` y `DownloadState` en `lib/features/transcription/domain/contracts/model_repository.dart`
 
 ### Andamiaje de pruebas
 
-- [ ] T026 [P] Escribir los dobles de prueba en `test/support/fake_audio_recorder.dart`, `test/support/fake_transcriber.dart`, `test/support/fake_audio_playback.dart` y `test/support/fake_model_repository.dart`, controlables desde la prueba (emiten estados y resultados a voluntad). Son los que garantizan que ninguna prueba abra el micrófono ni cargue un modelo
-- [ ] T027 Escribir la prueba de migración en `test/drift/schema_v2_test.dart` usando `SchemaVerifier` de `package:drift_dev/api/migrations_native.dart`: debe verificar **el paso de v1 a v2 con datos poblados**, no solo el esquema final. Verificar solo el resultado dejaría pasar una migración que funciona en instalación limpia y falla en actualización, que es el único caso que importa
+- [X] T026 [P] Escribir los dobles de prueba en `test/support/fake_audio_recorder.dart`, `test/support/fake_transcriber.dart`, `test/support/fake_audio_playback.dart` y `test/support/fake_model_repository.dart`, controlables desde la prueba (emiten estados y resultados a voluntad). Son los que garantizan que ninguna prueba abra el micrófono ni cargue un modelo
+- [X] T027 Escribir la prueba de migración en `test/drift/schema_v2_test.dart` usando `SchemaVerifier` de `package:drift_dev/api/migrations_native.dart`: debe verificar **el paso de v1 a v2 con datos poblados**, no solo el esquema final. Verificar solo el resultado dejaría pasar una migración que funciona en instalación limpia y falla en actualización, que es el único caso que importa
 
 **Checkpoint**: la base migra de v1 a v2 sin pérdida, los contratos compilan y los dobles están
 listos. Las historias pueden empezar.

@@ -32,3 +32,36 @@ final class NotFoundFailure extends Failure {
 final class StorageFailure extends Failure {
   const StorageFailure(super.message);
 }
+
+/// Incremento 2 — captura y transcripción. Ver contracts/domain-contracts.md.
+final class MicrophonePermissionDenied extends Failure {
+  const MicrophonePermissionDenied(super.message);
+}
+
+final class SessionNotInProgressFailure extends Failure {
+  const SessionNotInProgressFailure(super.message);
+}
+
+final class RecordingAlreadyActiveFailure extends Failure {
+  const RecordingAlreadyActiveFailure(super.message);
+}
+
+final class NoActiveRecordingFailure extends Failure {
+  const NoActiveRecordingFailure(super.message);
+}
+
+final class StorageFullFailure extends Failure {
+  const StorageFullFailure(super.message);
+}
+
+final class ModelUnavailableFailure extends Failure {
+  const ModelUnavailableFailure(super.message);
+}
+
+final class DownloadFailure extends Failure {
+  const DownloadFailure(super.message);
+}
+
+final class TranscriptionFailure extends Failure {
+  const TranscriptionFailure(super.message);
+}

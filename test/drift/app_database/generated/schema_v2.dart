@@ -3172,8 +3172,2298 @@ class AuditEntriesCompanion extends UpdateCompanion<AuditEntriesData> {
   }
 }
 
-class DatabaseAtV1 extends GeneratedDatabase {
-  DatabaseAtV1(QueryExecutor e) : super(e);
+class Recordings extends Table with TableInfo<Recordings, RecordingsData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Recordings(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL REFERENCES sessions(id)',
+  );
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL REFERENCES projects(id)',
+  );
+  late final GeneratedColumn<String> filePath = GeneratedColumn<String>(
+    'file_path',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT \'recording\'',
+    defaultValue: const CustomExpression('\'recording\''),
+  );
+  late final GeneratedColumn<int> durationMs = GeneratedColumn<int>(
+    'duration_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT 0',
+    defaultValue: const CustomExpression('0'),
+  );
+  late final GeneratedColumn<int> sampleRate = GeneratedColumn<int>(
+    'sample_rate',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT 16000',
+    defaultValue: const CustomExpression('16000'),
+  );
+  late final GeneratedColumn<int> channels = GeneratedColumn<int>(
+    'channels',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT 1',
+    defaultValue: const CustomExpression('1'),
+  );
+  late final GeneratedColumn<int> startedAt = GeneratedColumn<int>(
+    'started_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> stoppedAt = GeneratedColumn<int>(
+    'stopped_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    sessionId,
+    projectId,
+    filePath,
+    status,
+    durationMs,
+    sampleRate,
+    channels,
+    startedAt,
+    stoppedAt,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'recordings';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RecordingsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RecordingsData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      filePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_path'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      durationMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_ms'],
+      )!,
+      sampleRate: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sample_rate'],
+      )!,
+      channels: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}channels'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}started_at'],
+      )!,
+      stoppedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}stopped_at'],
+      ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  Recordings createAlias(String alias) {
+    return Recordings(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['PRIMARY KEY(id)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class RecordingsData extends DataClass implements Insertable<RecordingsData> {
+  final String id;
+  final String sessionId;
+  final String projectId;
+  final String filePath;
+  final String status;
+  final int durationMs;
+  final int sampleRate;
+  final int channels;
+  final int startedAt;
+  final int? stoppedAt;
+  final int? deletedAt;
+  final int createdAt;
+  final int updatedAt;
+  const RecordingsData({
+    required this.id,
+    required this.sessionId,
+    required this.projectId,
+    required this.filePath,
+    required this.status,
+    required this.durationMs,
+    required this.sampleRate,
+    required this.channels,
+    required this.startedAt,
+    this.stoppedAt,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['session_id'] = Variable<String>(sessionId);
+    map['project_id'] = Variable<String>(projectId);
+    map['file_path'] = Variable<String>(filePath);
+    map['status'] = Variable<String>(status);
+    map['duration_ms'] = Variable<int>(durationMs);
+    map['sample_rate'] = Variable<int>(sampleRate);
+    map['channels'] = Variable<int>(channels);
+    map['started_at'] = Variable<int>(startedAt);
+    if (!nullToAbsent || stoppedAt != null) {
+      map['stopped_at'] = Variable<int>(stoppedAt);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    return map;
+  }
+
+  RecordingsCompanion toCompanion(bool nullToAbsent) {
+    return RecordingsCompanion(
+      id: Value(id),
+      sessionId: Value(sessionId),
+      projectId: Value(projectId),
+      filePath: Value(filePath),
+      status: Value(status),
+      durationMs: Value(durationMs),
+      sampleRate: Value(sampleRate),
+      channels: Value(channels),
+      startedAt: Value(startedAt),
+      stoppedAt: stoppedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stoppedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory RecordingsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RecordingsData(
+      id: serializer.fromJson<String>(json['id']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      filePath: serializer.fromJson<String>(json['filePath']),
+      status: serializer.fromJson<String>(json['status']),
+      durationMs: serializer.fromJson<int>(json['durationMs']),
+      sampleRate: serializer.fromJson<int>(json['sampleRate']),
+      channels: serializer.fromJson<int>(json['channels']),
+      startedAt: serializer.fromJson<int>(json['startedAt']),
+      stoppedAt: serializer.fromJson<int?>(json['stoppedAt']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'projectId': serializer.toJson<String>(projectId),
+      'filePath': serializer.toJson<String>(filePath),
+      'status': serializer.toJson<String>(status),
+      'durationMs': serializer.toJson<int>(durationMs),
+      'sampleRate': serializer.toJson<int>(sampleRate),
+      'channels': serializer.toJson<int>(channels),
+      'startedAt': serializer.toJson<int>(startedAt),
+      'stoppedAt': serializer.toJson<int?>(stoppedAt),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+    };
+  }
+
+  RecordingsData copyWith({
+    String? id,
+    String? sessionId,
+    String? projectId,
+    String? filePath,
+    String? status,
+    int? durationMs,
+    int? sampleRate,
+    int? channels,
+    int? startedAt,
+    Value<int?> stoppedAt = const Value.absent(),
+    Value<int?> deletedAt = const Value.absent(),
+    int? createdAt,
+    int? updatedAt,
+  }) => RecordingsData(
+    id: id ?? this.id,
+    sessionId: sessionId ?? this.sessionId,
+    projectId: projectId ?? this.projectId,
+    filePath: filePath ?? this.filePath,
+    status: status ?? this.status,
+    durationMs: durationMs ?? this.durationMs,
+    sampleRate: sampleRate ?? this.sampleRate,
+    channels: channels ?? this.channels,
+    startedAt: startedAt ?? this.startedAt,
+    stoppedAt: stoppedAt.present ? stoppedAt.value : this.stoppedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  RecordingsData copyWithCompanion(RecordingsCompanion data) {
+    return RecordingsData(
+      id: data.id.present ? data.id.value : this.id,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      filePath: data.filePath.present ? data.filePath.value : this.filePath,
+      status: data.status.present ? data.status.value : this.status,
+      durationMs: data.durationMs.present
+          ? data.durationMs.value
+          : this.durationMs,
+      sampleRate: data.sampleRate.present
+          ? data.sampleRate.value
+          : this.sampleRate,
+      channels: data.channels.present ? data.channels.value : this.channels,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+      stoppedAt: data.stoppedAt.present ? data.stoppedAt.value : this.stoppedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecordingsData(')
+          ..write('id: $id, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('filePath: $filePath, ')
+          ..write('status: $status, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('sampleRate: $sampleRate, ')
+          ..write('channels: $channels, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('stoppedAt: $stoppedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    sessionId,
+    projectId,
+    filePath,
+    status,
+    durationMs,
+    sampleRate,
+    channels,
+    startedAt,
+    stoppedAt,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RecordingsData &&
+          other.id == this.id &&
+          other.sessionId == this.sessionId &&
+          other.projectId == this.projectId &&
+          other.filePath == this.filePath &&
+          other.status == this.status &&
+          other.durationMs == this.durationMs &&
+          other.sampleRate == this.sampleRate &&
+          other.channels == this.channels &&
+          other.startedAt == this.startedAt &&
+          other.stoppedAt == this.stoppedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class RecordingsCompanion extends UpdateCompanion<RecordingsData> {
+  final Value<String> id;
+  final Value<String> sessionId;
+  final Value<String> projectId;
+  final Value<String> filePath;
+  final Value<String> status;
+  final Value<int> durationMs;
+  final Value<int> sampleRate;
+  final Value<int> channels;
+  final Value<int> startedAt;
+  final Value<int?> stoppedAt;
+  final Value<int?> deletedAt;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int> rowid;
+  const RecordingsCompanion({
+    this.id = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.filePath = const Value.absent(),
+    this.status = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    this.sampleRate = const Value.absent(),
+    this.channels = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.stoppedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RecordingsCompanion.insert({
+    required String id,
+    required String sessionId,
+    required String projectId,
+    required String filePath,
+    this.status = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    this.sampleRate = const Value.absent(),
+    this.channels = const Value.absent(),
+    required int startedAt,
+    this.stoppedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    required int createdAt,
+    required int updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       sessionId = Value(sessionId),
+       projectId = Value(projectId),
+       filePath = Value(filePath),
+       startedAt = Value(startedAt),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<RecordingsData> custom({
+    Expression<String>? id,
+    Expression<String>? sessionId,
+    Expression<String>? projectId,
+    Expression<String>? filePath,
+    Expression<String>? status,
+    Expression<int>? durationMs,
+    Expression<int>? sampleRate,
+    Expression<int>? channels,
+    Expression<int>? startedAt,
+    Expression<int>? stoppedAt,
+    Expression<int>? deletedAt,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (sessionId != null) 'session_id': sessionId,
+      if (projectId != null) 'project_id': projectId,
+      if (filePath != null) 'file_path': filePath,
+      if (status != null) 'status': status,
+      if (durationMs != null) 'duration_ms': durationMs,
+      if (sampleRate != null) 'sample_rate': sampleRate,
+      if (channels != null) 'channels': channels,
+      if (startedAt != null) 'started_at': startedAt,
+      if (stoppedAt != null) 'stopped_at': stoppedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RecordingsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? sessionId,
+    Value<String>? projectId,
+    Value<String>? filePath,
+    Value<String>? status,
+    Value<int>? durationMs,
+    Value<int>? sampleRate,
+    Value<int>? channels,
+    Value<int>? startedAt,
+    Value<int?>? stoppedAt,
+    Value<int?>? deletedAt,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return RecordingsCompanion(
+      id: id ?? this.id,
+      sessionId: sessionId ?? this.sessionId,
+      projectId: projectId ?? this.projectId,
+      filePath: filePath ?? this.filePath,
+      status: status ?? this.status,
+      durationMs: durationMs ?? this.durationMs,
+      sampleRate: sampleRate ?? this.sampleRate,
+      channels: channels ?? this.channels,
+      startedAt: startedAt ?? this.startedAt,
+      stoppedAt: stoppedAt ?? this.stoppedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (filePath.present) {
+      map['file_path'] = Variable<String>(filePath.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (durationMs.present) {
+      map['duration_ms'] = Variable<int>(durationMs.value);
+    }
+    if (sampleRate.present) {
+      map['sample_rate'] = Variable<int>(sampleRate.value);
+    }
+    if (channels.present) {
+      map['channels'] = Variable<int>(channels.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<int>(startedAt.value);
+    }
+    if (stoppedAt.present) {
+      map['stopped_at'] = Variable<int>(stoppedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecordingsCompanion(')
+          ..write('id: $id, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('filePath: $filePath, ')
+          ..write('status: $status, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('sampleRate: $sampleRate, ')
+          ..write('channels: $channels, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('stoppedAt: $stoppedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class LiveMarks extends Table with TableInfo<LiveMarks, LiveMarksData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  LiveMarks(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> recordingId = GeneratedColumn<String>(
+    'recording_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL REFERENCES recordings(id)',
+  );
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> atMs = GeneratedColumn<int>(
+    'at_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    recordingId,
+    sessionId,
+    projectId,
+    kind,
+    atMs,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'live_marks';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LiveMarksData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LiveMarksData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      recordingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recording_id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      atMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}at_ms'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  LiveMarks createAlias(String alias) {
+    return LiveMarks(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['PRIMARY KEY(id)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class LiveMarksData extends DataClass implements Insertable<LiveMarksData> {
+  final String id;
+  final String recordingId;
+  final String sessionId;
+  final String projectId;
+  final String kind;
+  final int atMs;
+  final int? deletedAt;
+  final int createdAt;
+  final int updatedAt;
+  const LiveMarksData({
+    required this.id,
+    required this.recordingId,
+    required this.sessionId,
+    required this.projectId,
+    required this.kind,
+    required this.atMs,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['recording_id'] = Variable<String>(recordingId);
+    map['session_id'] = Variable<String>(sessionId);
+    map['project_id'] = Variable<String>(projectId);
+    map['kind'] = Variable<String>(kind);
+    map['at_ms'] = Variable<int>(atMs);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    return map;
+  }
+
+  LiveMarksCompanion toCompanion(bool nullToAbsent) {
+    return LiveMarksCompanion(
+      id: Value(id),
+      recordingId: Value(recordingId),
+      sessionId: Value(sessionId),
+      projectId: Value(projectId),
+      kind: Value(kind),
+      atMs: Value(atMs),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LiveMarksData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LiveMarksData(
+      id: serializer.fromJson<String>(json['id']),
+      recordingId: serializer.fromJson<String>(json['recordingId']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      atMs: serializer.fromJson<int>(json['atMs']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'recordingId': serializer.toJson<String>(recordingId),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'projectId': serializer.toJson<String>(projectId),
+      'kind': serializer.toJson<String>(kind),
+      'atMs': serializer.toJson<int>(atMs),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+    };
+  }
+
+  LiveMarksData copyWith({
+    String? id,
+    String? recordingId,
+    String? sessionId,
+    String? projectId,
+    String? kind,
+    int? atMs,
+    Value<int?> deletedAt = const Value.absent(),
+    int? createdAt,
+    int? updatedAt,
+  }) => LiveMarksData(
+    id: id ?? this.id,
+    recordingId: recordingId ?? this.recordingId,
+    sessionId: sessionId ?? this.sessionId,
+    projectId: projectId ?? this.projectId,
+    kind: kind ?? this.kind,
+    atMs: atMs ?? this.atMs,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LiveMarksData copyWithCompanion(LiveMarksCompanion data) {
+    return LiveMarksData(
+      id: data.id.present ? data.id.value : this.id,
+      recordingId: data.recordingId.present
+          ? data.recordingId.value
+          : this.recordingId,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      atMs: data.atMs.present ? data.atMs.value : this.atMs,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LiveMarksData(')
+          ..write('id: $id, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('kind: $kind, ')
+          ..write('atMs: $atMs, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    recordingId,
+    sessionId,
+    projectId,
+    kind,
+    atMs,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LiveMarksData &&
+          other.id == this.id &&
+          other.recordingId == this.recordingId &&
+          other.sessionId == this.sessionId &&
+          other.projectId == this.projectId &&
+          other.kind == this.kind &&
+          other.atMs == this.atMs &&
+          other.deletedAt == this.deletedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LiveMarksCompanion extends UpdateCompanion<LiveMarksData> {
+  final Value<String> id;
+  final Value<String> recordingId;
+  final Value<String> sessionId;
+  final Value<String> projectId;
+  final Value<String> kind;
+  final Value<int> atMs;
+  final Value<int?> deletedAt;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int> rowid;
+  const LiveMarksCompanion({
+    this.id = const Value.absent(),
+    this.recordingId = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.atMs = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LiveMarksCompanion.insert({
+    required String id,
+    required String recordingId,
+    required String sessionId,
+    required String projectId,
+    required String kind,
+    required int atMs,
+    this.deletedAt = const Value.absent(),
+    required int createdAt,
+    required int updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       recordingId = Value(recordingId),
+       sessionId = Value(sessionId),
+       projectId = Value(projectId),
+       kind = Value(kind),
+       atMs = Value(atMs),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<LiveMarksData> custom({
+    Expression<String>? id,
+    Expression<String>? recordingId,
+    Expression<String>? sessionId,
+    Expression<String>? projectId,
+    Expression<String>? kind,
+    Expression<int>? atMs,
+    Expression<int>? deletedAt,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (recordingId != null) 'recording_id': recordingId,
+      if (sessionId != null) 'session_id': sessionId,
+      if (projectId != null) 'project_id': projectId,
+      if (kind != null) 'kind': kind,
+      if (atMs != null) 'at_ms': atMs,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LiveMarksCompanion copyWith({
+    Value<String>? id,
+    Value<String>? recordingId,
+    Value<String>? sessionId,
+    Value<String>? projectId,
+    Value<String>? kind,
+    Value<int>? atMs,
+    Value<int?>? deletedAt,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LiveMarksCompanion(
+      id: id ?? this.id,
+      recordingId: recordingId ?? this.recordingId,
+      sessionId: sessionId ?? this.sessionId,
+      projectId: projectId ?? this.projectId,
+      kind: kind ?? this.kind,
+      atMs: atMs ?? this.atMs,
+      deletedAt: deletedAt ?? this.deletedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (recordingId.present) {
+      map['recording_id'] = Variable<String>(recordingId.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (atMs.present) {
+      map['at_ms'] = Variable<int>(atMs.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LiveMarksCompanion(')
+          ..write('id: $id, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('kind: $kind, ')
+          ..write('atMs: $atMs, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Transcripts extends Table with TableInfo<Transcripts, TranscriptsData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Transcripts(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> recordingId = GeneratedColumn<String>(
+    'recording_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL REFERENCES recordings(id)',
+  );
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> pass = GeneratedColumn<String>(
+    'pass',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT \'pending\'',
+    defaultValue: const CustomExpression('\'pending\''),
+  );
+  late final GeneratedColumn<String> modelId = GeneratedColumn<String>(
+    'model_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<String> failureReason = GeneratedColumn<String>(
+    'failure_reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<int> completedAt = GeneratedColumn<int>(
+    'completed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    recordingId,
+    sessionId,
+    projectId,
+    pass,
+    status,
+    modelId,
+    body,
+    failureReason,
+    completedAt,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'transcripts';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TranscriptsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TranscriptsData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      recordingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recording_id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      pass: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pass'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      modelId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}model_id'],
+      )!,
+      body: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body'],
+      ),
+      failureReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}failure_reason'],
+      ),
+      completedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}completed_at'],
+      ),
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  Transcripts createAlias(String alias) {
+    return Transcripts(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['PRIMARY KEY(id)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class TranscriptsData extends DataClass implements Insertable<TranscriptsData> {
+  final String id;
+  final String recordingId;
+  final String sessionId;
+  final String projectId;
+  final String pass;
+  final String status;
+  final String modelId;
+  final String? body;
+  final String? failureReason;
+  final int? completedAt;
+  final int? deletedAt;
+  final int createdAt;
+  final int updatedAt;
+  const TranscriptsData({
+    required this.id,
+    required this.recordingId,
+    required this.sessionId,
+    required this.projectId,
+    required this.pass,
+    required this.status,
+    required this.modelId,
+    this.body,
+    this.failureReason,
+    this.completedAt,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['recording_id'] = Variable<String>(recordingId);
+    map['session_id'] = Variable<String>(sessionId);
+    map['project_id'] = Variable<String>(projectId);
+    map['pass'] = Variable<String>(pass);
+    map['status'] = Variable<String>(status);
+    map['model_id'] = Variable<String>(modelId);
+    if (!nullToAbsent || body != null) {
+      map['body'] = Variable<String>(body);
+    }
+    if (!nullToAbsent || failureReason != null) {
+      map['failure_reason'] = Variable<String>(failureReason);
+    }
+    if (!nullToAbsent || completedAt != null) {
+      map['completed_at'] = Variable<int>(completedAt);
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    return map;
+  }
+
+  TranscriptsCompanion toCompanion(bool nullToAbsent) {
+    return TranscriptsCompanion(
+      id: Value(id),
+      recordingId: Value(recordingId),
+      sessionId: Value(sessionId),
+      projectId: Value(projectId),
+      pass: Value(pass),
+      status: Value(status),
+      modelId: Value(modelId),
+      body: body == null && nullToAbsent ? const Value.absent() : Value(body),
+      failureReason: failureReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(failureReason),
+      completedAt: completedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory TranscriptsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TranscriptsData(
+      id: serializer.fromJson<String>(json['id']),
+      recordingId: serializer.fromJson<String>(json['recordingId']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      pass: serializer.fromJson<String>(json['pass']),
+      status: serializer.fromJson<String>(json['status']),
+      modelId: serializer.fromJson<String>(json['modelId']),
+      body: serializer.fromJson<String?>(json['body']),
+      failureReason: serializer.fromJson<String?>(json['failureReason']),
+      completedAt: serializer.fromJson<int?>(json['completedAt']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'recordingId': serializer.toJson<String>(recordingId),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'projectId': serializer.toJson<String>(projectId),
+      'pass': serializer.toJson<String>(pass),
+      'status': serializer.toJson<String>(status),
+      'modelId': serializer.toJson<String>(modelId),
+      'body': serializer.toJson<String?>(body),
+      'failureReason': serializer.toJson<String?>(failureReason),
+      'completedAt': serializer.toJson<int?>(completedAt),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+    };
+  }
+
+  TranscriptsData copyWith({
+    String? id,
+    String? recordingId,
+    String? sessionId,
+    String? projectId,
+    String? pass,
+    String? status,
+    String? modelId,
+    Value<String?> body = const Value.absent(),
+    Value<String?> failureReason = const Value.absent(),
+    Value<int?> completedAt = const Value.absent(),
+    Value<int?> deletedAt = const Value.absent(),
+    int? createdAt,
+    int? updatedAt,
+  }) => TranscriptsData(
+    id: id ?? this.id,
+    recordingId: recordingId ?? this.recordingId,
+    sessionId: sessionId ?? this.sessionId,
+    projectId: projectId ?? this.projectId,
+    pass: pass ?? this.pass,
+    status: status ?? this.status,
+    modelId: modelId ?? this.modelId,
+    body: body.present ? body.value : this.body,
+    failureReason: failureReason.present
+        ? failureReason.value
+        : this.failureReason,
+    completedAt: completedAt.present ? completedAt.value : this.completedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  TranscriptsData copyWithCompanion(TranscriptsCompanion data) {
+    return TranscriptsData(
+      id: data.id.present ? data.id.value : this.id,
+      recordingId: data.recordingId.present
+          ? data.recordingId.value
+          : this.recordingId,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      pass: data.pass.present ? data.pass.value : this.pass,
+      status: data.status.present ? data.status.value : this.status,
+      modelId: data.modelId.present ? data.modelId.value : this.modelId,
+      body: data.body.present ? data.body.value : this.body,
+      failureReason: data.failureReason.present
+          ? data.failureReason.value
+          : this.failureReason,
+      completedAt: data.completedAt.present
+          ? data.completedAt.value
+          : this.completedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TranscriptsData(')
+          ..write('id: $id, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('pass: $pass, ')
+          ..write('status: $status, ')
+          ..write('modelId: $modelId, ')
+          ..write('body: $body, ')
+          ..write('failureReason: $failureReason, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    recordingId,
+    sessionId,
+    projectId,
+    pass,
+    status,
+    modelId,
+    body,
+    failureReason,
+    completedAt,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TranscriptsData &&
+          other.id == this.id &&
+          other.recordingId == this.recordingId &&
+          other.sessionId == this.sessionId &&
+          other.projectId == this.projectId &&
+          other.pass == this.pass &&
+          other.status == this.status &&
+          other.modelId == this.modelId &&
+          other.body == this.body &&
+          other.failureReason == this.failureReason &&
+          other.completedAt == this.completedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class TranscriptsCompanion extends UpdateCompanion<TranscriptsData> {
+  final Value<String> id;
+  final Value<String> recordingId;
+  final Value<String> sessionId;
+  final Value<String> projectId;
+  final Value<String> pass;
+  final Value<String> status;
+  final Value<String> modelId;
+  final Value<String?> body;
+  final Value<String?> failureReason;
+  final Value<int?> completedAt;
+  final Value<int?> deletedAt;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int> rowid;
+  const TranscriptsCompanion({
+    this.id = const Value.absent(),
+    this.recordingId = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.pass = const Value.absent(),
+    this.status = const Value.absent(),
+    this.modelId = const Value.absent(),
+    this.body = const Value.absent(),
+    this.failureReason = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TranscriptsCompanion.insert({
+    required String id,
+    required String recordingId,
+    required String sessionId,
+    required String projectId,
+    required String pass,
+    this.status = const Value.absent(),
+    required String modelId,
+    this.body = const Value.absent(),
+    this.failureReason = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    required int createdAt,
+    required int updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       recordingId = Value(recordingId),
+       sessionId = Value(sessionId),
+       projectId = Value(projectId),
+       pass = Value(pass),
+       modelId = Value(modelId),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<TranscriptsData> custom({
+    Expression<String>? id,
+    Expression<String>? recordingId,
+    Expression<String>? sessionId,
+    Expression<String>? projectId,
+    Expression<String>? pass,
+    Expression<String>? status,
+    Expression<String>? modelId,
+    Expression<String>? body,
+    Expression<String>? failureReason,
+    Expression<int>? completedAt,
+    Expression<int>? deletedAt,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (recordingId != null) 'recording_id': recordingId,
+      if (sessionId != null) 'session_id': sessionId,
+      if (projectId != null) 'project_id': projectId,
+      if (pass != null) 'pass': pass,
+      if (status != null) 'status': status,
+      if (modelId != null) 'model_id': modelId,
+      if (body != null) 'body': body,
+      if (failureReason != null) 'failure_reason': failureReason,
+      if (completedAt != null) 'completed_at': completedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TranscriptsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? recordingId,
+    Value<String>? sessionId,
+    Value<String>? projectId,
+    Value<String>? pass,
+    Value<String>? status,
+    Value<String>? modelId,
+    Value<String?>? body,
+    Value<String?>? failureReason,
+    Value<int?>? completedAt,
+    Value<int?>? deletedAt,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return TranscriptsCompanion(
+      id: id ?? this.id,
+      recordingId: recordingId ?? this.recordingId,
+      sessionId: sessionId ?? this.sessionId,
+      projectId: projectId ?? this.projectId,
+      pass: pass ?? this.pass,
+      status: status ?? this.status,
+      modelId: modelId ?? this.modelId,
+      body: body ?? this.body,
+      failureReason: failureReason ?? this.failureReason,
+      completedAt: completedAt ?? this.completedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (recordingId.present) {
+      map['recording_id'] = Variable<String>(recordingId.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (pass.present) {
+      map['pass'] = Variable<String>(pass.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (modelId.present) {
+      map['model_id'] = Variable<String>(modelId.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
+    }
+    if (failureReason.present) {
+      map['failure_reason'] = Variable<String>(failureReason.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<int>(completedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TranscriptsCompanion(')
+          ..write('id: $id, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('pass: $pass, ')
+          ..write('status: $status, ')
+          ..write('modelId: $modelId, ')
+          ..write('body: $body, ')
+          ..write('failureReason: $failureReason, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class TranscriptSegments extends Table
+    with TableInfo<TranscriptSegments, TranscriptSegmentsData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  TranscriptSegments(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> transcriptId = GeneratedColumn<String>(
+    'transcript_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL REFERENCES transcripts(id)',
+  );
+  late final GeneratedColumn<String> recordingId = GeneratedColumn<String>(
+    'recording_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> fromMs = GeneratedColumn<int>(
+    'from_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> toMs = GeneratedColumn<int>(
+    'to_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> deletedAt = GeneratedColumn<int>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    $customConstraints: 'NULL',
+  );
+  late final GeneratedColumn<int> createdAt = GeneratedColumn<int>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    $customConstraints: 'NOT NULL',
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    transcriptId,
+    recordingId,
+    sessionId,
+    projectId,
+    fromMs,
+    toMs,
+    position,
+    body,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'transcript_segments';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TranscriptSegmentsData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TranscriptSegmentsData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      transcriptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transcript_id'],
+      )!,
+      recordingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recording_id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      fromMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}from_ms'],
+      )!,
+      toMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}to_ms'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
+      body: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  TranscriptSegments createAlias(String alias) {
+    return TranscriptSegments(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['PRIMARY KEY(id)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class TranscriptSegmentsData extends DataClass
+    implements Insertable<TranscriptSegmentsData> {
+  final String id;
+  final String transcriptId;
+  final String recordingId;
+  final String sessionId;
+  final String projectId;
+  final int fromMs;
+  final int toMs;
+  final int position;
+  final String body;
+  final int? deletedAt;
+  final int createdAt;
+  final int updatedAt;
+  const TranscriptSegmentsData({
+    required this.id,
+    required this.transcriptId,
+    required this.recordingId,
+    required this.sessionId,
+    required this.projectId,
+    required this.fromMs,
+    required this.toMs,
+    required this.position,
+    required this.body,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['transcript_id'] = Variable<String>(transcriptId);
+    map['recording_id'] = Variable<String>(recordingId);
+    map['session_id'] = Variable<String>(sessionId);
+    map['project_id'] = Variable<String>(projectId);
+    map['from_ms'] = Variable<int>(fromMs);
+    map['to_ms'] = Variable<int>(toMs);
+    map['position'] = Variable<int>(position);
+    map['body'] = Variable<String>(body);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<int>(deletedAt);
+    }
+    map['created_at'] = Variable<int>(createdAt);
+    map['updated_at'] = Variable<int>(updatedAt);
+    return map;
+  }
+
+  TranscriptSegmentsCompanion toCompanion(bool nullToAbsent) {
+    return TranscriptSegmentsCompanion(
+      id: Value(id),
+      transcriptId: Value(transcriptId),
+      recordingId: Value(recordingId),
+      sessionId: Value(sessionId),
+      projectId: Value(projectId),
+      fromMs: Value(fromMs),
+      toMs: Value(toMs),
+      position: Value(position),
+      body: Value(body),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory TranscriptSegmentsData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TranscriptSegmentsData(
+      id: serializer.fromJson<String>(json['id']),
+      transcriptId: serializer.fromJson<String>(json['transcriptId']),
+      recordingId: serializer.fromJson<String>(json['recordingId']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      fromMs: serializer.fromJson<int>(json['fromMs']),
+      toMs: serializer.fromJson<int>(json['toMs']),
+      position: serializer.fromJson<int>(json['position']),
+      body: serializer.fromJson<String>(json['body']),
+      deletedAt: serializer.fromJson<int?>(json['deletedAt']),
+      createdAt: serializer.fromJson<int>(json['createdAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'transcriptId': serializer.toJson<String>(transcriptId),
+      'recordingId': serializer.toJson<String>(recordingId),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'projectId': serializer.toJson<String>(projectId),
+      'fromMs': serializer.toJson<int>(fromMs),
+      'toMs': serializer.toJson<int>(toMs),
+      'position': serializer.toJson<int>(position),
+      'body': serializer.toJson<String>(body),
+      'deletedAt': serializer.toJson<int?>(deletedAt),
+      'createdAt': serializer.toJson<int>(createdAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
+    };
+  }
+
+  TranscriptSegmentsData copyWith({
+    String? id,
+    String? transcriptId,
+    String? recordingId,
+    String? sessionId,
+    String? projectId,
+    int? fromMs,
+    int? toMs,
+    int? position,
+    String? body,
+    Value<int?> deletedAt = const Value.absent(),
+    int? createdAt,
+    int? updatedAt,
+  }) => TranscriptSegmentsData(
+    id: id ?? this.id,
+    transcriptId: transcriptId ?? this.transcriptId,
+    recordingId: recordingId ?? this.recordingId,
+    sessionId: sessionId ?? this.sessionId,
+    projectId: projectId ?? this.projectId,
+    fromMs: fromMs ?? this.fromMs,
+    toMs: toMs ?? this.toMs,
+    position: position ?? this.position,
+    body: body ?? this.body,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  TranscriptSegmentsData copyWithCompanion(TranscriptSegmentsCompanion data) {
+    return TranscriptSegmentsData(
+      id: data.id.present ? data.id.value : this.id,
+      transcriptId: data.transcriptId.present
+          ? data.transcriptId.value
+          : this.transcriptId,
+      recordingId: data.recordingId.present
+          ? data.recordingId.value
+          : this.recordingId,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      fromMs: data.fromMs.present ? data.fromMs.value : this.fromMs,
+      toMs: data.toMs.present ? data.toMs.value : this.toMs,
+      position: data.position.present ? data.position.value : this.position,
+      body: data.body.present ? data.body.value : this.body,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TranscriptSegmentsData(')
+          ..write('id: $id, ')
+          ..write('transcriptId: $transcriptId, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('fromMs: $fromMs, ')
+          ..write('toMs: $toMs, ')
+          ..write('position: $position, ')
+          ..write('body: $body, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    transcriptId,
+    recordingId,
+    sessionId,
+    projectId,
+    fromMs,
+    toMs,
+    position,
+    body,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TranscriptSegmentsData &&
+          other.id == this.id &&
+          other.transcriptId == this.transcriptId &&
+          other.recordingId == this.recordingId &&
+          other.sessionId == this.sessionId &&
+          other.projectId == this.projectId &&
+          other.fromMs == this.fromMs &&
+          other.toMs == this.toMs &&
+          other.position == this.position &&
+          other.body == this.body &&
+          other.deletedAt == this.deletedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class TranscriptSegmentsCompanion
+    extends UpdateCompanion<TranscriptSegmentsData> {
+  final Value<String> id;
+  final Value<String> transcriptId;
+  final Value<String> recordingId;
+  final Value<String> sessionId;
+  final Value<String> projectId;
+  final Value<int> fromMs;
+  final Value<int> toMs;
+  final Value<int> position;
+  final Value<String> body;
+  final Value<int?> deletedAt;
+  final Value<int> createdAt;
+  final Value<int> updatedAt;
+  final Value<int> rowid;
+  const TranscriptSegmentsCompanion({
+    this.id = const Value.absent(),
+    this.transcriptId = const Value.absent(),
+    this.recordingId = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.fromMs = const Value.absent(),
+    this.toMs = const Value.absent(),
+    this.position = const Value.absent(),
+    this.body = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TranscriptSegmentsCompanion.insert({
+    required String id,
+    required String transcriptId,
+    required String recordingId,
+    required String sessionId,
+    required String projectId,
+    required int fromMs,
+    required int toMs,
+    required int position,
+    required String body,
+    this.deletedAt = const Value.absent(),
+    required int createdAt,
+    required int updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       transcriptId = Value(transcriptId),
+       recordingId = Value(recordingId),
+       sessionId = Value(sessionId),
+       projectId = Value(projectId),
+       fromMs = Value(fromMs),
+       toMs = Value(toMs),
+       position = Value(position),
+       body = Value(body),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<TranscriptSegmentsData> custom({
+    Expression<String>? id,
+    Expression<String>? transcriptId,
+    Expression<String>? recordingId,
+    Expression<String>? sessionId,
+    Expression<String>? projectId,
+    Expression<int>? fromMs,
+    Expression<int>? toMs,
+    Expression<int>? position,
+    Expression<String>? body,
+    Expression<int>? deletedAt,
+    Expression<int>? createdAt,
+    Expression<int>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (transcriptId != null) 'transcript_id': transcriptId,
+      if (recordingId != null) 'recording_id': recordingId,
+      if (sessionId != null) 'session_id': sessionId,
+      if (projectId != null) 'project_id': projectId,
+      if (fromMs != null) 'from_ms': fromMs,
+      if (toMs != null) 'to_ms': toMs,
+      if (position != null) 'position': position,
+      if (body != null) 'body': body,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TranscriptSegmentsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? transcriptId,
+    Value<String>? recordingId,
+    Value<String>? sessionId,
+    Value<String>? projectId,
+    Value<int>? fromMs,
+    Value<int>? toMs,
+    Value<int>? position,
+    Value<String>? body,
+    Value<int?>? deletedAt,
+    Value<int>? createdAt,
+    Value<int>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return TranscriptSegmentsCompanion(
+      id: id ?? this.id,
+      transcriptId: transcriptId ?? this.transcriptId,
+      recordingId: recordingId ?? this.recordingId,
+      sessionId: sessionId ?? this.sessionId,
+      projectId: projectId ?? this.projectId,
+      fromMs: fromMs ?? this.fromMs,
+      toMs: toMs ?? this.toMs,
+      position: position ?? this.position,
+      body: body ?? this.body,
+      deletedAt: deletedAt ?? this.deletedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (transcriptId.present) {
+      map['transcript_id'] = Variable<String>(transcriptId.value);
+    }
+    if (recordingId.present) {
+      map['recording_id'] = Variable<String>(recordingId.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (fromMs.present) {
+      map['from_ms'] = Variable<int>(fromMs.value);
+    }
+    if (toMs.present) {
+      map['to_ms'] = Variable<int>(toMs.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<int>(deletedAt.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<int>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<int>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TranscriptSegmentsCompanion(')
+          ..write('id: $id, ')
+          ..write('transcriptId: $transcriptId, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('fromMs: $fromMs, ')
+          ..write('toMs: $toMs, ')
+          ..write('position: $position, ')
+          ..write('body: $body, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class DatabaseAtV2 extends GeneratedDatabase {
+  DatabaseAtV2(QueryExecutor e) : super(e);
   late final Projects projects = Projects(this);
   late final Stakeholders stakeholders = Stakeholders(this);
   late final Sessions sessions = Sessions(this);
@@ -3183,6 +5473,10 @@ class DatabaseAtV1 extends GeneratedDatabase {
   late final ScriptPoints scriptPoints = ScriptPoints(this);
   late final GlossaryTerms glossaryTerms = GlossaryTerms(this);
   late final AuditEntries auditEntries = AuditEntries(this);
+  late final Recordings recordings = Recordings(this);
+  late final LiveMarks liveMarks = LiveMarks(this);
+  late final Transcripts transcripts = Transcripts(this);
+  late final TranscriptSegments transcriptSegments = TranscriptSegments(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3195,7 +5489,11 @@ class DatabaseAtV1 extends GeneratedDatabase {
     scriptPoints,
     glossaryTerms,
     auditEntries,
+    recordings,
+    liveMarks,
+    transcripts,
+    transcriptSegments,
   ];
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 }

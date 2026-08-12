@@ -12,3 +12,11 @@ extension type const ScriptPointId(String value) {}
 extension type const GlossaryTermId(String value) {}
 
 extension type const AuditEntryId(String value) {}
+
+extension type const RecordingId(String value) {}
+
+extension type const LiveMarkId(String value) {}
+
+extension type const TranscriptId(String value) {}
+
+extension type const SegmentId(String value) {}

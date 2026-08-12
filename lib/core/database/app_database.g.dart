@@ -3808,6 +3808,2817 @@ class AuditEntriesCompanion extends UpdateCompanion<AuditEntry> {
   }
 }
 
+class $RecordingsTable extends Recordings
+    with TableInfo<$RecordingsTable, Recording> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RecordingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
+  );
+  @override
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES sessions (id)',
+    ),
+  );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES projects (id)',
+    ),
+  );
+  static const VerificationMeta _filePathMeta = const VerificationMeta(
+    'filePath',
+  );
+  @override
+  late final GeneratedColumn<String> filePath = GeneratedColumn<String>(
+    'file_path',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('recording'),
+  );
+  static const VerificationMeta _durationMsMeta = const VerificationMeta(
+    'durationMs',
+  );
+  @override
+  late final GeneratedColumn<int> durationMs = GeneratedColumn<int>(
+    'duration_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _sampleRateMeta = const VerificationMeta(
+    'sampleRate',
+  );
+  @override
+  late final GeneratedColumn<int> sampleRate = GeneratedColumn<int>(
+    'sample_rate',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(16000),
+  );
+  static const VerificationMeta _channelsMeta = const VerificationMeta(
+    'channels',
+  );
+  @override
+  late final GeneratedColumn<int> channels = GeneratedColumn<int>(
+    'channels',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> startedAt =
+      GeneratedColumn<DateTime>(
+        'started_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($RecordingsTable.$converterstartedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime> stoppedAt =
+      GeneratedColumn<DateTime>(
+        'stopped_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      ).withConverter<DateTime?>($RecordingsTable.$converterstoppedAtn);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime> deletedAt =
+      GeneratedColumn<DateTime>(
+        'deleted_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      ).withConverter<DateTime?>($RecordingsTable.$converterdeletedAtn);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> createdAt =
+      GeneratedColumn<DateTime>(
+        'created_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($RecordingsTable.$convertercreatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> updatedAt =
+      GeneratedColumn<DateTime>(
+        'updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($RecordingsTable.$converterupdatedAt);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    sessionId,
+    projectId,
+    filePath,
+    status,
+    durationMs,
+    sampleRate,
+    channels,
+    startedAt,
+    stoppedAt,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'recordings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Recording> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('session_id')) {
+      context.handle(
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionIdMeta);
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('file_path')) {
+      context.handle(
+        _filePathMeta,
+        filePath.isAcceptableOrUnknown(data['file_path']!, _filePathMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_filePathMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('duration_ms')) {
+      context.handle(
+        _durationMsMeta,
+        durationMs.isAcceptableOrUnknown(data['duration_ms']!, _durationMsMeta),
+      );
+    }
+    if (data.containsKey('sample_rate')) {
+      context.handle(
+        _sampleRateMeta,
+        sampleRate.isAcceptableOrUnknown(data['sample_rate']!, _sampleRateMeta),
+      );
+    }
+    if (data.containsKey('channels')) {
+      context.handle(
+        _channelsMeta,
+        channels.isAcceptableOrUnknown(data['channels']!, _channelsMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Recording map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Recording(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      filePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_path'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      durationMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}duration_ms'],
+      )!,
+      sampleRate: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sample_rate'],
+      )!,
+      channels: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}channels'],
+      )!,
+      startedAt: $RecordingsTable.$converterstartedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}started_at'],
+        )!,
+      ),
+      stoppedAt: $RecordingsTable.$converterstoppedAtn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}stopped_at'],
+        ),
+      ),
+      deletedAt: $RecordingsTable.$converterdeletedAtn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}deleted_at'],
+        ),
+      ),
+      createdAt: $RecordingsTable.$convertercreatedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}created_at'],
+        )!,
+      ),
+      updatedAt: $RecordingsTable.$converterupdatedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}updated_at'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $RecordingsTable createAlias(String alias) {
+    return $RecordingsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<DateTime, DateTime> $converterstartedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime, DateTime> $converterstoppedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterstoppedAtn =
+      NullAwareTypeConverter.wrap($converterstoppedAt);
+  static TypeConverter<DateTime, DateTime> $converterdeletedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterdeletedAtn =
+      NullAwareTypeConverter.wrap($converterdeletedAt);
+  static TypeConverter<DateTime, DateTime> $convertercreatedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime, DateTime> $converterupdatedAt =
+      const UtcDateTimeConverter();
+}
+
+class Recording extends DataClass implements Insertable<Recording> {
+  final String id;
+  final String sessionId;
+  final String projectId;
+  final String filePath;
+  final String status;
+  final int durationMs;
+  final int sampleRate;
+  final int channels;
+  final DateTime startedAt;
+  final DateTime? stoppedAt;
+  final DateTime? deletedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Recording({
+    required this.id,
+    required this.sessionId,
+    required this.projectId,
+    required this.filePath,
+    required this.status,
+    required this.durationMs,
+    required this.sampleRate,
+    required this.channels,
+    required this.startedAt,
+    this.stoppedAt,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['session_id'] = Variable<String>(sessionId);
+    map['project_id'] = Variable<String>(projectId);
+    map['file_path'] = Variable<String>(filePath);
+    map['status'] = Variable<String>(status);
+    map['duration_ms'] = Variable<int>(durationMs);
+    map['sample_rate'] = Variable<int>(sampleRate);
+    map['channels'] = Variable<int>(channels);
+    {
+      map['started_at'] = Variable<DateTime>(
+        $RecordingsTable.$converterstartedAt.toSql(startedAt),
+      );
+    }
+    if (!nullToAbsent || stoppedAt != null) {
+      map['stopped_at'] = Variable<DateTime>(
+        $RecordingsTable.$converterstoppedAtn.toSql(stoppedAt),
+      );
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(
+        $RecordingsTable.$converterdeletedAtn.toSql(deletedAt),
+      );
+    }
+    {
+      map['created_at'] = Variable<DateTime>(
+        $RecordingsTable.$convertercreatedAt.toSql(createdAt),
+      );
+    }
+    {
+      map['updated_at'] = Variable<DateTime>(
+        $RecordingsTable.$converterupdatedAt.toSql(updatedAt),
+      );
+    }
+    return map;
+  }
+
+  RecordingsCompanion toCompanion(bool nullToAbsent) {
+    return RecordingsCompanion(
+      id: Value(id),
+      sessionId: Value(sessionId),
+      projectId: Value(projectId),
+      filePath: Value(filePath),
+      status: Value(status),
+      durationMs: Value(durationMs),
+      sampleRate: Value(sampleRate),
+      channels: Value(channels),
+      startedAt: Value(startedAt),
+      stoppedAt: stoppedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stoppedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Recording.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Recording(
+      id: serializer.fromJson<String>(json['id']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      filePath: serializer.fromJson<String>(json['filePath']),
+      status: serializer.fromJson<String>(json['status']),
+      durationMs: serializer.fromJson<int>(json['durationMs']),
+      sampleRate: serializer.fromJson<int>(json['sampleRate']),
+      channels: serializer.fromJson<int>(json['channels']),
+      startedAt: serializer.fromJson<DateTime>(json['startedAt']),
+      stoppedAt: serializer.fromJson<DateTime?>(json['stoppedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'projectId': serializer.toJson<String>(projectId),
+      'filePath': serializer.toJson<String>(filePath),
+      'status': serializer.toJson<String>(status),
+      'durationMs': serializer.toJson<int>(durationMs),
+      'sampleRate': serializer.toJson<int>(sampleRate),
+      'channels': serializer.toJson<int>(channels),
+      'startedAt': serializer.toJson<DateTime>(startedAt),
+      'stoppedAt': serializer.toJson<DateTime?>(stoppedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Recording copyWith({
+    String? id,
+    String? sessionId,
+    String? projectId,
+    String? filePath,
+    String? status,
+    int? durationMs,
+    int? sampleRate,
+    int? channels,
+    DateTime? startedAt,
+    Value<DateTime?> stoppedAt = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => Recording(
+    id: id ?? this.id,
+    sessionId: sessionId ?? this.sessionId,
+    projectId: projectId ?? this.projectId,
+    filePath: filePath ?? this.filePath,
+    status: status ?? this.status,
+    durationMs: durationMs ?? this.durationMs,
+    sampleRate: sampleRate ?? this.sampleRate,
+    channels: channels ?? this.channels,
+    startedAt: startedAt ?? this.startedAt,
+    stoppedAt: stoppedAt.present ? stoppedAt.value : this.stoppedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Recording copyWithCompanion(RecordingsCompanion data) {
+    return Recording(
+      id: data.id.present ? data.id.value : this.id,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      filePath: data.filePath.present ? data.filePath.value : this.filePath,
+      status: data.status.present ? data.status.value : this.status,
+      durationMs: data.durationMs.present
+          ? data.durationMs.value
+          : this.durationMs,
+      sampleRate: data.sampleRate.present
+          ? data.sampleRate.value
+          : this.sampleRate,
+      channels: data.channels.present ? data.channels.value : this.channels,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+      stoppedAt: data.stoppedAt.present ? data.stoppedAt.value : this.stoppedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Recording(')
+          ..write('id: $id, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('filePath: $filePath, ')
+          ..write('status: $status, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('sampleRate: $sampleRate, ')
+          ..write('channels: $channels, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('stoppedAt: $stoppedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    sessionId,
+    projectId,
+    filePath,
+    status,
+    durationMs,
+    sampleRate,
+    channels,
+    startedAt,
+    stoppedAt,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Recording &&
+          other.id == this.id &&
+          other.sessionId == this.sessionId &&
+          other.projectId == this.projectId &&
+          other.filePath == this.filePath &&
+          other.status == this.status &&
+          other.durationMs == this.durationMs &&
+          other.sampleRate == this.sampleRate &&
+          other.channels == this.channels &&
+          other.startedAt == this.startedAt &&
+          other.stoppedAt == this.stoppedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class RecordingsCompanion extends UpdateCompanion<Recording> {
+  final Value<String> id;
+  final Value<String> sessionId;
+  final Value<String> projectId;
+  final Value<String> filePath;
+  final Value<String> status;
+  final Value<int> durationMs;
+  final Value<int> sampleRate;
+  final Value<int> channels;
+  final Value<DateTime> startedAt;
+  final Value<DateTime?> stoppedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const RecordingsCompanion({
+    this.id = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.filePath = const Value.absent(),
+    this.status = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    this.sampleRate = const Value.absent(),
+    this.channels = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.stoppedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RecordingsCompanion.insert({
+    required String id,
+    required String sessionId,
+    required String projectId,
+    required String filePath,
+    this.status = const Value.absent(),
+    this.durationMs = const Value.absent(),
+    this.sampleRate = const Value.absent(),
+    this.channels = const Value.absent(),
+    required DateTime startedAt,
+    this.stoppedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       sessionId = Value(sessionId),
+       projectId = Value(projectId),
+       filePath = Value(filePath),
+       startedAt = Value(startedAt),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<Recording> custom({
+    Expression<String>? id,
+    Expression<String>? sessionId,
+    Expression<String>? projectId,
+    Expression<String>? filePath,
+    Expression<String>? status,
+    Expression<int>? durationMs,
+    Expression<int>? sampleRate,
+    Expression<int>? channels,
+    Expression<DateTime>? startedAt,
+    Expression<DateTime>? stoppedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (sessionId != null) 'session_id': sessionId,
+      if (projectId != null) 'project_id': projectId,
+      if (filePath != null) 'file_path': filePath,
+      if (status != null) 'status': status,
+      if (durationMs != null) 'duration_ms': durationMs,
+      if (sampleRate != null) 'sample_rate': sampleRate,
+      if (channels != null) 'channels': channels,
+      if (startedAt != null) 'started_at': startedAt,
+      if (stoppedAt != null) 'stopped_at': stoppedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RecordingsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? sessionId,
+    Value<String>? projectId,
+    Value<String>? filePath,
+    Value<String>? status,
+    Value<int>? durationMs,
+    Value<int>? sampleRate,
+    Value<int>? channels,
+    Value<DateTime>? startedAt,
+    Value<DateTime?>? stoppedAt,
+    Value<DateTime?>? deletedAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return RecordingsCompanion(
+      id: id ?? this.id,
+      sessionId: sessionId ?? this.sessionId,
+      projectId: projectId ?? this.projectId,
+      filePath: filePath ?? this.filePath,
+      status: status ?? this.status,
+      durationMs: durationMs ?? this.durationMs,
+      sampleRate: sampleRate ?? this.sampleRate,
+      channels: channels ?? this.channels,
+      startedAt: startedAt ?? this.startedAt,
+      stoppedAt: stoppedAt ?? this.stoppedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (filePath.present) {
+      map['file_path'] = Variable<String>(filePath.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (durationMs.present) {
+      map['duration_ms'] = Variable<int>(durationMs.value);
+    }
+    if (sampleRate.present) {
+      map['sample_rate'] = Variable<int>(sampleRate.value);
+    }
+    if (channels.present) {
+      map['channels'] = Variable<int>(channels.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<DateTime>(
+        $RecordingsTable.$converterstartedAt.toSql(startedAt.value),
+      );
+    }
+    if (stoppedAt.present) {
+      map['stopped_at'] = Variable<DateTime>(
+        $RecordingsTable.$converterstoppedAtn.toSql(stoppedAt.value),
+      );
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(
+        $RecordingsTable.$converterdeletedAtn.toSql(deletedAt.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(
+        $RecordingsTable.$convertercreatedAt.toSql(createdAt.value),
+      );
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(
+        $RecordingsTable.$converterupdatedAt.toSql(updatedAt.value),
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecordingsCompanion(')
+          ..write('id: $id, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('filePath: $filePath, ')
+          ..write('status: $status, ')
+          ..write('durationMs: $durationMs, ')
+          ..write('sampleRate: $sampleRate, ')
+          ..write('channels: $channels, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('stoppedAt: $stoppedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LiveMarksTable extends LiveMarks
+    with TableInfo<$LiveMarksTable, LiveMark> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LiveMarksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordingIdMeta = const VerificationMeta(
+    'recordingId',
+  );
+  @override
+  late final GeneratedColumn<String> recordingId = GeneratedColumn<String>(
+    'recording_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES recordings (id)',
+    ),
+  );
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
+  );
+  @override
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _atMsMeta = const VerificationMeta('atMs');
+  @override
+  late final GeneratedColumn<int> atMs = GeneratedColumn<int>(
+    'at_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime> deletedAt =
+      GeneratedColumn<DateTime>(
+        'deleted_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      ).withConverter<DateTime?>($LiveMarksTable.$converterdeletedAtn);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> createdAt =
+      GeneratedColumn<DateTime>(
+        'created_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($LiveMarksTable.$convertercreatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> updatedAt =
+      GeneratedColumn<DateTime>(
+        'updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($LiveMarksTable.$converterupdatedAt);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    recordingId,
+    sessionId,
+    projectId,
+    kind,
+    atMs,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'live_marks';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LiveMark> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('recording_id')) {
+      context.handle(
+        _recordingIdMeta,
+        recordingId.isAcceptableOrUnknown(
+          data['recording_id']!,
+          _recordingIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_recordingIdMeta);
+    }
+    if (data.containsKey('session_id')) {
+      context.handle(
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionIdMeta);
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(
+        _kindMeta,
+        kind.isAcceptableOrUnknown(data['kind']!, _kindMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('at_ms')) {
+      context.handle(
+        _atMsMeta,
+        atMs.isAcceptableOrUnknown(data['at_ms']!, _atMsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_atMsMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LiveMark map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LiveMark(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      recordingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recording_id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      kind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}kind'],
+      )!,
+      atMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}at_ms'],
+      )!,
+      deletedAt: $LiveMarksTable.$converterdeletedAtn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}deleted_at'],
+        ),
+      ),
+      createdAt: $LiveMarksTable.$convertercreatedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}created_at'],
+        )!,
+      ),
+      updatedAt: $LiveMarksTable.$converterupdatedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}updated_at'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $LiveMarksTable createAlias(String alias) {
+    return $LiveMarksTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<DateTime, DateTime> $converterdeletedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterdeletedAtn =
+      NullAwareTypeConverter.wrap($converterdeletedAt);
+  static TypeConverter<DateTime, DateTime> $convertercreatedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime, DateTime> $converterupdatedAt =
+      const UtcDateTimeConverter();
+}
+
+class LiveMark extends DataClass implements Insertable<LiveMark> {
+  final String id;
+  final String recordingId;
+  final String sessionId;
+  final String projectId;
+  final String kind;
+  final int atMs;
+  final DateTime? deletedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const LiveMark({
+    required this.id,
+    required this.recordingId,
+    required this.sessionId,
+    required this.projectId,
+    required this.kind,
+    required this.atMs,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['recording_id'] = Variable<String>(recordingId);
+    map['session_id'] = Variable<String>(sessionId);
+    map['project_id'] = Variable<String>(projectId);
+    map['kind'] = Variable<String>(kind);
+    map['at_ms'] = Variable<int>(atMs);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(
+        $LiveMarksTable.$converterdeletedAtn.toSql(deletedAt),
+      );
+    }
+    {
+      map['created_at'] = Variable<DateTime>(
+        $LiveMarksTable.$convertercreatedAt.toSql(createdAt),
+      );
+    }
+    {
+      map['updated_at'] = Variable<DateTime>(
+        $LiveMarksTable.$converterupdatedAt.toSql(updatedAt),
+      );
+    }
+    return map;
+  }
+
+  LiveMarksCompanion toCompanion(bool nullToAbsent) {
+    return LiveMarksCompanion(
+      id: Value(id),
+      recordingId: Value(recordingId),
+      sessionId: Value(sessionId),
+      projectId: Value(projectId),
+      kind: Value(kind),
+      atMs: Value(atMs),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory LiveMark.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LiveMark(
+      id: serializer.fromJson<String>(json['id']),
+      recordingId: serializer.fromJson<String>(json['recordingId']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      kind: serializer.fromJson<String>(json['kind']),
+      atMs: serializer.fromJson<int>(json['atMs']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'recordingId': serializer.toJson<String>(recordingId),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'projectId': serializer.toJson<String>(projectId),
+      'kind': serializer.toJson<String>(kind),
+      'atMs': serializer.toJson<int>(atMs),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  LiveMark copyWith({
+    String? id,
+    String? recordingId,
+    String? sessionId,
+    String? projectId,
+    String? kind,
+    int? atMs,
+    Value<DateTime?> deletedAt = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => LiveMark(
+    id: id ?? this.id,
+    recordingId: recordingId ?? this.recordingId,
+    sessionId: sessionId ?? this.sessionId,
+    projectId: projectId ?? this.projectId,
+    kind: kind ?? this.kind,
+    atMs: atMs ?? this.atMs,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  LiveMark copyWithCompanion(LiveMarksCompanion data) {
+    return LiveMark(
+      id: data.id.present ? data.id.value : this.id,
+      recordingId: data.recordingId.present
+          ? data.recordingId.value
+          : this.recordingId,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      atMs: data.atMs.present ? data.atMs.value : this.atMs,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LiveMark(')
+          ..write('id: $id, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('kind: $kind, ')
+          ..write('atMs: $atMs, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    recordingId,
+    sessionId,
+    projectId,
+    kind,
+    atMs,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LiveMark &&
+          other.id == this.id &&
+          other.recordingId == this.recordingId &&
+          other.sessionId == this.sessionId &&
+          other.projectId == this.projectId &&
+          other.kind == this.kind &&
+          other.atMs == this.atMs &&
+          other.deletedAt == this.deletedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class LiveMarksCompanion extends UpdateCompanion<LiveMark> {
+  final Value<String> id;
+  final Value<String> recordingId;
+  final Value<String> sessionId;
+  final Value<String> projectId;
+  final Value<String> kind;
+  final Value<int> atMs;
+  final Value<DateTime?> deletedAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const LiveMarksCompanion({
+    this.id = const Value.absent(),
+    this.recordingId = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.atMs = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LiveMarksCompanion.insert({
+    required String id,
+    required String recordingId,
+    required String sessionId,
+    required String projectId,
+    required String kind,
+    required int atMs,
+    this.deletedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       recordingId = Value(recordingId),
+       sessionId = Value(sessionId),
+       projectId = Value(projectId),
+       kind = Value(kind),
+       atMs = Value(atMs),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<LiveMark> custom({
+    Expression<String>? id,
+    Expression<String>? recordingId,
+    Expression<String>? sessionId,
+    Expression<String>? projectId,
+    Expression<String>? kind,
+    Expression<int>? atMs,
+    Expression<DateTime>? deletedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (recordingId != null) 'recording_id': recordingId,
+      if (sessionId != null) 'session_id': sessionId,
+      if (projectId != null) 'project_id': projectId,
+      if (kind != null) 'kind': kind,
+      if (atMs != null) 'at_ms': atMs,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LiveMarksCompanion copyWith({
+    Value<String>? id,
+    Value<String>? recordingId,
+    Value<String>? sessionId,
+    Value<String>? projectId,
+    Value<String>? kind,
+    Value<int>? atMs,
+    Value<DateTime?>? deletedAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return LiveMarksCompanion(
+      id: id ?? this.id,
+      recordingId: recordingId ?? this.recordingId,
+      sessionId: sessionId ?? this.sessionId,
+      projectId: projectId ?? this.projectId,
+      kind: kind ?? this.kind,
+      atMs: atMs ?? this.atMs,
+      deletedAt: deletedAt ?? this.deletedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (recordingId.present) {
+      map['recording_id'] = Variable<String>(recordingId.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (atMs.present) {
+      map['at_ms'] = Variable<int>(atMs.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(
+        $LiveMarksTable.$converterdeletedAtn.toSql(deletedAt.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(
+        $LiveMarksTable.$convertercreatedAt.toSql(createdAt.value),
+      );
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(
+        $LiveMarksTable.$converterupdatedAt.toSql(updatedAt.value),
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LiveMarksCompanion(')
+          ..write('id: $id, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('kind: $kind, ')
+          ..write('atMs: $atMs, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TranscriptsTable extends Transcripts
+    with TableInfo<$TranscriptsTable, Transcript> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TranscriptsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _recordingIdMeta = const VerificationMeta(
+    'recordingId',
+  );
+  @override
+  late final GeneratedColumn<String> recordingId = GeneratedColumn<String>(
+    'recording_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES recordings (id)',
+    ),
+  );
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
+  );
+  @override
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _passMeta = const VerificationMeta('pass');
+  @override
+  late final GeneratedColumn<String> pass = GeneratedColumn<String>(
+    'pass',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  static const VerificationMeta _modelIdMeta = const VerificationMeta(
+    'modelId',
+  );
+  @override
+  late final GeneratedColumn<String> modelId = GeneratedColumn<String>(
+    'model_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
+  @override
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _failureReasonMeta = const VerificationMeta(
+    'failureReason',
+  );
+  @override
+  late final GeneratedColumn<String> failureReason = GeneratedColumn<String>(
+    'failure_reason',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime> completedAt =
+      GeneratedColumn<DateTime>(
+        'completed_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      ).withConverter<DateTime?>($TranscriptsTable.$convertercompletedAtn);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime> deletedAt =
+      GeneratedColumn<DateTime>(
+        'deleted_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      ).withConverter<DateTime?>($TranscriptsTable.$converterdeletedAtn);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> createdAt =
+      GeneratedColumn<DateTime>(
+        'created_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($TranscriptsTable.$convertercreatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> updatedAt =
+      GeneratedColumn<DateTime>(
+        'updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($TranscriptsTable.$converterupdatedAt);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    recordingId,
+    sessionId,
+    projectId,
+    pass,
+    status,
+    modelId,
+    body,
+    failureReason,
+    completedAt,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'transcripts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Transcript> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('recording_id')) {
+      context.handle(
+        _recordingIdMeta,
+        recordingId.isAcceptableOrUnknown(
+          data['recording_id']!,
+          _recordingIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_recordingIdMeta);
+    }
+    if (data.containsKey('session_id')) {
+      context.handle(
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionIdMeta);
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('pass')) {
+      context.handle(
+        _passMeta,
+        pass.isAcceptableOrUnknown(data['pass']!, _passMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_passMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('model_id')) {
+      context.handle(
+        _modelIdMeta,
+        modelId.isAcceptableOrUnknown(data['model_id']!, _modelIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_modelIdMeta);
+    }
+    if (data.containsKey('body')) {
+      context.handle(
+        _bodyMeta,
+        body.isAcceptableOrUnknown(data['body']!, _bodyMeta),
+      );
+    }
+    if (data.containsKey('failure_reason')) {
+      context.handle(
+        _failureReasonMeta,
+        failureReason.isAcceptableOrUnknown(
+          data['failure_reason']!,
+          _failureReasonMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Transcript map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Transcript(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      recordingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recording_id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      pass: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}pass'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      modelId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}model_id'],
+      )!,
+      body: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body'],
+      ),
+      failureReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}failure_reason'],
+      ),
+      completedAt: $TranscriptsTable.$convertercompletedAtn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}completed_at'],
+        ),
+      ),
+      deletedAt: $TranscriptsTable.$converterdeletedAtn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}deleted_at'],
+        ),
+      ),
+      createdAt: $TranscriptsTable.$convertercreatedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}created_at'],
+        )!,
+      ),
+      updatedAt: $TranscriptsTable.$converterupdatedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}updated_at'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $TranscriptsTable createAlias(String alias) {
+    return $TranscriptsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<DateTime, DateTime> $convertercompletedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $convertercompletedAtn =
+      NullAwareTypeConverter.wrap($convertercompletedAt);
+  static TypeConverter<DateTime, DateTime> $converterdeletedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterdeletedAtn =
+      NullAwareTypeConverter.wrap($converterdeletedAt);
+  static TypeConverter<DateTime, DateTime> $convertercreatedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime, DateTime> $converterupdatedAt =
+      const UtcDateTimeConverter();
+}
+
+class Transcript extends DataClass implements Insertable<Transcript> {
+  final String id;
+  final String recordingId;
+  final String sessionId;
+  final String projectId;
+  final String pass;
+  final String status;
+  final String modelId;
+  final String? body;
+  final String? failureReason;
+  final DateTime? completedAt;
+  final DateTime? deletedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Transcript({
+    required this.id,
+    required this.recordingId,
+    required this.sessionId,
+    required this.projectId,
+    required this.pass,
+    required this.status,
+    required this.modelId,
+    this.body,
+    this.failureReason,
+    this.completedAt,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['recording_id'] = Variable<String>(recordingId);
+    map['session_id'] = Variable<String>(sessionId);
+    map['project_id'] = Variable<String>(projectId);
+    map['pass'] = Variable<String>(pass);
+    map['status'] = Variable<String>(status);
+    map['model_id'] = Variable<String>(modelId);
+    if (!nullToAbsent || body != null) {
+      map['body'] = Variable<String>(body);
+    }
+    if (!nullToAbsent || failureReason != null) {
+      map['failure_reason'] = Variable<String>(failureReason);
+    }
+    if (!nullToAbsent || completedAt != null) {
+      map['completed_at'] = Variable<DateTime>(
+        $TranscriptsTable.$convertercompletedAtn.toSql(completedAt),
+      );
+    }
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(
+        $TranscriptsTable.$converterdeletedAtn.toSql(deletedAt),
+      );
+    }
+    {
+      map['created_at'] = Variable<DateTime>(
+        $TranscriptsTable.$convertercreatedAt.toSql(createdAt),
+      );
+    }
+    {
+      map['updated_at'] = Variable<DateTime>(
+        $TranscriptsTable.$converterupdatedAt.toSql(updatedAt),
+      );
+    }
+    return map;
+  }
+
+  TranscriptsCompanion toCompanion(bool nullToAbsent) {
+    return TranscriptsCompanion(
+      id: Value(id),
+      recordingId: Value(recordingId),
+      sessionId: Value(sessionId),
+      projectId: Value(projectId),
+      pass: Value(pass),
+      status: Value(status),
+      modelId: Value(modelId),
+      body: body == null && nullToAbsent ? const Value.absent() : Value(body),
+      failureReason: failureReason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(failureReason),
+      completedAt: completedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Transcript.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Transcript(
+      id: serializer.fromJson<String>(json['id']),
+      recordingId: serializer.fromJson<String>(json['recordingId']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      pass: serializer.fromJson<String>(json['pass']),
+      status: serializer.fromJson<String>(json['status']),
+      modelId: serializer.fromJson<String>(json['modelId']),
+      body: serializer.fromJson<String?>(json['body']),
+      failureReason: serializer.fromJson<String?>(json['failureReason']),
+      completedAt: serializer.fromJson<DateTime?>(json['completedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'recordingId': serializer.toJson<String>(recordingId),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'projectId': serializer.toJson<String>(projectId),
+      'pass': serializer.toJson<String>(pass),
+      'status': serializer.toJson<String>(status),
+      'modelId': serializer.toJson<String>(modelId),
+      'body': serializer.toJson<String?>(body),
+      'failureReason': serializer.toJson<String?>(failureReason),
+      'completedAt': serializer.toJson<DateTime?>(completedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Transcript copyWith({
+    String? id,
+    String? recordingId,
+    String? sessionId,
+    String? projectId,
+    String? pass,
+    String? status,
+    String? modelId,
+    Value<String?> body = const Value.absent(),
+    Value<String?> failureReason = const Value.absent(),
+    Value<DateTime?> completedAt = const Value.absent(),
+    Value<DateTime?> deletedAt = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => Transcript(
+    id: id ?? this.id,
+    recordingId: recordingId ?? this.recordingId,
+    sessionId: sessionId ?? this.sessionId,
+    projectId: projectId ?? this.projectId,
+    pass: pass ?? this.pass,
+    status: status ?? this.status,
+    modelId: modelId ?? this.modelId,
+    body: body.present ? body.value : this.body,
+    failureReason: failureReason.present
+        ? failureReason.value
+        : this.failureReason,
+    completedAt: completedAt.present ? completedAt.value : this.completedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Transcript copyWithCompanion(TranscriptsCompanion data) {
+    return Transcript(
+      id: data.id.present ? data.id.value : this.id,
+      recordingId: data.recordingId.present
+          ? data.recordingId.value
+          : this.recordingId,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      pass: data.pass.present ? data.pass.value : this.pass,
+      status: data.status.present ? data.status.value : this.status,
+      modelId: data.modelId.present ? data.modelId.value : this.modelId,
+      body: data.body.present ? data.body.value : this.body,
+      failureReason: data.failureReason.present
+          ? data.failureReason.value
+          : this.failureReason,
+      completedAt: data.completedAt.present
+          ? data.completedAt.value
+          : this.completedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Transcript(')
+          ..write('id: $id, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('pass: $pass, ')
+          ..write('status: $status, ')
+          ..write('modelId: $modelId, ')
+          ..write('body: $body, ')
+          ..write('failureReason: $failureReason, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    recordingId,
+    sessionId,
+    projectId,
+    pass,
+    status,
+    modelId,
+    body,
+    failureReason,
+    completedAt,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Transcript &&
+          other.id == this.id &&
+          other.recordingId == this.recordingId &&
+          other.sessionId == this.sessionId &&
+          other.projectId == this.projectId &&
+          other.pass == this.pass &&
+          other.status == this.status &&
+          other.modelId == this.modelId &&
+          other.body == this.body &&
+          other.failureReason == this.failureReason &&
+          other.completedAt == this.completedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class TranscriptsCompanion extends UpdateCompanion<Transcript> {
+  final Value<String> id;
+  final Value<String> recordingId;
+  final Value<String> sessionId;
+  final Value<String> projectId;
+  final Value<String> pass;
+  final Value<String> status;
+  final Value<String> modelId;
+  final Value<String?> body;
+  final Value<String?> failureReason;
+  final Value<DateTime?> completedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const TranscriptsCompanion({
+    this.id = const Value.absent(),
+    this.recordingId = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.pass = const Value.absent(),
+    this.status = const Value.absent(),
+    this.modelId = const Value.absent(),
+    this.body = const Value.absent(),
+    this.failureReason = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TranscriptsCompanion.insert({
+    required String id,
+    required String recordingId,
+    required String sessionId,
+    required String projectId,
+    required String pass,
+    this.status = const Value.absent(),
+    required String modelId,
+    this.body = const Value.absent(),
+    this.failureReason = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       recordingId = Value(recordingId),
+       sessionId = Value(sessionId),
+       projectId = Value(projectId),
+       pass = Value(pass),
+       modelId = Value(modelId),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<Transcript> custom({
+    Expression<String>? id,
+    Expression<String>? recordingId,
+    Expression<String>? sessionId,
+    Expression<String>? projectId,
+    Expression<String>? pass,
+    Expression<String>? status,
+    Expression<String>? modelId,
+    Expression<String>? body,
+    Expression<String>? failureReason,
+    Expression<DateTime>? completedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (recordingId != null) 'recording_id': recordingId,
+      if (sessionId != null) 'session_id': sessionId,
+      if (projectId != null) 'project_id': projectId,
+      if (pass != null) 'pass': pass,
+      if (status != null) 'status': status,
+      if (modelId != null) 'model_id': modelId,
+      if (body != null) 'body': body,
+      if (failureReason != null) 'failure_reason': failureReason,
+      if (completedAt != null) 'completed_at': completedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TranscriptsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? recordingId,
+    Value<String>? sessionId,
+    Value<String>? projectId,
+    Value<String>? pass,
+    Value<String>? status,
+    Value<String>? modelId,
+    Value<String?>? body,
+    Value<String?>? failureReason,
+    Value<DateTime?>? completedAt,
+    Value<DateTime?>? deletedAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return TranscriptsCompanion(
+      id: id ?? this.id,
+      recordingId: recordingId ?? this.recordingId,
+      sessionId: sessionId ?? this.sessionId,
+      projectId: projectId ?? this.projectId,
+      pass: pass ?? this.pass,
+      status: status ?? this.status,
+      modelId: modelId ?? this.modelId,
+      body: body ?? this.body,
+      failureReason: failureReason ?? this.failureReason,
+      completedAt: completedAt ?? this.completedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (recordingId.present) {
+      map['recording_id'] = Variable<String>(recordingId.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (pass.present) {
+      map['pass'] = Variable<String>(pass.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (modelId.present) {
+      map['model_id'] = Variable<String>(modelId.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
+    }
+    if (failureReason.present) {
+      map['failure_reason'] = Variable<String>(failureReason.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<DateTime>(
+        $TranscriptsTable.$convertercompletedAtn.toSql(completedAt.value),
+      );
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(
+        $TranscriptsTable.$converterdeletedAtn.toSql(deletedAt.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(
+        $TranscriptsTable.$convertercreatedAt.toSql(createdAt.value),
+      );
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(
+        $TranscriptsTable.$converterupdatedAt.toSql(updatedAt.value),
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TranscriptsCompanion(')
+          ..write('id: $id, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('pass: $pass, ')
+          ..write('status: $status, ')
+          ..write('modelId: $modelId, ')
+          ..write('body: $body, ')
+          ..write('failureReason: $failureReason, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TranscriptSegmentsTable extends TranscriptSegments
+    with TableInfo<$TranscriptSegmentsTable, TranscriptSegment> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TranscriptSegmentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _transcriptIdMeta = const VerificationMeta(
+    'transcriptId',
+  );
+  @override
+  late final GeneratedColumn<String> transcriptId = GeneratedColumn<String>(
+    'transcript_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES transcripts (id)',
+    ),
+  );
+  static const VerificationMeta _recordingIdMeta = const VerificationMeta(
+    'recordingId',
+  );
+  @override
+  late final GeneratedColumn<String> recordingId = GeneratedColumn<String>(
+    'recording_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta(
+    'sessionId',
+  );
+  @override
+  late final GeneratedColumn<String> sessionId = GeneratedColumn<String>(
+    'session_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _projectIdMeta = const VerificationMeta(
+    'projectId',
+  );
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+    'project_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fromMsMeta = const VerificationMeta('fromMs');
+  @override
+  late final GeneratedColumn<int> fromMs = GeneratedColumn<int>(
+    'from_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _toMsMeta = const VerificationMeta('toMs');
+  @override
+  late final GeneratedColumn<int> toMs = GeneratedColumn<int>(
+    'to_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
+  @override
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime?, DateTime> deletedAt =
+      GeneratedColumn<DateTime>(
+        'deleted_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      ).withConverter<DateTime?>($TranscriptSegmentsTable.$converterdeletedAtn);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> createdAt =
+      GeneratedColumn<DateTime>(
+        'created_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($TranscriptSegmentsTable.$convertercreatedAt);
+  @override
+  late final GeneratedColumnWithTypeConverter<DateTime, DateTime> updatedAt =
+      GeneratedColumn<DateTime>(
+        'updated_at',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      ).withConverter<DateTime>($TranscriptSegmentsTable.$converterupdatedAt);
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    transcriptId,
+    recordingId,
+    sessionId,
+    projectId,
+    fromMs,
+    toMs,
+    position,
+    body,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'transcript_segments';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TranscriptSegment> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('transcript_id')) {
+      context.handle(
+        _transcriptIdMeta,
+        transcriptId.isAcceptableOrUnknown(
+          data['transcript_id']!,
+          _transcriptIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_transcriptIdMeta);
+    }
+    if (data.containsKey('recording_id')) {
+      context.handle(
+        _recordingIdMeta,
+        recordingId.isAcceptableOrUnknown(
+          data['recording_id']!,
+          _recordingIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_recordingIdMeta);
+    }
+    if (data.containsKey('session_id')) {
+      context.handle(
+        _sessionIdMeta,
+        sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sessionIdMeta);
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(
+        _projectIdMeta,
+        projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_projectIdMeta);
+    }
+    if (data.containsKey('from_ms')) {
+      context.handle(
+        _fromMsMeta,
+        fromMs.isAcceptableOrUnknown(data['from_ms']!, _fromMsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fromMsMeta);
+    }
+    if (data.containsKey('to_ms')) {
+      context.handle(
+        _toMsMeta,
+        toMs.isAcceptableOrUnknown(data['to_ms']!, _toMsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_toMsMeta);
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_positionMeta);
+    }
+    if (data.containsKey('body')) {
+      context.handle(
+        _bodyMeta,
+        body.isAcceptableOrUnknown(data['body']!, _bodyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bodyMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TranscriptSegment map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TranscriptSegment(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      transcriptId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}transcript_id'],
+      )!,
+      recordingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recording_id'],
+      )!,
+      sessionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_id'],
+      )!,
+      projectId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}project_id'],
+      )!,
+      fromMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}from_ms'],
+      )!,
+      toMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}to_ms'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
+      body: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body'],
+      )!,
+      deletedAt: $TranscriptSegmentsTable.$converterdeletedAtn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}deleted_at'],
+        ),
+      ),
+      createdAt: $TranscriptSegmentsTable.$convertercreatedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}created_at'],
+        )!,
+      ),
+      updatedAt: $TranscriptSegmentsTable.$converterupdatedAt.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}updated_at'],
+        )!,
+      ),
+    );
+  }
+
+  @override
+  $TranscriptSegmentsTable createAlias(String alias) {
+    return $TranscriptSegmentsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<DateTime, DateTime> $converterdeletedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime?, DateTime?> $converterdeletedAtn =
+      NullAwareTypeConverter.wrap($converterdeletedAt);
+  static TypeConverter<DateTime, DateTime> $convertercreatedAt =
+      const UtcDateTimeConverter();
+  static TypeConverter<DateTime, DateTime> $converterupdatedAt =
+      const UtcDateTimeConverter();
+}
+
+class TranscriptSegment extends DataClass
+    implements Insertable<TranscriptSegment> {
+  final String id;
+  final String transcriptId;
+  final String recordingId;
+  final String sessionId;
+  final String projectId;
+  final int fromMs;
+  final int toMs;
+  final int position;
+  final String body;
+  final DateTime? deletedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const TranscriptSegment({
+    required this.id,
+    required this.transcriptId,
+    required this.recordingId,
+    required this.sessionId,
+    required this.projectId,
+    required this.fromMs,
+    required this.toMs,
+    required this.position,
+    required this.body,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['transcript_id'] = Variable<String>(transcriptId);
+    map['recording_id'] = Variable<String>(recordingId);
+    map['session_id'] = Variable<String>(sessionId);
+    map['project_id'] = Variable<String>(projectId);
+    map['from_ms'] = Variable<int>(fromMs);
+    map['to_ms'] = Variable<int>(toMs);
+    map['position'] = Variable<int>(position);
+    map['body'] = Variable<String>(body);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(
+        $TranscriptSegmentsTable.$converterdeletedAtn.toSql(deletedAt),
+      );
+    }
+    {
+      map['created_at'] = Variable<DateTime>(
+        $TranscriptSegmentsTable.$convertercreatedAt.toSql(createdAt),
+      );
+    }
+    {
+      map['updated_at'] = Variable<DateTime>(
+        $TranscriptSegmentsTable.$converterupdatedAt.toSql(updatedAt),
+      );
+    }
+    return map;
+  }
+
+  TranscriptSegmentsCompanion toCompanion(bool nullToAbsent) {
+    return TranscriptSegmentsCompanion(
+      id: Value(id),
+      transcriptId: Value(transcriptId),
+      recordingId: Value(recordingId),
+      sessionId: Value(sessionId),
+      projectId: Value(projectId),
+      fromMs: Value(fromMs),
+      toMs: Value(toMs),
+      position: Value(position),
+      body: Value(body),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory TranscriptSegment.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TranscriptSegment(
+      id: serializer.fromJson<String>(json['id']),
+      transcriptId: serializer.fromJson<String>(json['transcriptId']),
+      recordingId: serializer.fromJson<String>(json['recordingId']),
+      sessionId: serializer.fromJson<String>(json['sessionId']),
+      projectId: serializer.fromJson<String>(json['projectId']),
+      fromMs: serializer.fromJson<int>(json['fromMs']),
+      toMs: serializer.fromJson<int>(json['toMs']),
+      position: serializer.fromJson<int>(json['position']),
+      body: serializer.fromJson<String>(json['body']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'transcriptId': serializer.toJson<String>(transcriptId),
+      'recordingId': serializer.toJson<String>(recordingId),
+      'sessionId': serializer.toJson<String>(sessionId),
+      'projectId': serializer.toJson<String>(projectId),
+      'fromMs': serializer.toJson<int>(fromMs),
+      'toMs': serializer.toJson<int>(toMs),
+      'position': serializer.toJson<int>(position),
+      'body': serializer.toJson<String>(body),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  TranscriptSegment copyWith({
+    String? id,
+    String? transcriptId,
+    String? recordingId,
+    String? sessionId,
+    String? projectId,
+    int? fromMs,
+    int? toMs,
+    int? position,
+    String? body,
+    Value<DateTime?> deletedAt = const Value.absent(),
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => TranscriptSegment(
+    id: id ?? this.id,
+    transcriptId: transcriptId ?? this.transcriptId,
+    recordingId: recordingId ?? this.recordingId,
+    sessionId: sessionId ?? this.sessionId,
+    projectId: projectId ?? this.projectId,
+    fromMs: fromMs ?? this.fromMs,
+    toMs: toMs ?? this.toMs,
+    position: position ?? this.position,
+    body: body ?? this.body,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  TranscriptSegment copyWithCompanion(TranscriptSegmentsCompanion data) {
+    return TranscriptSegment(
+      id: data.id.present ? data.id.value : this.id,
+      transcriptId: data.transcriptId.present
+          ? data.transcriptId.value
+          : this.transcriptId,
+      recordingId: data.recordingId.present
+          ? data.recordingId.value
+          : this.recordingId,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      projectId: data.projectId.present ? data.projectId.value : this.projectId,
+      fromMs: data.fromMs.present ? data.fromMs.value : this.fromMs,
+      toMs: data.toMs.present ? data.toMs.value : this.toMs,
+      position: data.position.present ? data.position.value : this.position,
+      body: data.body.present ? data.body.value : this.body,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TranscriptSegment(')
+          ..write('id: $id, ')
+          ..write('transcriptId: $transcriptId, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('fromMs: $fromMs, ')
+          ..write('toMs: $toMs, ')
+          ..write('position: $position, ')
+          ..write('body: $body, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    transcriptId,
+    recordingId,
+    sessionId,
+    projectId,
+    fromMs,
+    toMs,
+    position,
+    body,
+    deletedAt,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TranscriptSegment &&
+          other.id == this.id &&
+          other.transcriptId == this.transcriptId &&
+          other.recordingId == this.recordingId &&
+          other.sessionId == this.sessionId &&
+          other.projectId == this.projectId &&
+          other.fromMs == this.fromMs &&
+          other.toMs == this.toMs &&
+          other.position == this.position &&
+          other.body == this.body &&
+          other.deletedAt == this.deletedAt &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class TranscriptSegmentsCompanion extends UpdateCompanion<TranscriptSegment> {
+  final Value<String> id;
+  final Value<String> transcriptId;
+  final Value<String> recordingId;
+  final Value<String> sessionId;
+  final Value<String> projectId;
+  final Value<int> fromMs;
+  final Value<int> toMs;
+  final Value<int> position;
+  final Value<String> body;
+  final Value<DateTime?> deletedAt;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const TranscriptSegmentsCompanion({
+    this.id = const Value.absent(),
+    this.transcriptId = const Value.absent(),
+    this.recordingId = const Value.absent(),
+    this.sessionId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.fromMs = const Value.absent(),
+    this.toMs = const Value.absent(),
+    this.position = const Value.absent(),
+    this.body = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TranscriptSegmentsCompanion.insert({
+    required String id,
+    required String transcriptId,
+    required String recordingId,
+    required String sessionId,
+    required String projectId,
+    required int fromMs,
+    required int toMs,
+    required int position,
+    required String body,
+    this.deletedAt = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       transcriptId = Value(transcriptId),
+       recordingId = Value(recordingId),
+       sessionId = Value(sessionId),
+       projectId = Value(projectId),
+       fromMs = Value(fromMs),
+       toMs = Value(toMs),
+       position = Value(position),
+       body = Value(body),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<TranscriptSegment> custom({
+    Expression<String>? id,
+    Expression<String>? transcriptId,
+    Expression<String>? recordingId,
+    Expression<String>? sessionId,
+    Expression<String>? projectId,
+    Expression<int>? fromMs,
+    Expression<int>? toMs,
+    Expression<int>? position,
+    Expression<String>? body,
+    Expression<DateTime>? deletedAt,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (transcriptId != null) 'transcript_id': transcriptId,
+      if (recordingId != null) 'recording_id': recordingId,
+      if (sessionId != null) 'session_id': sessionId,
+      if (projectId != null) 'project_id': projectId,
+      if (fromMs != null) 'from_ms': fromMs,
+      if (toMs != null) 'to_ms': toMs,
+      if (position != null) 'position': position,
+      if (body != null) 'body': body,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TranscriptSegmentsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? transcriptId,
+    Value<String>? recordingId,
+    Value<String>? sessionId,
+    Value<String>? projectId,
+    Value<int>? fromMs,
+    Value<int>? toMs,
+    Value<int>? position,
+    Value<String>? body,
+    Value<DateTime?>? deletedAt,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return TranscriptSegmentsCompanion(
+      id: id ?? this.id,
+      transcriptId: transcriptId ?? this.transcriptId,
+      recordingId: recordingId ?? this.recordingId,
+      sessionId: sessionId ?? this.sessionId,
+      projectId: projectId ?? this.projectId,
+      fromMs: fromMs ?? this.fromMs,
+      toMs: toMs ?? this.toMs,
+      position: position ?? this.position,
+      body: body ?? this.body,
+      deletedAt: deletedAt ?? this.deletedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (transcriptId.present) {
+      map['transcript_id'] = Variable<String>(transcriptId.value);
+    }
+    if (recordingId.present) {
+      map['recording_id'] = Variable<String>(recordingId.value);
+    }
+    if (sessionId.present) {
+      map['session_id'] = Variable<String>(sessionId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (fromMs.present) {
+      map['from_ms'] = Variable<int>(fromMs.value);
+    }
+    if (toMs.present) {
+      map['to_ms'] = Variable<int>(toMs.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(
+        $TranscriptSegmentsTable.$converterdeletedAtn.toSql(deletedAt.value),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(
+        $TranscriptSegmentsTable.$convertercreatedAt.toSql(createdAt.value),
+      );
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(
+        $TranscriptSegmentsTable.$converterupdatedAt.toSql(updatedAt.value),
+      );
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TranscriptSegmentsCompanion(')
+          ..write('id: $id, ')
+          ..write('transcriptId: $transcriptId, ')
+          ..write('recordingId: $recordingId, ')
+          ..write('sessionId: $sessionId, ')
+          ..write('projectId: $projectId, ')
+          ..write('fromMs: $fromMs, ')
+          ..write('toMs: $toMs, ')
+          ..write('position: $position, ')
+          ..write('body: $body, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3819,6 +6630,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ScriptPointsTable scriptPoints = $ScriptPointsTable(this);
   late final $GlossaryTermsTable glossaryTerms = $GlossaryTermsTable(this);
   late final $AuditEntriesTable auditEntries = $AuditEntriesTable(this);
+  late final $RecordingsTable recordings = $RecordingsTable(this);
+  late final $LiveMarksTable liveMarks = $LiveMarksTable(this);
+  late final $TranscriptsTable transcripts = $TranscriptsTable(this);
+  late final $TranscriptSegmentsTable transcriptSegments =
+      $TranscriptSegmentsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3831,6 +6647,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     scriptPoints,
     glossaryTerms,
     auditEntries,
+    recordings,
+    liveMarks,
+    transcripts,
+    transcriptSegments,
   ];
 }
 
@@ -3929,6 +6749,24 @@ final class $$ProjectsTableReferences
     ).filter((f) => f.projectId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_auditEntriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$RecordingsTable, List<Recording>>
+  _recordingsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.recordings,
+    aliasName: 'projects__id__recordings__project_id',
+  );
+
+  $$RecordingsTableProcessedTableManager get recordingsRefs {
+    final manager = $$RecordingsTableTableManager(
+      $_db,
+      $_db.recordings,
+    ).filter((f) => f.projectId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_recordingsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -4072,6 +6910,31 @@ class $$ProjectsTableFilterComposer
           }) => $$AuditEntriesTableFilterComposer(
             $db: $db,
             $table: $db.auditEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> recordingsRefs(
+    Expression<bool> Function($$RecordingsTableFilterComposer f) f,
+  ) {
+    final $$RecordingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.projectId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableFilterComposer(
+            $db: $db,
+            $table: $db.recordings,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4258,6 +7121,31 @@ class $$ProjectsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> recordingsRefs<T extends Object>(
+    Expression<T> Function($$RecordingsTableAnnotationComposer a) f,
+  ) {
+    final $$RecordingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.projectId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.recordings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$ProjectsTableTableManager
@@ -4278,6 +7166,7 @@ class $$ProjectsTableTableManager
             bool sessionsRefs,
             bool glossaryTermsRefs,
             bool auditEntriesRefs,
+            bool recordingsRefs,
           })
         > {
   $$ProjectsTableTableManager(_$AppDatabase db, $ProjectsTable table)
@@ -4345,6 +7234,7 @@ class $$ProjectsTableTableManager
                 sessionsRefs = false,
                 glossaryTermsRefs = false,
                 auditEntriesRefs = false,
+                recordingsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -4353,6 +7243,7 @@ class $$ProjectsTableTableManager
                     if (sessionsRefs) db.sessions,
                     if (glossaryTermsRefs) db.glossaryTerms,
                     if (auditEntriesRefs) db.auditEntries,
+                    if (recordingsRefs) db.recordings,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -4441,6 +7332,27 @@ class $$ProjectsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (recordingsRefs)
+                        await $_getPrefetchedData<
+                          Project,
+                          $ProjectsTable,
+                          Recording
+                        >(
+                          currentTable: table,
+                          referencedTable: $$ProjectsTableReferences
+                              ._recordingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$ProjectsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).recordingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.projectId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -4466,6 +7378,7 @@ typedef $$ProjectsTableProcessedTableManager =
         bool sessionsRefs,
         bool glossaryTermsRefs,
         bool auditEntriesRefs,
+        bool recordingsRefs,
       })
     >;
 typedef $$StakeholdersTableCreateCompanionBuilder =
@@ -5079,6 +7992,24 @@ final class $$SessionsTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$RecordingsTable, List<Recording>>
+  _recordingsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.recordings,
+    aliasName: 'sessions__id__recordings__session_id',
+  );
+
+  $$RecordingsTableProcessedTableManager get recordingsRefs {
+    final manager = $$RecordingsTableTableManager(
+      $_db,
+      $_db.recordings,
+    ).filter((f) => f.sessionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_recordingsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$SessionsTableFilterComposer
@@ -5214,6 +8145,31 @@ class $$SessionsTableFilterComposer
           }) => $$ScriptPointsTableFilterComposer(
             $db: $db,
             $table: $db.scriptPoints,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> recordingsRefs(
+    Expression<bool> Function($$RecordingsTableFilterComposer f) f,
+  ) {
+    final $$RecordingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.sessionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableFilterComposer(
+            $db: $db,
+            $table: $db.recordings,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5430,6 +8386,31 @@ class $$SessionsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> recordingsRefs<T extends Object>(
+    Expression<T> Function($$RecordingsTableAnnotationComposer a) f,
+  ) {
+    final $$RecordingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.sessionId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.recordings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$SessionsTableTableManager
@@ -5449,6 +8430,7 @@ class $$SessionsTableTableManager
             bool projectId,
             bool sessionParticipantsRefs,
             bool scriptPointsRefs,
+            bool recordingsRefs,
           })
         > {
   $$SessionsTableTableManager(_$AppDatabase db, $SessionsTable table)
@@ -5535,12 +8517,14 @@ class $$SessionsTableTableManager
                 projectId = false,
                 sessionParticipantsRefs = false,
                 scriptPointsRefs = false,
+                recordingsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (sessionParticipantsRefs) db.sessionParticipants,
                     if (scriptPointsRefs) db.scriptPoints,
+                    if (recordingsRefs) db.recordings,
                   ],
                   addJoins:
                       <
@@ -5618,6 +8602,27 @@ class $$SessionsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (recordingsRefs)
+                        await $_getPrefetchedData<
+                          Session,
+                          $SessionsTable,
+                          Recording
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SessionsTableReferences
+                              ._recordingsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SessionsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).recordingsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.sessionId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -5642,6 +8647,7 @@ typedef $$SessionsTableProcessedTableManager =
         bool projectId,
         bool sessionParticipantsRefs,
         bool scriptPointsRefs,
+        bool recordingsRefs,
       })
     >;
 typedef $$SessionParticipantsTableCreateCompanionBuilder =
@@ -7254,6 +10260,2218 @@ typedef $$AuditEntriesTableProcessedTableManager =
       AuditEntry,
       PrefetchHooks Function({bool projectId})
     >;
+typedef $$RecordingsTableCreateCompanionBuilder =
+    RecordingsCompanion Function({
+      required String id,
+      required String sessionId,
+      required String projectId,
+      required String filePath,
+      Value<String> status,
+      Value<int> durationMs,
+      Value<int> sampleRate,
+      Value<int> channels,
+      required DateTime startedAt,
+      Value<DateTime?> stoppedAt,
+      Value<DateTime?> deletedAt,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$RecordingsTableUpdateCompanionBuilder =
+    RecordingsCompanion Function({
+      Value<String> id,
+      Value<String> sessionId,
+      Value<String> projectId,
+      Value<String> filePath,
+      Value<String> status,
+      Value<int> durationMs,
+      Value<int> sampleRate,
+      Value<int> channels,
+      Value<DateTime> startedAt,
+      Value<DateTime?> stoppedAt,
+      Value<DateTime?> deletedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$RecordingsTableReferences
+    extends BaseReferences<_$AppDatabase, $RecordingsTable, Recording> {
+  $$RecordingsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $SessionsTable _sessionIdTable(_$AppDatabase db) =>
+      db.sessions.createAlias('recordings__session_id__sessions__id');
+
+  $$SessionsTableProcessedTableManager get sessionId {
+    final $_column = $_itemColumn<String>('session_id')!;
+
+    final manager = $$SessionsTableTableManager(
+      $_db,
+      $_db.sessions,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_sessionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $ProjectsTable _projectIdTable(_$AppDatabase db) =>
+      db.projects.createAlias('recordings__project_id__projects__id');
+
+  $$ProjectsTableProcessedTableManager get projectId {
+    final $_column = $_itemColumn<String>('project_id')!;
+
+    final manager = $$ProjectsTableTableManager(
+      $_db,
+      $_db.projects,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_projectIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$LiveMarksTable, List<LiveMark>>
+  _liveMarksRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.liveMarks,
+    aliasName: 'recordings__id__live_marks__recording_id',
+  );
+
+  $$LiveMarksTableProcessedTableManager get liveMarksRefs {
+    final manager = $$LiveMarksTableTableManager(
+      $_db,
+      $_db.liveMarks,
+    ).filter((f) => f.recordingId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_liveMarksRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$TranscriptsTable, List<Transcript>>
+  _transcriptsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.transcripts,
+    aliasName: 'recordings__id__transcripts__recording_id',
+  );
+
+  $$TranscriptsTableProcessedTableManager get transcriptsRefs {
+    final manager = $$TranscriptsTableTableManager(
+      $_db,
+      $_db.transcripts,
+    ).filter((f) => f.recordingId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_transcriptsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$RecordingsTableFilterComposer
+    extends Composer<_$AppDatabase, $RecordingsTable> {
+  $$RecordingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get filePath => $composableBuilder(
+    column: $table.filePath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get durationMs => $composableBuilder(
+    column: $table.durationMs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sampleRate => $composableBuilder(
+    column: $table.sampleRate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get channels => $composableBuilder(
+    column: $table.channels,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get startedAt =>
+      $composableBuilder(
+        column: $table.startedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime?, DateTime, DateTime> get stoppedAt =>
+      $composableBuilder(
+        column: $table.stoppedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime?, DateTime, DateTime> get deletedAt =>
+      $composableBuilder(
+        column: $table.deletedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get createdAt =>
+      $composableBuilder(
+        column: $table.createdAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get updatedAt =>
+      $composableBuilder(
+        column: $table.updatedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  $$SessionsTableFilterComposer get sessionId {
+    final $$SessionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.sessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableFilterComposer(
+            $db: $db,
+            $table: $db.sessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProjectsTableFilterComposer get projectId {
+    final $$ProjectsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableFilterComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> liveMarksRefs(
+    Expression<bool> Function($$LiveMarksTableFilterComposer f) f,
+  ) {
+    final $$LiveMarksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.liveMarks,
+      getReferencedColumn: (t) => t.recordingId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LiveMarksTableFilterComposer(
+            $db: $db,
+            $table: $db.liveMarks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> transcriptsRefs(
+    Expression<bool> Function($$TranscriptsTableFilterComposer f) f,
+  ) {
+    final $$TranscriptsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transcripts,
+      getReferencedColumn: (t) => t.recordingId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TranscriptsTableFilterComposer(
+            $db: $db,
+            $table: $db.transcripts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$RecordingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $RecordingsTable> {
+  $$RecordingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get filePath => $composableBuilder(
+    column: $table.filePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get durationMs => $composableBuilder(
+    column: $table.durationMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sampleRate => $composableBuilder(
+    column: $table.sampleRate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get channels => $composableBuilder(
+    column: $table.channels,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startedAt => $composableBuilder(
+    column: $table.startedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get stoppedAt => $composableBuilder(
+    column: $table.stoppedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SessionsTableOrderingComposer get sessionId {
+    final $$SessionsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.sessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableOrderingComposer(
+            $db: $db,
+            $table: $db.sessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProjectsTableOrderingComposer get projectId {
+    final $$ProjectsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableOrderingComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$RecordingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RecordingsTable> {
+  $$RecordingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get filePath =>
+      $composableBuilder(column: $table.filePath, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<int> get durationMs => $composableBuilder(
+    column: $table.durationMs,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get sampleRate => $composableBuilder(
+    column: $table.sampleRate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get channels =>
+      $composableBuilder(column: $table.channels, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime?, DateTime> get stoppedAt =>
+      $composableBuilder(column: $table.stoppedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime?, DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$SessionsTableAnnotationComposer get sessionId {
+    final $$SessionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.sessionId,
+      referencedTable: $db.sessions,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.sessions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$ProjectsTableAnnotationComposer get projectId {
+    final $$ProjectsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.projectId,
+      referencedTable: $db.projects,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ProjectsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.projects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> liveMarksRefs<T extends Object>(
+    Expression<T> Function($$LiveMarksTableAnnotationComposer a) f,
+  ) {
+    final $$LiveMarksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.liveMarks,
+      getReferencedColumn: (t) => t.recordingId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LiveMarksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.liveMarks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<T> transcriptsRefs<T extends Object>(
+    Expression<T> Function($$TranscriptsTableAnnotationComposer a) f,
+  ) {
+    final $$TranscriptsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transcripts,
+      getReferencedColumn: (t) => t.recordingId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TranscriptsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transcripts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$RecordingsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RecordingsTable,
+          Recording,
+          $$RecordingsTableFilterComposer,
+          $$RecordingsTableOrderingComposer,
+          $$RecordingsTableAnnotationComposer,
+          $$RecordingsTableCreateCompanionBuilder,
+          $$RecordingsTableUpdateCompanionBuilder,
+          (Recording, $$RecordingsTableReferences),
+          Recording,
+          PrefetchHooks Function({
+            bool sessionId,
+            bool projectId,
+            bool liveMarksRefs,
+            bool transcriptsRefs,
+          })
+        > {
+  $$RecordingsTableTableManager(_$AppDatabase db, $RecordingsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RecordingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RecordingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RecordingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> sessionId = const Value.absent(),
+                Value<String> projectId = const Value.absent(),
+                Value<String> filePath = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<int> durationMs = const Value.absent(),
+                Value<int> sampleRate = const Value.absent(),
+                Value<int> channels = const Value.absent(),
+                Value<DateTime> startedAt = const Value.absent(),
+                Value<DateTime?> stoppedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => RecordingsCompanion(
+                id: id,
+                sessionId: sessionId,
+                projectId: projectId,
+                filePath: filePath,
+                status: status,
+                durationMs: durationMs,
+                sampleRate: sampleRate,
+                channels: channels,
+                startedAt: startedAt,
+                stoppedAt: stoppedAt,
+                deletedAt: deletedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String sessionId,
+                required String projectId,
+                required String filePath,
+                Value<String> status = const Value.absent(),
+                Value<int> durationMs = const Value.absent(),
+                Value<int> sampleRate = const Value.absent(),
+                Value<int> channels = const Value.absent(),
+                required DateTime startedAt,
+                Value<DateTime?> stoppedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => RecordingsCompanion.insert(
+                id: id,
+                sessionId: sessionId,
+                projectId: projectId,
+                filePath: filePath,
+                status: status,
+                durationMs: durationMs,
+                sampleRate: sampleRate,
+                channels: channels,
+                startedAt: startedAt,
+                stoppedAt: stoppedAt,
+                deletedAt: deletedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$RecordingsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                sessionId = false,
+                projectId = false,
+                liveMarksRefs = false,
+                transcriptsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (liveMarksRefs) db.liveMarks,
+                    if (transcriptsRefs) db.transcripts,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (sessionId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.sessionId,
+                                    referencedTable: $$RecordingsTableReferences
+                                        ._sessionIdTable(db),
+                                    referencedColumn:
+                                        $$RecordingsTableReferences
+                                            ._sessionIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (projectId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.projectId,
+                                    referencedTable: $$RecordingsTableReferences
+                                        ._projectIdTable(db),
+                                    referencedColumn:
+                                        $$RecordingsTableReferences
+                                            ._projectIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (liveMarksRefs)
+                        await $_getPrefetchedData<
+                          Recording,
+                          $RecordingsTable,
+                          LiveMark
+                        >(
+                          currentTable: table,
+                          referencedTable: $$RecordingsTableReferences
+                              ._liveMarksRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$RecordingsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).liveMarksRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.recordingId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (transcriptsRefs)
+                        await $_getPrefetchedData<
+                          Recording,
+                          $RecordingsTable,
+                          Transcript
+                        >(
+                          currentTable: table,
+                          referencedTable: $$RecordingsTableReferences
+                              ._transcriptsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$RecordingsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).transcriptsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.recordingId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$RecordingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RecordingsTable,
+      Recording,
+      $$RecordingsTableFilterComposer,
+      $$RecordingsTableOrderingComposer,
+      $$RecordingsTableAnnotationComposer,
+      $$RecordingsTableCreateCompanionBuilder,
+      $$RecordingsTableUpdateCompanionBuilder,
+      (Recording, $$RecordingsTableReferences),
+      Recording,
+      PrefetchHooks Function({
+        bool sessionId,
+        bool projectId,
+        bool liveMarksRefs,
+        bool transcriptsRefs,
+      })
+    >;
+typedef $$LiveMarksTableCreateCompanionBuilder =
+    LiveMarksCompanion Function({
+      required String id,
+      required String recordingId,
+      required String sessionId,
+      required String projectId,
+      required String kind,
+      required int atMs,
+      Value<DateTime?> deletedAt,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$LiveMarksTableUpdateCompanionBuilder =
+    LiveMarksCompanion Function({
+      Value<String> id,
+      Value<String> recordingId,
+      Value<String> sessionId,
+      Value<String> projectId,
+      Value<String> kind,
+      Value<int> atMs,
+      Value<DateTime?> deletedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$LiveMarksTableReferences
+    extends BaseReferences<_$AppDatabase, $LiveMarksTable, LiveMark> {
+  $$LiveMarksTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $RecordingsTable _recordingIdTable(_$AppDatabase db) =>
+      db.recordings.createAlias('live_marks__recording_id__recordings__id');
+
+  $$RecordingsTableProcessedTableManager get recordingId {
+    final $_column = $_itemColumn<String>('recording_id')!;
+
+    final manager = $$RecordingsTableTableManager(
+      $_db,
+      $_db.recordings,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_recordingIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$LiveMarksTableFilterComposer
+    extends Composer<_$AppDatabase, $LiveMarksTable> {
+  $$LiveMarksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get atMs => $composableBuilder(
+    column: $table.atMs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<DateTime?, DateTime, DateTime> get deletedAt =>
+      $composableBuilder(
+        column: $table.deletedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get createdAt =>
+      $composableBuilder(
+        column: $table.createdAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get updatedAt =>
+      $composableBuilder(
+        column: $table.updatedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  $$RecordingsTableFilterComposer get recordingId {
+    final $$RecordingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recordingId,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableFilterComposer(
+            $db: $db,
+            $table: $db.recordings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LiveMarksTableOrderingComposer
+    extends Composer<_$AppDatabase, $LiveMarksTable> {
+  $$LiveMarksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get kind => $composableBuilder(
+    column: $table.kind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get atMs => $composableBuilder(
+    column: $table.atMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$RecordingsTableOrderingComposer get recordingId {
+    final $$RecordingsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recordingId,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableOrderingComposer(
+            $db: $db,
+            $table: $db.recordings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LiveMarksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LiveMarksTable> {
+  $$LiveMarksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => column);
+
+  GeneratedColumn<String> get projectId =>
+      $composableBuilder(column: $table.projectId, builder: (column) => column);
+
+  GeneratedColumn<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<int> get atMs =>
+      $composableBuilder(column: $table.atMs, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime?, DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$RecordingsTableAnnotationComposer get recordingId {
+    final $$RecordingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recordingId,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.recordings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LiveMarksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LiveMarksTable,
+          LiveMark,
+          $$LiveMarksTableFilterComposer,
+          $$LiveMarksTableOrderingComposer,
+          $$LiveMarksTableAnnotationComposer,
+          $$LiveMarksTableCreateCompanionBuilder,
+          $$LiveMarksTableUpdateCompanionBuilder,
+          (LiveMark, $$LiveMarksTableReferences),
+          LiveMark,
+          PrefetchHooks Function({bool recordingId})
+        > {
+  $$LiveMarksTableTableManager(_$AppDatabase db, $LiveMarksTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LiveMarksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LiveMarksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LiveMarksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> recordingId = const Value.absent(),
+                Value<String> sessionId = const Value.absent(),
+                Value<String> projectId = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<int> atMs = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LiveMarksCompanion(
+                id: id,
+                recordingId: recordingId,
+                sessionId: sessionId,
+                projectId: projectId,
+                kind: kind,
+                atMs: atMs,
+                deletedAt: deletedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String recordingId,
+                required String sessionId,
+                required String projectId,
+                required String kind,
+                required int atMs,
+                Value<DateTime?> deletedAt = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => LiveMarksCompanion.insert(
+                id: id,
+                recordingId: recordingId,
+                sessionId: sessionId,
+                projectId: projectId,
+                kind: kind,
+                atMs: atMs,
+                deletedAt: deletedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$LiveMarksTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({recordingId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (recordingId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.recordingId,
+                                referencedTable: $$LiveMarksTableReferences
+                                    ._recordingIdTable(db),
+                                referencedColumn: $$LiveMarksTableReferences
+                                    ._recordingIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$LiveMarksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LiveMarksTable,
+      LiveMark,
+      $$LiveMarksTableFilterComposer,
+      $$LiveMarksTableOrderingComposer,
+      $$LiveMarksTableAnnotationComposer,
+      $$LiveMarksTableCreateCompanionBuilder,
+      $$LiveMarksTableUpdateCompanionBuilder,
+      (LiveMark, $$LiveMarksTableReferences),
+      LiveMark,
+      PrefetchHooks Function({bool recordingId})
+    >;
+typedef $$TranscriptsTableCreateCompanionBuilder =
+    TranscriptsCompanion Function({
+      required String id,
+      required String recordingId,
+      required String sessionId,
+      required String projectId,
+      required String pass,
+      Value<String> status,
+      required String modelId,
+      Value<String?> body,
+      Value<String?> failureReason,
+      Value<DateTime?> completedAt,
+      Value<DateTime?> deletedAt,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$TranscriptsTableUpdateCompanionBuilder =
+    TranscriptsCompanion Function({
+      Value<String> id,
+      Value<String> recordingId,
+      Value<String> sessionId,
+      Value<String> projectId,
+      Value<String> pass,
+      Value<String> status,
+      Value<String> modelId,
+      Value<String?> body,
+      Value<String?> failureReason,
+      Value<DateTime?> completedAt,
+      Value<DateTime?> deletedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$TranscriptsTableReferences
+    extends BaseReferences<_$AppDatabase, $TranscriptsTable, Transcript> {
+  $$TranscriptsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $RecordingsTable _recordingIdTable(_$AppDatabase db) =>
+      db.recordings.createAlias('transcripts__recording_id__recordings__id');
+
+  $$RecordingsTableProcessedTableManager get recordingId {
+    final $_column = $_itemColumn<String>('recording_id')!;
+
+    final manager = $$RecordingsTableTableManager(
+      $_db,
+      $_db.recordings,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_recordingIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TranscriptSegmentsTable, List<TranscriptSegment>>
+  _transcriptSegmentsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.transcriptSegments,
+        aliasName: 'transcripts__id__transcript_segments__transcript_id',
+      );
+
+  $$TranscriptSegmentsTableProcessedTableManager get transcriptSegmentsRefs {
+    final manager = $$TranscriptSegmentsTableTableManager(
+      $_db,
+      $_db.transcriptSegments,
+    ).filter((f) => f.transcriptId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _transcriptSegmentsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$TranscriptsTableFilterComposer
+    extends Composer<_$AppDatabase, $TranscriptsTable> {
+  $$TranscriptsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get pass => $composableBuilder(
+    column: $table.pass,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get modelId => $composableBuilder(
+    column: $table.modelId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get failureReason => $composableBuilder(
+    column: $table.failureReason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<DateTime?, DateTime, DateTime>
+  get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<DateTime?, DateTime, DateTime> get deletedAt =>
+      $composableBuilder(
+        column: $table.deletedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get createdAt =>
+      $composableBuilder(
+        column: $table.createdAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get updatedAt =>
+      $composableBuilder(
+        column: $table.updatedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  $$RecordingsTableFilterComposer get recordingId {
+    final $$RecordingsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recordingId,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableFilterComposer(
+            $db: $db,
+            $table: $db.recordings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> transcriptSegmentsRefs(
+    Expression<bool> Function($$TranscriptSegmentsTableFilterComposer f) f,
+  ) {
+    final $$TranscriptSegmentsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transcriptSegments,
+      getReferencedColumn: (t) => t.transcriptId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TranscriptSegmentsTableFilterComposer(
+            $db: $db,
+            $table: $db.transcriptSegments,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$TranscriptsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TranscriptsTable> {
+  $$TranscriptsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get pass => $composableBuilder(
+    column: $table.pass,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get modelId => $composableBuilder(
+    column: $table.modelId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get failureReason => $composableBuilder(
+    column: $table.failureReason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$RecordingsTableOrderingComposer get recordingId {
+    final $$RecordingsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recordingId,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableOrderingComposer(
+            $db: $db,
+            $table: $db.recordings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TranscriptsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TranscriptsTable> {
+  $$TranscriptsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => column);
+
+  GeneratedColumn<String> get projectId =>
+      $composableBuilder(column: $table.projectId, builder: (column) => column);
+
+  GeneratedColumn<String> get pass =>
+      $composableBuilder(column: $table.pass, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get modelId =>
+      $composableBuilder(column: $table.modelId, builder: (column) => column);
+
+  GeneratedColumn<String> get body =>
+      $composableBuilder(column: $table.body, builder: (column) => column);
+
+  GeneratedColumn<String> get failureReason => $composableBuilder(
+    column: $table.failureReason,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<DateTime?, DateTime> get completedAt =>
+      $composableBuilder(
+        column: $table.completedAt,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<DateTime?, DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$RecordingsTableAnnotationComposer get recordingId {
+    final $$RecordingsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recordingId,
+      referencedTable: $db.recordings,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordingsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.recordings,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> transcriptSegmentsRefs<T extends Object>(
+    Expression<T> Function($$TranscriptSegmentsTableAnnotationComposer a) f,
+  ) {
+    final $$TranscriptSegmentsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.transcriptSegments,
+          getReferencedColumn: (t) => t.transcriptId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$TranscriptSegmentsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.transcriptSegments,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$TranscriptsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TranscriptsTable,
+          Transcript,
+          $$TranscriptsTableFilterComposer,
+          $$TranscriptsTableOrderingComposer,
+          $$TranscriptsTableAnnotationComposer,
+          $$TranscriptsTableCreateCompanionBuilder,
+          $$TranscriptsTableUpdateCompanionBuilder,
+          (Transcript, $$TranscriptsTableReferences),
+          Transcript,
+          PrefetchHooks Function({
+            bool recordingId,
+            bool transcriptSegmentsRefs,
+          })
+        > {
+  $$TranscriptsTableTableManager(_$AppDatabase db, $TranscriptsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TranscriptsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TranscriptsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TranscriptsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> recordingId = const Value.absent(),
+                Value<String> sessionId = const Value.absent(),
+                Value<String> projectId = const Value.absent(),
+                Value<String> pass = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String> modelId = const Value.absent(),
+                Value<String?> body = const Value.absent(),
+                Value<String?> failureReason = const Value.absent(),
+                Value<DateTime?> completedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TranscriptsCompanion(
+                id: id,
+                recordingId: recordingId,
+                sessionId: sessionId,
+                projectId: projectId,
+                pass: pass,
+                status: status,
+                modelId: modelId,
+                body: body,
+                failureReason: failureReason,
+                completedAt: completedAt,
+                deletedAt: deletedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String recordingId,
+                required String sessionId,
+                required String projectId,
+                required String pass,
+                Value<String> status = const Value.absent(),
+                required String modelId,
+                Value<String?> body = const Value.absent(),
+                Value<String?> failureReason = const Value.absent(),
+                Value<DateTime?> completedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => TranscriptsCompanion.insert(
+                id: id,
+                recordingId: recordingId,
+                sessionId: sessionId,
+                projectId: projectId,
+                pass: pass,
+                status: status,
+                modelId: modelId,
+                body: body,
+                failureReason: failureReason,
+                completedAt: completedAt,
+                deletedAt: deletedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TranscriptsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({recordingId = false, transcriptSegmentsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (transcriptSegmentsRefs) db.transcriptSegments,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (recordingId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.recordingId,
+                                    referencedTable:
+                                        $$TranscriptsTableReferences
+                                            ._recordingIdTable(db),
+                                    referencedColumn:
+                                        $$TranscriptsTableReferences
+                                            ._recordingIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (transcriptSegmentsRefs)
+                        await $_getPrefetchedData<
+                          Transcript,
+                          $TranscriptsTable,
+                          TranscriptSegment
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TranscriptsTableReferences
+                              ._transcriptSegmentsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TranscriptsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).transcriptSegmentsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.transcriptId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TranscriptsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TranscriptsTable,
+      Transcript,
+      $$TranscriptsTableFilterComposer,
+      $$TranscriptsTableOrderingComposer,
+      $$TranscriptsTableAnnotationComposer,
+      $$TranscriptsTableCreateCompanionBuilder,
+      $$TranscriptsTableUpdateCompanionBuilder,
+      (Transcript, $$TranscriptsTableReferences),
+      Transcript,
+      PrefetchHooks Function({bool recordingId, bool transcriptSegmentsRefs})
+    >;
+typedef $$TranscriptSegmentsTableCreateCompanionBuilder =
+    TranscriptSegmentsCompanion Function({
+      required String id,
+      required String transcriptId,
+      required String recordingId,
+      required String sessionId,
+      required String projectId,
+      required int fromMs,
+      required int toMs,
+      required int position,
+      required String body,
+      Value<DateTime?> deletedAt,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$TranscriptSegmentsTableUpdateCompanionBuilder =
+    TranscriptSegmentsCompanion Function({
+      Value<String> id,
+      Value<String> transcriptId,
+      Value<String> recordingId,
+      Value<String> sessionId,
+      Value<String> projectId,
+      Value<int> fromMs,
+      Value<int> toMs,
+      Value<int> position,
+      Value<String> body,
+      Value<DateTime?> deletedAt,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+final class $$TranscriptSegmentsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $TranscriptSegmentsTable,
+          TranscriptSegment
+        > {
+  $$TranscriptSegmentsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $TranscriptsTable _transcriptIdTable(_$AppDatabase db) => db
+      .transcripts
+      .createAlias('transcript_segments__transcript_id__transcripts__id');
+
+  $$TranscriptsTableProcessedTableManager get transcriptId {
+    final $_column = $_itemColumn<String>('transcript_id')!;
+
+    final manager = $$TranscriptsTableTableManager(
+      $_db,
+      $_db.transcripts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_transcriptIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TranscriptSegmentsTableFilterComposer
+    extends Composer<_$AppDatabase, $TranscriptSegmentsTable> {
+  $$TranscriptSegmentsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recordingId => $composableBuilder(
+    column: $table.recordingId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get fromMs => $composableBuilder(
+    column: $table.fromMs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get toMs => $composableBuilder(
+    column: $table.toMs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<DateTime?, DateTime, DateTime> get deletedAt =>
+      $composableBuilder(
+        column: $table.deletedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get createdAt =>
+      $composableBuilder(
+        column: $table.createdAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<DateTime, DateTime, DateTime> get updatedAt =>
+      $composableBuilder(
+        column: $table.updatedAt,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  $$TranscriptsTableFilterComposer get transcriptId {
+    final $$TranscriptsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transcriptId,
+      referencedTable: $db.transcripts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TranscriptsTableFilterComposer(
+            $db: $db,
+            $table: $db.transcripts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TranscriptSegmentsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TranscriptSegmentsTable> {
+  $$TranscriptSegmentsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recordingId => $composableBuilder(
+    column: $table.recordingId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sessionId => $composableBuilder(
+    column: $table.sessionId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get projectId => $composableBuilder(
+    column: $table.projectId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get fromMs => $composableBuilder(
+    column: $table.fromMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get toMs => $composableBuilder(
+    column: $table.toMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TranscriptsTableOrderingComposer get transcriptId {
+    final $$TranscriptsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transcriptId,
+      referencedTable: $db.transcripts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TranscriptsTableOrderingComposer(
+            $db: $db,
+            $table: $db.transcripts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TranscriptSegmentsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TranscriptSegmentsTable> {
+  $$TranscriptSegmentsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get recordingId => $composableBuilder(
+    column: $table.recordingId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => column);
+
+  GeneratedColumn<String> get projectId =>
+      $composableBuilder(column: $table.projectId, builder: (column) => column);
+
+  GeneratedColumn<int> get fromMs =>
+      $composableBuilder(column: $table.fromMs, builder: (column) => column);
+
+  GeneratedColumn<int> get toMs =>
+      $composableBuilder(column: $table.toMs, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<String> get body =>
+      $composableBuilder(column: $table.body, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime?, DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<DateTime, DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$TranscriptsTableAnnotationComposer get transcriptId {
+    final $$TranscriptsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.transcriptId,
+      referencedTable: $db.transcripts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TranscriptsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transcripts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TranscriptSegmentsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TranscriptSegmentsTable,
+          TranscriptSegment,
+          $$TranscriptSegmentsTableFilterComposer,
+          $$TranscriptSegmentsTableOrderingComposer,
+          $$TranscriptSegmentsTableAnnotationComposer,
+          $$TranscriptSegmentsTableCreateCompanionBuilder,
+          $$TranscriptSegmentsTableUpdateCompanionBuilder,
+          (TranscriptSegment, $$TranscriptSegmentsTableReferences),
+          TranscriptSegment,
+          PrefetchHooks Function({bool transcriptId})
+        > {
+  $$TranscriptSegmentsTableTableManager(
+    _$AppDatabase db,
+    $TranscriptSegmentsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TranscriptSegmentsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TranscriptSegmentsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TranscriptSegmentsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> transcriptId = const Value.absent(),
+                Value<String> recordingId = const Value.absent(),
+                Value<String> sessionId = const Value.absent(),
+                Value<String> projectId = const Value.absent(),
+                Value<int> fromMs = const Value.absent(),
+                Value<int> toMs = const Value.absent(),
+                Value<int> position = const Value.absent(),
+                Value<String> body = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TranscriptSegmentsCompanion(
+                id: id,
+                transcriptId: transcriptId,
+                recordingId: recordingId,
+                sessionId: sessionId,
+                projectId: projectId,
+                fromMs: fromMs,
+                toMs: toMs,
+                position: position,
+                body: body,
+                deletedAt: deletedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String transcriptId,
+                required String recordingId,
+                required String sessionId,
+                required String projectId,
+                required int fromMs,
+                required int toMs,
+                required int position,
+                required String body,
+                Value<DateTime?> deletedAt = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => TranscriptSegmentsCompanion.insert(
+                id: id,
+                transcriptId: transcriptId,
+                recordingId: recordingId,
+                sessionId: sessionId,
+                projectId: projectId,
+                fromMs: fromMs,
+                toMs: toMs,
+                position: position,
+                body: body,
+                deletedAt: deletedAt,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TranscriptSegmentsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({transcriptId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (transcriptId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.transcriptId,
+                                referencedTable:
+                                    $$TranscriptSegmentsTableReferences
+                                        ._transcriptIdTable(db),
+                                referencedColumn:
+                                    $$TranscriptSegmentsTableReferences
+                                        ._transcriptIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TranscriptSegmentsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TranscriptSegmentsTable,
+      TranscriptSegment,
+      $$TranscriptSegmentsTableFilterComposer,
+      $$TranscriptSegmentsTableOrderingComposer,
+      $$TranscriptSegmentsTableAnnotationComposer,
+      $$TranscriptSegmentsTableCreateCompanionBuilder,
+      $$TranscriptSegmentsTableUpdateCompanionBuilder,
+      (TranscriptSegment, $$TranscriptSegmentsTableReferences),
+      TranscriptSegment,
+      PrefetchHooks Function({bool transcriptId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7272,4 +12490,12 @@ class $AppDatabaseManager {
       $$GlossaryTermsTableTableManager(_db, _db.glossaryTerms);
   $$AuditEntriesTableTableManager get auditEntries =>
       $$AuditEntriesTableTableManager(_db, _db.auditEntries);
+  $$RecordingsTableTableManager get recordings =>
+      $$RecordingsTableTableManager(_db, _db.recordings);
+  $$LiveMarksTableTableManager get liveMarks =>
+      $$LiveMarksTableTableManager(_db, _db.liveMarks);
+  $$TranscriptsTableTableManager get transcripts =>
+      $$TranscriptsTableTableManager(_db, _db.transcripts);
+  $$TranscriptSegmentsTableTableManager get transcriptSegments =>
+      $$TranscriptSegmentsTableTableManager(_db, _db.transcriptSegments);
 }
