@@ -158,20 +158,20 @@ distintos instantes y verificar que cada marca quedó con su tipo y su instante 
 
 ### Tests for User Story 2
 
-- [ ] T047 [P] [US2] Prueba de casos de uso en `test/unit/domain/recordings/live_mark_test.dart`: `PlaceLiveMark` rechaza con `NoActiveRecordingFailure` sin captura activa, calcula `at_ms` desde el inicio de **su grabación** y admite dos marcas en el mismo instante sin deduplicar; `ChangeMarkKind` funciona con la grabación ya detenida
-- [ ] T048 [P] [US2] Prueba del DAO en `test/data/live_marks_dao_test.dart`: listado por grabación ordenado por `at_ms`, cambio de tipo, y baja lógica con asiento `liveMarkDeleted` en la misma transacción
-- [ ] T049 [P] [US2] Prueba de Notifier en `test/unit/notifiers/live_marks_test.dart` con `ProviderContainer.test()`
-- [ ] T050 [P] [US2] Prueba de widget en `test/widget/recordings/live_mark_bar_test.dart`: los tres controles solo están visibles con captura activa y no interrumpida, y tocarlos **no abre ningún diálogo**
+- [X] T047 [P] [US2] Prueba de casos de uso en `test/unit/domain/recordings/live_mark_test.dart`: `PlaceLiveMark` rechaza con `NoActiveRecordingFailure` sin captura activa, calcula `at_ms` desde el inicio de **su grabación** y admite dos marcas en el mismo instante sin deduplicar; `ChangeMarkKind` funciona con la grabación ya detenida
+- [X] T048 [P] [US2] Prueba del DAO en `test/data/live_marks_dao_test.dart`: listado por grabación ordenado por `at_ms`, cambio de tipo, y baja lógica con asiento `liveMarkDeleted` en la misma transacción
+- [X] T049 [P] [US2] Prueba de Notifier en `test/unit/notifiers/live_marks_test.dart` con `ProviderContainer.test()`
+- [X] T050 [P] [US2] Prueba de widget en `test/widget/recordings/live_mark_bar_test.dart`: los tres controles solo están visibles con captura activa y no interrumpida, y tocarlos **no abre ningún diálogo**
 
 ### Implementation for User Story 2
 
-- [ ] T051 [P] [US2] Crear la entidad `LiveMark` y el enum `LiveMarkKind` con exactamente tres valores —`requirement`, `doubt`, `quote`— en `lib/features/recordings/domain/entities/live_mark.dart`. Son los aclarados el 2026-08-11 y definen las ventanas de filtrado del incremento 3
-- [ ] T052 [US2] Declarar `LiveMarkRepository` en `lib/features/recordings/domain/contracts/live_mark_repository.dart`
-- [ ] T053 [P] [US2] Implementar los casos de uso `PlaceLiveMark`, `ChangeMarkKind`, `DeleteLiveMark` y `WatchMarks` en `lib/features/recordings/domain/usecases/`
-- [ ] T054 [US2] Implementar `LiveMarksDao` y `LiveMarkRepositoryImpl` en `lib/features/recordings/data/`, con la baja lógica y su asiento en la misma transacción
-- [ ] T055 [US2] Implementar las mutaciones `placeLiveMark`, `changeMarkKind` y `deleteLiveMark` en `lib/features/recordings/presentation/recording_mutations.dart`
-- [ ] T056 [US2] Implementar la barra de marcado en `lib/features/recordings/presentation/live_mark_bar.dart` con los tres botones y confirmación **pasiva y no bloqueante**: un diálogo rompería el propósito entero de la historia
-- [ ] T057 [US2] Mostrar la lista de marcas ordenada por instante, cada una con su tipo visible, en `lib/features/recordings/presentation/live_mark_list.dart`
+- [X] T051 [P] [US2] Crear la entidad `LiveMark` y el enum `LiveMarkKind` con exactamente tres valores —`requirement`, `doubt`, `quote`— en `lib/features/recordings/domain/entities/live_mark.dart`. Son los aclarados el 2026-08-11 y definen las ventanas de filtrado del incremento 3
+- [X] T052 [US2] Declarar `LiveMarkRepository` en `lib/features/recordings/domain/contracts/live_mark_repository.dart`
+- [X] T053 [P] [US2] Implementar los casos de uso `PlaceLiveMark`, `ChangeMarkKind`, `DeleteLiveMark` y `WatchMarks` en `lib/features/recordings/domain/usecases/`
+- [X] T054 [US2] Implementar `LiveMarksDao` y `LiveMarkRepositoryImpl` en `lib/features/recordings/data/`, con la baja lógica y su asiento en la misma transacción
+- [X] T055 [US2] Implementar las mutaciones `placeLiveMark`, `changeMarkKind` y `deleteLiveMark` en `lib/features/recordings/presentation/recording_mutations.dart`
+- [X] T056 [US2] Implementar la barra de marcado en `lib/features/recordings/presentation/live_mark_bar.dart` con los tres botones y confirmación **pasiva y no bloqueante**: un diálogo rompería el propósito entero de la historia
+- [X] T057 [US2] Mostrar la lista de marcas ordenada por instante, cada una con su tipo visible, en `lib/features/recordings/presentation/live_mark_list.dart`
 
 **Checkpoint**: se marca en vivo sin interrumpir la captura, y las marcas se corrigen después.
 

@@ -36,6 +36,9 @@ class _FakeRecordingRepository implements RecordingRepository {
   Future<Recording?> findInterrupted() async => null;
 
   @override
+  Future<Recording?> findById(RecordingId id) async => store[id.value];
+
+  @override
   Future<void> setStopped(RecordingId id, int durationMs, DateTime at) async {
     final current = store[id.value]!;
     store[id.value] = current.copyWith(

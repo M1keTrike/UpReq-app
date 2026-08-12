@@ -37,6 +37,9 @@ class _FakeRecordingRepository implements RecordingRepository {
   Future<Recording?> findInterrupted() => throw UnimplementedError();
 
   @override
+  Future<Recording?> findById(RecordingId id) async => store[id.value];
+
+  @override
   Future<void> updateStatus(RecordingId id, RecordingStatus status, DateTime at) =>
       throw UnimplementedError();
 

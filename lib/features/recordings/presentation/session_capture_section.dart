@@ -4,6 +4,7 @@ import 'package:up_req/core/domain/ids.dart';
 
 import '../domain/entities/recording.dart';
 import 'active_capture_notifier.dart';
+import 'live_mark_bar.dart';
 import 'recording_mutations.dart';
 import 'session_capture_provider.dart';
 
@@ -28,9 +29,11 @@ class SessionCaptureSection extends ConsumerWidget {
       children: [
         Text('Grabación', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        if (active != null)
-          _ActiveCaptureView(active: active)
-        else if (canRecord)
+        if (active != null) ...[
+          _ActiveCaptureView(active: active),
+          const SizedBox(height: 8),
+          LiveMarkBar(active: active),
+        ] else if (canRecord)
           FilledButton.icon(
             key: const Key('start-recording-button'),
             icon: const Icon(Icons.fiber_manual_record),

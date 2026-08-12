@@ -9,6 +9,8 @@ abstract interface class RecordingRepository {
 
   Future<Recording?> findInterrupted(); // FR-011, al arrancar
 
+  Future<Recording?> findById(RecordingId id);
+
   Future<void> insert(Recording recording);
 
   Future<void> updateStatus(RecordingId id, RecordingStatus status, DateTime at);

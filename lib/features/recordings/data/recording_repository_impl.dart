@@ -35,6 +35,12 @@ class RecordingRepositoryImpl implements RecordingRepository {
   }
 
   @override
+  Future<domain.Recording?> findById(RecordingId id) async {
+    final row = await _dao.findById(id.value);
+    return row == null ? null : _toDomain(row);
+  }
+
+  @override
   Future<void> insert(domain.Recording recording) {
     return _dao.insertRecording(
       db.RecordingsCompanion.insert(
