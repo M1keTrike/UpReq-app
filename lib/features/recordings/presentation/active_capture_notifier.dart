@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:up_req/core/domain/ids.dart';
 import 'package:up_req/core/domain/result.dart';
+import 'package:up_req/features/transcription/domain/contracts/transcriber.dart';
+import 'package:up_req/features/transcription/domain/usecases/start_live_pass.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../data/record_audio_recorder.dart';
@@ -67,6 +69,13 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
   StreamSubscription<RecorderState>? _recorderStatesSubscription;
   Timer? _elapsedTicker;
 
+  /// Sesión de la pasada en vivo (US4), presente solo cuando
+  /// `StartLivePass` encontró el modelo `base` disponible. `null` es un
+  /// estado válido y frecuente: FR-012 nunca falla la grabación por su
+  /// ausencia.
+  LiveTranscription? _liveSession;
+  StreamSubscription<String>? _livePartialSubscription;
+
   /// Mide el tiempo transcurrido en pantalla (FR-002) con un cronómetro de
   /// pared, deliberadamente independiente del `Clock` inyectable: ese reloj
   /// se fija en las pruebas para que `started_at` sea determinista, y un
@@ -95,6 +104,7 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
     ref.onDispose(() {
       _pcmSubscription?.cancel();
       _recorderStatesSubscription?.cancel();
+      _livePartialSubscription?.cancel();
       _elapsedTicker?.cancel();
       _pcmController.close();
     });
@@ -170,6 +180,29 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
     // suscripción a la base cada vez que este estado cambia.
     _elapsedTicker?.cancel();
     _elapsedTicker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
+
+    unawaited(_startLiveIfAvailable(id));
+  }
+
+  /// FR-012: arranca la pasada en vivo sobre el segundo suscriptor del
+  /// bifurcador. Si `StartLivePass` devuelve `Err` (modelo `base` ausente),
+  /// se omite en silencio — la barrera del modelo (research.md, C3) no debe
+  /// convertirse en un fallo de grabación. Corre en paralelo a `_beginCapture`
+  /// (no se espera desde ahí) porque cargar el modelo puede tardar más que
+  /// abrir el micrófono, y la captura no debe esperar por eso.
+  Future<void> _startLiveIfAvailable(RecordingId id) async {
+    final result = await ref.read(startLivePassProvider)(id, pcmBroadcast());
+    if (result is! Ok<LiveTranscription>) return;
+
+    if (state == null) {
+      // La captura ya se detuvo (o nunca llegó a persistir el estado)
+      // mientras esperábamos: no dejar una sesión de inferencia huérfana.
+      await result.value.stop();
+      return;
+    }
+
+    _liveSession = result.value;
+    _livePartialSubscription = _liveSession!.partials.listen(updateLivePartial);
   }
 
   void _tick() {
@@ -219,7 +252,19 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
     await ref.read(audioRecorderProvider).stop();
     await _recorderStatesSubscription?.cancel();
     _recorderStatesSubscription = null;
+    await _stopLiveSession();
     unawaited(_disableWakelock());
+  }
+
+  /// Cierra la sesión de la pasada en vivo, si la había: nunca sobrevive a
+  /// una captura (FR-012, "vive en el notifier y muere al detener"), ni
+  /// siquiera durante una interrupción impuesta por el sistema.
+  Future<void> _stopLiveSession() async {
+    await _livePartialSubscription?.cancel();
+    _livePartialSubscription = null;
+    final live = _liveSession;
+    _liveSession = null;
+    if (live != null) await live.stop();
   }
 
   Future<void> _onStorageFull(RecordingId id) async {

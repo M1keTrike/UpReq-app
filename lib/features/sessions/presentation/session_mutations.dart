@@ -1,6 +1,9 @@
 import 'package:riverpod/experimental/mutation.dart';
 import 'package:up_req/core/domain/ids.dart';
 import 'package:up_req/core/domain/result.dart';
+import 'package:up_req/features/recordings/data/recording_repository_impl.dart';
+import 'package:up_req/features/recordings/presentation/active_capture_notifier.dart';
+import 'package:up_req/features/transcription/domain/usecases/run_final_pass.dart';
 
 import '../domain/entities/elicitation_session.dart';
 import '../domain/entities/session_draft.dart';
@@ -50,13 +53,32 @@ Future<void> runDeleteSession(MutationTarget target, SessionId id) {
   });
 }
 
+/// Al cerrar (T084): detiene antes la grabación que siguiera activa de ESTA
+/// sesión (FR-005), y tras confirmarse el cierre dispara `RunFinalPass`
+/// sobre cada grabación no borrada de la sesión — puede haber varias
+/// (FR-003a), y cada una produce su propia transcripción con sus propios
+/// segmentos, sin que ninguna espere a las demás.
 Future<void> runAdvanceSessionStatus(MutationTarget target, SessionId id, SessionStatus to) {
   return advanceSessionStatus.run(target, (tsx) async {
+    if (to == SessionStatus.closed) {
+      final active = tsx.get(activeCaptureProvider);
+      if (active != null) {
+        final activeRecording = await tsx.get(recordingRepositoryProvider).findById(active.id);
+        if (activeRecording?.sessionId == id) {
+          await tsx.get(activeCaptureProvider.notifier).stop();
+        }
+      }
+    }
+
     final result = await tsx.get(advanceSessionStatusProvider)(id, to);
-    return switch (result) {
-      Ok() => null,
-      Err(:final failure) => throw failure,
-    };
+    if (result case Err(:final failure)) throw failure;
+
+    if (to == SessionStatus.closed) {
+      final recordings = await tsx.get(recordingRepositoryProvider).watchBySession(id).first;
+      for (final recording in recordings) {
+        await tsx.get(runFinalPassProvider)(recording.id);
+      }
+    }
   });
 }
 
