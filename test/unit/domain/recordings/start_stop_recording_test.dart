@@ -98,6 +98,16 @@ class _FakeWavSink implements WavSink {
     closed = true;
     return durationToReturn;
   }
+
+  @override
+  Future<int> repairExisting(String relativePath, {int sampleRate = 16000, int channels = 1}) async {
+    return durationToReturn;
+  }
+
+  @override
+  Future<void> reopenForAppend(String relativePath, {int sampleRate = 16000, int channels = 1}) async {
+    opened = true;
+  }
 }
 
 class _FixedIdGenerator implements IdGenerator {

@@ -9,7 +9,10 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../data/record_audio_recorder.dart';
 import '../data/wav_writer.dart';
 import '../domain/contracts/audio_recorder.dart';
+import '../domain/entities/recording.dart';
+import '../domain/usecases/handle_interruption.dart';
 import '../domain/usecases/handle_storage_full.dart';
+import '../domain/usecases/recover_interrupted.dart';
 import '../domain/usecases/start_recording.dart';
 import '../domain/usecases/stop_recording.dart';
 
@@ -103,10 +106,49 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
     if (result is Err<RecordingId>) return result;
     final id = (result as Ok<RecordingId>).value;
 
+    final wavSink = ref.read(wavSinkProvider);
+    await wavSink.open('recordings/${id.value}.wav');
+    await _beginCapture(id);
+
+    return Ok(id);
+  }
+
+  /// Reanuda una grabación `interrupted` tras la elección explícita del
+  /// analista (FR-011). La cabecera ya quedó reparada por
+  /// `RecoverInterrupted`; aquí solo se reabre el archivo para anexar y se
+  /// vuelve a abrir el micrófono, exactamente como un `start()` nuevo pero
+  /// sin volver a validar sesión/proyecto ni generar otra fila.
+  Future<Result<void>> resumeInterrupted(RecordingId id) async {
+    final result = await ref.read(recoverInterruptedProvider)(id, RecoveryChoice.resume);
+    if (result is Err<Recording>) return Err(result.failure);
+    final recording = (result as Ok<Recording>).value;
+
+    final wavSink = ref.read(wavSinkProvider);
+    await wavSink.reopenForAppend(
+      recording.filePath,
+      sampleRate: recording.sampleRate,
+      channels: recording.channels,
+    );
+    await _beginCapture(id);
+
+    return const Ok(null);
+  }
+
+  /// Cierra una grabación `interrupted` conservando lo capturado, sin volver
+  /// a tocar hardware: ya está liberado desde que se detectó la
+  /// interrupción (`_handleImposedPause`) o nunca llegó a abrirse en este
+  /// proceso (recuperación tras un cierre inesperado).
+  Future<Result<void>> closeInterrupted(RecordingId id) async {
+    final result = await ref.read(recoverInterruptedProvider)(id, RecoveryChoice.closeKeeping);
+    return switch (result) {
+      Ok() => const Ok(null),
+      Err(:final failure) => Err(failure),
+    };
+  }
+
+  Future<void> _beginCapture(RecordingId id) async {
     final recorder = ref.read(audioRecorderProvider);
     final wavSink = ref.read(wavSinkProvider);
-
-    await wavSink.open('recordings/${id.value}.wav');
     final pcmStream = await recorder.start();
 
     _ownPause = false;
@@ -128,8 +170,6 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
     // suscripción a la base cada vez que este estado cambia.
     _elapsedTicker?.cancel();
     _elapsedTicker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
-
-    return Ok(id);
   }
 
   void _tick() {
@@ -164,15 +204,21 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
     state = current.copyWith(livePartial: text);
   }
 
+  /// `_ownPause` se marca ANTES de pedir el `stop()` y la suscripción a
+  /// `states` se cancela DESPUÉS de que resuelva: si `stop()` dispara
+  /// internamente una transición transitoria a `paused` antes de `stopped`,
+  /// `_onRecorderState` la reconoce como propia y no la confunde con una
+  /// interrupción del sistema (research.md, decisión 5).
   Future<void> _releaseHardware() async {
     await _pcmSubscription?.cancel();
     _pcmSubscription = null;
-    await _recorderStatesSubscription?.cancel();
-    _recorderStatesSubscription = null;
     _elapsedTicker?.cancel();
     _elapsedTicker = null;
     _stopwatch.stop();
+    _ownPause = true;
     await ref.read(audioRecorderProvider).stop();
+    await _recorderStatesSubscription?.cancel();
+    _recorderStatesSubscription = null;
     unawaited(_disableWakelock());
   }
 
@@ -189,10 +235,20 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
       return;
     }
     // Pausa que el notifier no pidió: interrupción del sistema (llamada
-    // entrante). El manejo completo (marcar `interrupted`, ofrecer
-    // recuperación) es de US3 (T064).
+    // entrante). FR-010.
     final current = state;
-    if (current != null) state = current.copyWith(isInterrupted: true);
+    if (current != null) unawaited(_handleImposedPause(current.id));
+  }
+
+  Future<void> _handleImposedPause(RecordingId id) async {
+    await _releaseHardware();
+    await ref.read(handleInterruptionProvider)(id);
+    // El estado pasa a null, igual que tras `stop()`: la grabación queda en
+    // `interrupted` en la base y la reporta `sessionCaptureProvider` (T065)
+    // vía `FindInterrupted`, que es la única fuente de verdad para mostrar
+    // la hoja de recuperación (evita un doble estado "activa e interrumpida"
+    // más "interrumpida en la base" al mismo tiempo).
+    state = null;
   }
 
   Future<void> _enableWakelock() async {

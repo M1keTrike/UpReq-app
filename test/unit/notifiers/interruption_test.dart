@@ -30,13 +30,14 @@ class _FakeRecordingRepository implements RecordingRepository {
   Stream<Recording?> watchActive() => Stream.value(active);
 
   @override
-  Stream<List<Recording>> watchBySession(SessionId id) => throw UnimplementedError();
-
-  @override
-  Future<Recording?> findInterrupted() async => null;
-
-  @override
   Future<Recording?> findById(RecordingId id) async => store[id.value];
+
+  @override
+  Future<void> updateStatus(RecordingId id, RecordingStatus status, DateTime at) async {
+    final current = store[id.value]!;
+    store[id.value] = current.copyWith(status: status, updatedAt: at);
+    if (status != RecordingStatus.recording) active = null;
+  }
 
   @override
   Future<void> setStopped(RecordingId id, int durationMs, DateTime at) async {
@@ -51,7 +52,10 @@ class _FakeRecordingRepository implements RecordingRepository {
   }
 
   @override
-  Future<void> updateStatus(RecordingId id, RecordingStatus status, DateTime at) async {}
+  Stream<List<Recording>> watchBySession(SessionId id) => throw UnimplementedError();
+
+  @override
+  Future<Recording?> findInterrupted() => throw UnimplementedError();
 
   @override
   Future<void> softDelete(RecordingId id, DateTime at) async {}
@@ -67,9 +71,7 @@ class _FakeWavSink implements WavSink {
   }
 
   @override
-  Future<void> append(Uint8List pcmFrames) async {
-    appended.add(pcmFrames);
-  }
+  Future<void> append(Uint8List pcmFrames) async => appended.add(pcmFrames);
 
   @override
   Future<int> closeAndFinalize() async {
@@ -101,7 +103,7 @@ class _FakeProjectStatusReader implements ProjectStatusReader {
 }
 
 void main() {
-  test('el estado avanza de reposo a capturando, el tiempo progresa y detener libera el recurso', () async {
+  test('una pausa que el notifier no pidió marca la grabación como interrupted', () async {
     final recorder = FakeAudioRecorder();
     final wavSink = _FakeWavSink();
     final repository = _FakeRecordingRepository();
@@ -117,30 +119,43 @@ void main() {
     );
     addTearDown(container.dispose);
 
+    final notifier = container.read(activeCaptureProvider.notifier);
+    final result = await notifier.start(const SessionId('session-1'));
+    final id = (result as Ok<RecordingId>).value;
+
+    recorder.emitSystemPause();
+    await Future<void>.delayed(Duration.zero);
+    await Future<void>.delayed(Duration.zero);
+
+    expect(repository.store[id.value]!.status, RecordingStatus.interrupted);
     expect(container.read(activeCaptureProvider), isNull);
+  });
+
+  test('una pausa pedida por la app (al detener) no marca interrupted', () async {
+    final recorder = FakeAudioRecorder();
+    final wavSink = _FakeWavSink();
+    final repository = _FakeRecordingRepository();
+
+    final container = buildTestContainer(
+      overrides: [
+        audioRecorderProvider.overrideWithValue(recorder),
+        wavSinkProvider.overrideWithValue(wavSink),
+        recordingRepositoryProvider.overrideWithValue(repository),
+        sessionStatusReaderProvider.overrideWithValue(_FakeSessionStatusReader()),
+        projectStatusReaderProvider.overrideWithValue(_FakeProjectStatusReader()),
+      ],
+    );
+    addTearDown(container.dispose);
 
     final notifier = container.read(activeCaptureProvider.notifier);
     final result = await notifier.start(const SessionId('session-1'));
-    expect(result, isA<Ok<RecordingId>>());
+    final id = (result as Ok<RecordingId>).value;
 
-    final active = container.read(activeCaptureProvider);
-    expect(active, isNotNull);
-    expect(active!.elapsed, Duration.zero);
-    expect(wavSink.isOpen, isTrue);
-    expect(recorder.started, isTrue);
+    // FakeAudioRecorder.stop() emite `paused` antes de `stopped`, simulando
+    // la transición transitoria real del paquete. No debe leerse como
+    // interrupción.
+    await notifier.stop();
 
-    recorder.emitFrame(Uint8List.fromList([1, 2, 3, 4]));
-    await Future<void>.delayed(Duration.zero);
-    expect(wavSink.appended, hasLength(1));
-
-    // El tiempo transcurrido progresa: el ticker interno corre cada segundo.
-    await Future<void>.delayed(const Duration(milliseconds: 1100));
-    final ticking = container.read(activeCaptureProvider);
-    expect(ticking!.elapsed, greaterThan(Duration.zero));
-
-    final stopResult = await notifier.stop();
-    expect(stopResult, isA<Ok<void>>());
-    expect(container.read(activeCaptureProvider), isNull);
-    expect(wavSink.isOpen, isFalse);
+    expect(repository.store[id.value]!.status, RecordingStatus.stopped);
   });
 }

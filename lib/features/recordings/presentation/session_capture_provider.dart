@@ -5,6 +5,7 @@ import 'package:up_req/core/domain/session_status_reader.dart';
 
 import '../data/recording_repository_impl.dart';
 import '../domain/entities/recording.dart';
+import '../domain/usecases/find_interrupted.dart';
 import 'active_capture_notifier.dart';
 
 part 'session_capture_provider.g.dart';
@@ -43,12 +44,19 @@ Stream<SessionCaptureState> sessionCapture(Ref ref, String sessionId) {
   // (constitución) en vez de fragmentar el estado en dos.
   final active = ref.watch(activeCaptureProvider);
 
+  final findInterrupted = ref.watch(findInterruptedProvider);
+
   return recordingRepository.watchBySession(id).asyncMap((recordings) async {
     final snapshot = await sessionStatusReader.find(id);
     final canRecord = snapshot != null &&
         snapshot.isInProgress &&
         await projectStatusReader.isActive(snapshot.projectId);
-    final interrupted = await recordingRepository.findInterrupted();
+
+    // Promueve y reporta cualquier grabación `recording` huérfana de un
+    // proceso anterior (T060), pero solo se muestra si pertenece a ESTA
+    // sesión: la hoja de recuperación es propia de la pantalla que se abre.
+    final anyInterrupted = await findInterrupted();
+    final interrupted = anyInterrupted?.sessionId == id ? anyInterrupted : null;
 
     return SessionCaptureState(
       recordings: recordings,

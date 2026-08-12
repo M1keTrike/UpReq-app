@@ -6,23 +6,34 @@ import '../domain/entities/recording.dart';
 import 'active_capture_notifier.dart';
 import 'live_mark_bar.dart';
 import 'recording_mutations.dart';
+import 'recovery_sheet.dart';
 import 'session_capture_provider.dart';
 
 /// Sección de captura del detalle de sesión (ui-contracts.md, pantalla 1).
 /// Fail-closed: mientras el provider carga, `canRecord` es `false` — el
 /// control de grabar no debe parpadear ni un instante con proyecto cerrado
 /// o sesión planeada (aprendizaje del incremento 1, anotado en el roadmap).
-class SessionCaptureSection extends ConsumerWidget {
+class SessionCaptureSection extends ConsumerStatefulWidget {
   const SessionCaptureSection({required this.sessionId, super.key});
 
   final String sessionId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(sessionCaptureProvider(sessionId));
+  ConsumerState<SessionCaptureSection> createState() => _SessionCaptureSectionState();
+}
+
+class _SessionCaptureSectionState extends ConsumerState<SessionCaptureSection> {
+  String? _sheetShownForRecordingId;
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(sessionCaptureProvider(widget.sessionId));
     final canRecord = state.value?.canRecord ?? false;
     final active = state.value?.active;
     final recordings = state.value?.recordings ?? const [];
+    final interrupted = state.value?.interrupted;
+
+    _maybeShowRecoverySheet(interrupted, canRecord);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +49,7 @@ class SessionCaptureSection extends ConsumerWidget {
             key: const Key('start-recording-button'),
             icon: const Icon(Icons.fiber_manual_record),
             label: const Text('Grabar entrevista'),
-            onPressed: () => runStartRecording(ref, SessionId(sessionId)),
+            onPressed: () => runStartRecording(ref, SessionId(widget.sessionId)),
           ),
         if (recordings.isEmpty && active == null && canRecord)
           const Padding(
@@ -50,6 +61,24 @@ class SessionCaptureSection extends ConsumerWidget {
             _RecordingTile(recording: recording, isReadOnly: !canRecord),
       ],
     );
+  }
+
+  /// Se dispara la primera vez que aparece una grabación `interrupted` de
+  /// esta sesión; no se repite mientras siga siendo la misma (T066: no
+  /// descartable sin elegir, así que reabrirla en cada rebuild sería ruido,
+  /// no una segunda oportunidad).
+  void _maybeShowRecoverySheet(Recording? interrupted, bool canRecord) {
+    if (interrupted == null) {
+      _sheetShownForRecordingId = null;
+      return;
+    }
+    if (_sheetShownForRecordingId == interrupted.id.value) return;
+    _sheetShownForRecordingId = interrupted.id.value;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      showRecoverySheet(context, ref, interrupted: interrupted, canResume: canRecord);
+    });
   }
 }
 

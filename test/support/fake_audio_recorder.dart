@@ -24,6 +24,10 @@ class FakeAudioRecorder implements AudioRecorder {
   @override
   Future<void> stop() async {
     started = false;
+    // Simula la transición transitoria real de `record`: pasar por `paused`
+    // antes de `stopped` al detener. El notifier debe distinguir esto de una
+    // interrupción real vía `_ownPause` (research.md, decisión 5).
+    statesController.add(RecorderState.paused);
     statesController.add(RecorderState.stopped);
   }
 

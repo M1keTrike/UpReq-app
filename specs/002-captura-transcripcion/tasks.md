@@ -187,20 +187,20 @@ captura, reabrirla y verificar que el audio se conservó y que la app ofrece có
 
 ### Tests for User Story 3
 
-- [ ] T058 [P] [US3] Prueba de recuperación en `test/unit/domain/recordings/recover_recording_test.dart`: `RecoverInterrupted` repara la cabecera en ambas ramas; `resume` deja la grabación en `recording` anexando al mismo archivo y `closeKeeping` la deja en `stopped` con la duración real
-- [ ] T059 [P] [US3] Prueba de detección de interrupción en `test/unit/notifiers/interruption_test.dart` con `FakeAudioRecorder`: una pausa **que el notifier no pidió** marca `interrupted`; una pausa pedida por la app, no
-- [ ] T060 [P] [US3] Prueba de arranque en `test/unit/domain/recordings/find_interrupted_test.dart`: al iniciar, una grabación que quedó en `recording` de una ejecución anterior se reporta como interrumpida
-- [ ] T061 [P] [US3] Prueba de widget en `test/widget/recordings/recovery_sheet_test.dart`: la hoja **no se puede descartar sin elegir**, y `resumeRecording` no se ofrece si la sesión ya se cerró
+- [X] T058 [P] [US3] Prueba de recuperación en `test/unit/domain/recordings/recover_recording_test.dart`: `RecoverInterrupted` repara la cabecera en ambas ramas; `resume` deja la grabación en `recording` anexando al mismo archivo y `closeKeeping` la deja en `stopped` con la duración real
+- [X] T059 [P] [US3] Prueba de detección de interrupción en `test/unit/notifiers/interruption_test.dart` con `FakeAudioRecorder`: una pausa **que el notifier no pidió** marca `interrupted`; una pausa pedida por la app, no
+- [X] T060 [P] [US3] Prueba de arranque en `test/unit/domain/recordings/find_interrupted_test.dart`: al iniciar, una grabación que quedó en `recording` de una ejecución anterior se reporta como interrumpida
+- [X] T061 [P] [US3] Prueba de widget en `test/widget/recordings/recovery_sheet_test.dart`: la hoja **no se puede descartar sin elegir**, y `resumeRecording` no se ofrece si la sesión ya se cerró
 
 ### Implementation for User Story 3
 
-- [ ] T062 [US3] Implementar `HandleInterruption` en `lib/features/recordings/domain/usecases/handle_interruption.dart`: marca `interrupted` conservando el archivo
-- [ ] T063 [US3] Implementar `RecoverInterrupted` con `RecoveryChoice` (`resume` | `closeKeeping`) en `lib/features/recordings/domain/usecases/recover_interrupted.dart`, aplicando `WavHeaderRepair` en ambas ramas
-- [ ] T064 [US3] Suscribir `ActiveCaptureNotifier` al stream `states` del grabador en `lib/features/recordings/presentation/active_capture_notifier.dart`, distinguiendo con un booleano las pausas propias de las impuestas por el sistema (llamada entrante)
-- [ ] T065 [US3] Implementar la detección al arrancar en `lib/features/recordings/presentation/session_capture_provider.dart`: `findInterrupted()` alimenta el campo `interrupted` del estado
-- [ ] T066 [US3] Implementar la hoja modal de recuperación en `lib/features/recordings/presentation/recovery_sheet.dart` con las dos acciones explícitas, **sin opción predeterminada** y sin poder descartarse sin elegir
-- [ ] T067 [US3] Implementar las mutaciones `resumeRecording` y `closeInterruptedRecording` en `lib/features/recordings/presentation/recording_mutations.dart`
-- [ ] T068 [US3] Permitir varias grabaciones por sesión (FR-003a) en el listado de `lib/features/recordings/presentation/session_capture_provider.dart`, ordenadas cronológicamente y cada una con su duración
+- [X] T062 [US3] Implementar `HandleInterruption` en `lib/features/recordings/domain/usecases/handle_interruption.dart`: marca `interrupted` conservando el archivo
+- [X] T063 [US3] Implementar `RecoverInterrupted` con `RecoveryChoice` (`resume` | `closeKeeping`) en `lib/features/recordings/domain/usecases/recover_interrupted.dart`, aplicando `WavHeaderRepair` en ambas ramas
+- [X] T064 [US3] Suscribir `ActiveCaptureNotifier` al stream `states` del grabador en `lib/features/recordings/presentation/active_capture_notifier.dart`, distinguiendo con un booleano las pausas propias de las impuestas por el sistema (llamada entrante)
+- [X] T065 [US3] Implementar la detección al arrancar en `lib/features/recordings/presentation/session_capture_provider.dart`: `findInterrupted()` alimenta el campo `interrupted` del estado
+- [X] T066 [US3] Implementar la hoja modal de recuperación en `lib/features/recordings/presentation/recovery_sheet.dart` con las dos acciones explícitas, **sin opción predeterminada** y sin poder descartarse sin elegir
+- [X] T067 [US3] Implementar las mutaciones `resumeRecording` y `closeInterruptedRecording` en `lib/features/recordings/presentation/recording_mutations.dart`
+- [X] T068 [US3] Permitir varias grabaciones por sesión (FR-003a) en el listado de `lib/features/recordings/presentation/session_capture_provider.dart`, ordenadas cronológicamente y cada una con su duración
 
 **Checkpoint**: una interrupción por cualquiera de las dos causas deja de costar la entrevista.
 

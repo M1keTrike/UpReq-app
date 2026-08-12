@@ -62,6 +62,14 @@ class _FakeWavSink implements WavSink {
 
   @override
   Future<int> closeAndFinalize() async => partialDurationMs;
+
+  @override
+  Future<int> repairExisting(String relativePath, {int sampleRate = 16000, int channels = 1}) async {
+    return partialDurationMs;
+  }
+
+  @override
+  Future<void> reopenForAppend(String relativePath, {int sampleRate = 16000, int channels = 1}) async {}
 }
 
 void main() {

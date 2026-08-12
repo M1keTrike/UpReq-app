@@ -63,16 +63,61 @@ class WavFileSink implements WavSink {
       sampleRate: _sampleRate,
       channels: _channels,
     );
+    _patchSizes(file, plan);
+    file.closeSync();
+    _file = null;
 
+    return plan.durationMs;
+  }
+
+  @override
+  Future<int> repairExisting(
+    String relativePath, {
+    int sampleRate = 16000,
+    int channels = 1,
+  }) async {
+    final absolutePath = await _resolveAbsolutePath(relativePath);
+    final fileOnDisk = File(absolutePath);
+    final lengthBytes = fileOnDisk.existsSync() ? fileOnDisk.lengthSync() : 0;
+
+    final plan = WavHeaderRepair.plan(
+      fileLengthBytes: lengthBytes,
+      sampleRate: sampleRate,
+      channels: channels,
+    );
+
+    final file = fileOnDisk.openSync(mode: FileMode.append);
+    _patchSizes(file, plan);
+    file.closeSync();
+
+    return plan.durationMs;
+  }
+
+  @override
+  Future<void> reopenForAppend(
+    String relativePath, {
+    int sampleRate = 16000,
+    int channels = 1,
+  }) async {
+    _sampleRate = sampleRate;
+    _channels = channels;
+
+    final absolutePath = await _resolveAbsolutePath(relativePath);
+    final fileOnDisk = File(absolutePath);
+    final currentLength = fileOnDisk.existsSync() ? fileOnDisk.lengthSync() : _headerBytes;
+    _bytesWritten = currentLength > _headerBytes ? currentLength - _headerBytes : 0;
+
+    final file = fileOnDisk.openSync(mode: FileMode.append);
+    file.setPositionSync(currentLength);
+    _file = file;
+  }
+
+  void _patchSizes(RandomAccessFile file, WavRepairPlan plan) {
     file.setPositionSync(4);
     file.writeFromSync(_uint32le(plan.riffChunkSize));
     file.setPositionSync(40);
     file.writeFromSync(_uint32le(plan.dataChunkSize));
     file.flushSync();
-    file.closeSync();
-    _file = null;
-
-    return plan.durationMs;
   }
 
   Future<String> _resolveAbsolutePath(String relativePath) async {

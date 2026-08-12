@@ -69,7 +69,7 @@ final class ActiveCaptureNotifierProvider
 }
 
 String _$activeCaptureNotifierHash() =>
-    r'2db5e5028e7a307158b5157a130a2fac4763d1db';
+    r'e86c2fa74e144a5edadd0c9ad7ce78e803b1dee2';
 
 /// Primera excepción real a `autoDispose` del proyecto (constitución,
 /// Principio I). Justificación: este notifier posee el flujo PCM, el

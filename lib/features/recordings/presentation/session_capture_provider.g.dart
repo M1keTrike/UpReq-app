@@ -66,7 +66,7 @@ final class SessionCaptureProvider
   }
 }
 
-String _$sessionCaptureHash() => r'2c80e5847a6665c045014e1a2c4ba523d703adbb';
+String _$sessionCaptureHash() => r'e05cbdcd58f0dcc9edc14b2819531e342f0095ab';
 
 final class SessionCaptureFamily extends $Family
     with $FunctionalFamilyOverride<Stream<SessionCaptureState>, String> {

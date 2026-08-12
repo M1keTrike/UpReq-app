@@ -15,6 +15,8 @@ final deleteRecording = Mutation<void>();
 final placeLiveMark = Mutation<LiveMarkId>();
 final changeMarkKind = Mutation<void>();
 final deleteLiveMark = Mutation<void>();
+final resumeRecording = Mutation<void>();
+final closeInterruptedRecording = Mutation<void>();
 
 Future<RecordingId> runStartRecording(MutationTarget target, SessionId sessionId) {
   return startRecording.run(target, (tsx) async {
@@ -76,6 +78,26 @@ Future<void> runChangeMarkKind(MutationTarget target, LiveMarkId id, LiveMarkKin
 Future<void> runDeleteLiveMark(MutationTarget target, LiveMarkId id) {
   return deleteLiveMark.run(target, (tsx) async {
     final result = await tsx.get(deleteLiveMarkProvider)(id);
+    return switch (result) {
+      Ok() => null,
+      Err(:final failure) => throw failure,
+    };
+  });
+}
+
+Future<void> runResumeRecording(MutationTarget target, RecordingId id) {
+  return resumeRecording.run(target, (tsx) async {
+    final result = await tsx.get(activeCaptureProvider.notifier).resumeInterrupted(id);
+    return switch (result) {
+      Ok() => null,
+      Err(:final failure) => throw failure,
+    };
+  });
+}
+
+Future<void> runCloseInterruptedRecording(MutationTarget target, RecordingId id) {
+  return closeInterruptedRecording.run(target, (tsx) async {
+    final result = await tsx.get(activeCaptureProvider.notifier).closeInterrupted(id);
     return switch (result) {
       Ok() => null,
       Err(:final failure) => throw failure,
