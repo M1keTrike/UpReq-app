@@ -1,32 +1,42 @@
+import 'dart:io';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../domain/contracts/model_repository.dart';
 import '../domain/contracts/transcriber.dart';
+import 'model_download_client.dart';
+import 'whisper_transcriber.dart';
 
 part 'model_repository_impl.g.dart';
 
-/// PLACEHOLDER TEMPORAL: T102 (US6, Fase 8) reemplaza esta clase por la
-/// implementación real sobre `dio`, resolviendo la ruta con
-/// `WhisperController.getPath(model)`. Hasta entonces ningún modelo está
-/// disponible nunca, así que `RunFinalPass` (US4) dejará toda transcripción
-/// en `pending` (FR-016) en vez de fallar o lanzar — es exactamente el
-/// comportamiento correcto de un incremento donde US4 está completa y US6
-/// todavía no, y mantiene intacta la barrera del modelo (research.md,
-/// conflicto C3): `Transcriber` sigue sin invocarse jamás desde aquí.
-class UnavailableModelRepository implements ModelRepository {
-  @override
-  Future<bool> isAvailable(TranscriptionModel model) async => false;
+/// Disponibilidad y descarga del modelo (T102). **Reemplaza** el
+/// `UnavailableModelRepository` placeholder que T079/T080 (US4) dejaron en
+/// este mismo archivo. La disponibilidad se resuelve comprobando en disco
+/// la misma ruta que usaría `whisper_ggml` (`whisperModelPath`,
+/// `whisper_transcriber.dart`): es la barrera de research.md, conflicto C3
+/// — todo camino hacia `Transcriber` pasa antes por aquí, y nunca se llama
+/// a `WhisperController.downloadModel()`.
+class ModelRepositoryImpl implements ModelRepository {
+  ModelRepositoryImpl(this._downloadClient, {Future<String> Function(TranscriptionModel model)? resolvePath})
+      : _resolvePath = resolvePath ?? whisperModelPath;
+
+  final ModelDownloadClient _downloadClient;
+  final Future<String> Function(TranscriptionModel model) _resolvePath;
 
   @override
-  Stream<DownloadProgress> download(TranscriptionModel model) {
-    return Stream.value(
-      const DownloadProgress(receivedBytes: 0, state: DownloadState.failed),
-    );
+  Future<bool> isAvailable(TranscriptionModel model) async {
+    final path = await _resolvePath(model);
+    return File(path).existsSync();
   }
 
   @override
-  Future<void> cancelDownload(TranscriptionModel model) async {}
+  Stream<DownloadProgress> download(TranscriptionModel model) => _downloadClient.download(model);
+
+  @override
+  Future<void> cancelDownload(TranscriptionModel model) async {
+    _downloadClient.cancel(model);
+  }
 }
 
 @Riverpod(keepAlive: true)
-ModelRepository modelRepository(Ref ref) => UnavailableModelRepository();
+ModelRepository modelRepository(Ref ref) => ModelRepositoryImpl(ModelDownloadClient());

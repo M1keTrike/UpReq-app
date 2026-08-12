@@ -286,21 +286,21 @@ terminar queda disponible, sin que ninguna otra pantalla haya requerido conexió
 
 ### Tests for User Story 6
 
-- [ ] T096 [P] [US6] Prueba de `DownloadModel` en `test/unit/domain/transcription/download_model_test.dart` con doble del cliente: emite progreso, y al completar dispara `ProcessPendingTranscripts`
-- [ ] T097 [P] [US6] Prueba de atomicidad en `test/unit/domain/transcription/download_atomicity_test.dart`: una descarga cancelada o fallida **no deja ningún modelo utilizable** (FR-022), y reintentar sobrescribe el `.part`
-- [ ] T098 [P] [US6] Prueba de `ProcessPendingTranscripts` en `test/unit/domain/transcription/process_pending_test.dart`: recorre `findPending()` y lanza la pasada definitiva de cada uno
-- [ ] T099 [P] [US6] Prueba de widget en `test/widget/transcription/model_settings_test.dart`: sin `Content-Length` la barra es indeterminada y **no se inventa un porcentaje**
+- [X] T096 [P] [US6] Prueba de `DownloadModel` en `test/unit/domain/transcription/download_model_test.dart` con doble del cliente: emite progreso, y al completar dispara `ProcessPendingTranscripts`
+- [X] T097 [P] [US6] Prueba de atomicidad en `test/unit/domain/transcription/download_atomicity_test.dart`: una descarga cancelada o fallida **no deja ningún modelo utilizable** (FR-022), y reintentar sobrescribe el `.part`. Usa un `HttpClientAdapter` de `dio` guionado en vez de la red real: ninguna prueba llama a la API real
+- [X] T098 [P] [US6] Prueba de `ProcessPendingTranscripts` en `test/unit/domain/transcription/process_pending_test.dart`: recorre `findPending()` y lanza la pasada definitiva de cada uno
+- [X] T099 [P] [US6] Prueba de widget en `test/widget/transcription/model_settings_test.dart`: sin `Content-Length` la barra es indeterminada y **no se inventa un porcentaje**
 
 ### Implementation for User Story 6
 
-- [ ] T100 [P] [US6] Crear la entidad `ModelEntry` y el enum `ModelStatus` en `lib/features/transcription/domain/entities/model_entry.dart`
-- [ ] T101 [US6] Implementar `ModelDownloadClient` en `lib/features/transcription/data/model_download_client.dart` sobre `dio`, con `onReceiveProgress` y `CancelToken`, escribiendo a `<ruta>.part` y renombrando de forma atómica al completar. **ÚNICO importador de `package:dio` en todo el árbol**, verificado por la puerta de CI de T002
-- [ ] T102 [US6] Implementar `ModelRepositoryImpl` en `lib/features/transcription/data/model_repository_impl.dart`, resolviendo la ruta destino con `WhisperController.getPath(model)` para garantizar que el nombre de archivo es el que el paquete espera. **Reemplaza** el `UnavailableModelRepository` placeholder que T079/T080 (US4) dejaron en ese mismo archivo para poder compilar `modelRepositoryProvider` antes de que esta tarea exista: hasta T102, `isAvailable` siempre devuelve `false` y toda transcripción queda `pending` (FR-016), que es el comportamiento correcto de un incremento con US4 completa y US6 todavía no
-- [ ] T103 [P] [US6] Implementar los casos de uso `WatchModelStatus`, `DownloadModel`, `CancelModelDownload` y `ProcessPendingTranscripts` en `lib/features/transcription/domain/usecases/`
-- [ ] T104 [US6] Implementar `modelSettingsProvider` en `lib/features/transcription/presentation/model_settings_provider.dart` con el contador de transcripciones pendientes
-- [ ] T105 [US6] Implementar las mutaciones `downloadModel` y `cancelModelDownload` en `lib/features/transcription/presentation/model_mutations.dart`
-- [ ] T106 [US6] Implementar la pantalla de ajustes en `lib/features/transcription/presentation/model_settings_screen.dart` con los dos modelos, su estado y su progreso
-- [ ] T107 [US6] Registrar la ruta `/settings/models` en `lib/core/router/app_router.dart`, colgando de la raíz y **no** de un proyecto: el modelo es del dispositivo
+- [X] T100 [P] [US6] Crear la entidad `ModelEntry` y el enum `ModelStatus` en `lib/features/transcription/domain/entities/model_entry.dart`
+- [X] T101 [US6] Implementar `ModelDownloadClient` en `lib/features/transcription/data/model_download_client.dart` sobre `dio`, con `onReceiveProgress` y `CancelToken`, escribiendo a `<ruta>.part` y renombrando de forma atómica al completar. **ÚNICO importador de `package:dio` en todo el árbol**, verificado por la puerta de CI de T002. La ruta destino y la URL de descarga son inyectables (`resolvePath`/`resolveUrl`, por defecto `whisperModelPath`/`whisperModelDownloadUrl` de `whisper_transcriber.dart`) para poder probarse sin tocar `path_provider` ni la red
+- [X] T102 [US6] Implementar `ModelRepositoryImpl` en `lib/features/transcription/data/model_repository_impl.dart`, resolviendo la ruta destino con `whisperModelPath` (`whisper_transcriber.dart`), que envuelve `WhisperController.getPath(model)` para garantizar que el nombre de archivo es el que el paquete espera. **Reemplaza** el `UnavailableModelRepository` placeholder que T079/T080 (US4) dejaron en ese mismo archivo. `whisperModelPath`/`whisperModelDownloadUrl` viven en `whisper_transcriber.dart` y no aquí porque ese es el único archivo autorizado a importar `package:whisper_ggml` (tool/check_import_boundaries.dart); `ModelRepositoryImpl` y `ModelDownloadClient` los consumen sin importar el paquete
+- [X] T103 [P] [US6] Implementar los casos de uso `WatchModelStatus`, `DownloadModel`, `CancelModelDownload` y `ProcessPendingTranscripts` en `lib/features/transcription/domain/usecases/`. `RunFinalPass`, `ProcessPendingTranscripts` y `DownloadModel` pasan a `keepAlive`: los lee en cadena `ModelDownloadNotifier` (presentation, keepAlive), y riverpod_lint exige que un provider keepAlive no dependa de uno autoDispose
+- [X] T104 [US6] Implementar `modelSettingsProvider` en `lib/features/transcription/presentation/model_settings_provider.dart` con el contador de transcripciones pendientes. El progreso por modelo viene de `ModelDownloadNotifier` (nuevo, `model_download_notifier.dart`, `keepAlive` para que una descarga larga no muera si el analista sale de ajustes), no de la propia `Mutation`
+- [X] T105 [US6] Implementar las mutaciones `downloadModel` y `cancelModelDownload` en `lib/features/transcription/presentation/model_mutations.dart`
+- [X] T106 [US6] Implementar la pantalla de ajustes en `lib/features/transcription/presentation/model_settings_screen.dart` con los dos modelos, su estado y su progreso
+- [X] T107 [US6] Registrar la ruta `/settings/models` en `lib/core/router/app_router.dart`, colgando de la raíz y **no** de un proyecto: el modelo es del dispositivo
 
 **Checkpoint**: todas las historias funcionan de forma independiente.
 

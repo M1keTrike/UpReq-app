@@ -21,7 +21,7 @@ final class RunFinalPassProvider
         argument: null,
         retry: null,
         name: r'runFinalPassProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -48,4 +48,4 @@ final class RunFinalPassProvider
   }
 }
 
-String _$runFinalPassHash() => r'baf9a834d9281682fea03627714878cb96e24c92';
+String _$runFinalPassHash() => r'd61436290a7b6258d9a22e6b62b00f8d1289a6c1';

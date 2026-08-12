@@ -67,12 +67,7 @@ class WhisperTranscriber implements Transcriber {
     return _WhisperLiveTranscription(session);
   }
 
-  pkg.WhisperModel _toWhisperModel(TranscriptionModel model) {
-    return switch (model) {
-      TranscriptionModel.base => pkg.WhisperModel.base,
-      TranscriptionModel.small => pkg.WhisperModel.small,
-    };
-  }
+  pkg.WhisperModel _toWhisperModel(TranscriptionModel model) => _toPkgModel(model);
 
   Future<String> _resolveAbsolutePath(String relativePath) async {
     final dir = await getApplicationDocumentsDirectory();
@@ -95,3 +90,25 @@ class _WhisperLiveTranscription implements LiveTranscription {
 
 @Riverpod(keepAlive: true)
 Transcriber transcriber(Ref ref) => WhisperTranscriber();
+
+pkg.WhisperModel _toPkgModel(TranscriptionModel model) {
+  return switch (model) {
+    TranscriptionModel.base => pkg.WhisperModel.base,
+    TranscriptionModel.small => pkg.WhisperModel.small,
+  };
+}
+
+/// Ruta local donde `whisper_ggml` espera el archivo del modelo
+/// (`WhisperController.getPath`). Expuesta aquí porque este es el único
+/// archivo autorizado a importar `package:whisper_ggml`
+/// (tool/check_import_boundaries.dart): `ModelRepositoryImpl` (T102) y
+/// `ModelDownloadClient` (T101) la consumen sin importar el paquete.
+Future<String> whisperModelPath(TranscriptionModel model) {
+  return pkg.WhisperController().getPath(_toPkgModel(model));
+}
+
+/// URL pública desde la que `whisper_ggml` descargaría el modelo por su
+/// cuenta en el primer uso (research.md, conflicto C3). La app reutiliza la
+/// misma URL para hacer ella la descarga, de forma explícita, observable y
+/// cancelable, sin que la ruta implícita del paquete llegue a dispararse.
+Uri whisperModelDownloadUrl(TranscriptionModel model) => _toPkgModel(model).modelUri;

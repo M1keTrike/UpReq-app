@@ -11,6 +11,7 @@ import 'package:up_req/features/sessions/presentation/session_form_screen.dart';
 import 'package:up_req/features/sessions/presentation/session_list_screen.dart';
 import 'package:up_req/features/stakeholders/presentation/stakeholder_form_screen.dart';
 import 'package:up_req/features/stakeholders/presentation/stakeholder_list_screen.dart';
+import 'package:up_req/features/transcription/presentation/model_settings_screen.dart';
 
 /// Árbol de rutas de FR-021: lista de proyectos, detalle de proyecto con
 /// acceso a interesados, sesiones, glosario y bitácora, y detalle de sesión
@@ -37,6 +38,12 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'projects/new',
           builder: (context, state) => const ProjectFormScreen(projectId: null),
+        ),
+        // T107: cuelga de la raíz y no de un proyecto — el modelo es del
+        // dispositivo, no del proyecto.
+        GoRoute(
+          path: 'settings/models',
+          builder: (context, state) => const ModelSettingsScreen(),
         ),
         GoRoute(
           path: 'projects/:projectId',

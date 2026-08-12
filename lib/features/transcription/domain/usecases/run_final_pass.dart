@@ -152,7 +152,11 @@ final class RunFinalPass {
   }
 }
 
-@riverpod
+// keepAlive: se lee desde ProcessPendingTranscripts (T103), a su vez leído
+// desde DownloadModel y, en presentación, desde ModelDownloadNotifier
+// (keepAlive); riverpod_lint exige que un provider keepAlive no dependa de
+// uno autoDispose. Mismo criterio que build_initial_prompt.dart.
+@Riverpod(keepAlive: true)
 RunFinalPass runFinalPass(Ref ref) {
   return RunFinalPass(
     ref.watch(recordingRepositoryProvider),

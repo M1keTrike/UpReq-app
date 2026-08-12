@@ -12,8 +12,10 @@ import 'package:up_req/features/recordings/domain/contracts/recording_repository
 import 'package:up_req/features/recordings/domain/contracts/wav_sink.dart';
 import 'package:up_req/features/recordings/domain/entities/recording.dart';
 import 'package:up_req/features/recordings/presentation/active_capture_notifier.dart';
+import 'package:up_req/features/transcription/data/model_repository_impl.dart';
 
 import '../../support/fake_audio_recorder.dart';
+import '../../support/fake_model_repository.dart';
 import '../../support/test_container.dart';
 
 class _FakeRecordingRepository implements RecordingRepository {
@@ -116,6 +118,10 @@ void main() {
         recordingRepositoryProvider.overrideWithValue(repository),
         sessionStatusReaderProvider.overrideWithValue(_FakeSessionStatusReader()),
         projectStatusReaderProvider.overrideWithValue(_FakeProjectStatusReader()),
+        // Vacío: ningún modelo disponible, así que StartLivePass omite la
+        // pasada en vivo sin tocar el archivo real del modelo (T102 lo
+        // resuelve con path_provider, que no existe en este entorno).
+        modelRepositoryProvider.overrideWithValue(FakeModelRepository()),
       ],
     );
     addTearDown(container.dispose);
