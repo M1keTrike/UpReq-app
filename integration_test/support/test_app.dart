@@ -5,11 +5,15 @@ import 'package:drift/native.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:riverpod/misc.dart' show Override;
 import 'package:up_req/core/database/app_database.dart';
 import 'package:up_req/core/database/database_provider.dart';
 import 'package:up_req/core/domain/project_status_reader.dart';
+import 'package:up_req/core/domain/session_status_reader.dart';
 import 'package:up_req/features/projects/data/project_repository_impl.dart';
 import 'package:up_req/features/projects/data/project_status_reader_impl.dart';
+import 'package:up_req/features/sessions/data/session_repository_impl.dart';
+import 'package:up_req/features/sessions/data/session_status_reader_impl.dart';
 import 'package:up_req/main.dart';
 
 /// Abre una `AppDatabase` en memoria, para las pruebas de integración que no
@@ -33,19 +37,29 @@ AppDatabase openFileDatabase(File file) {
 }
 
 /// Monta la app real con la base de datos indicada, cableando
-/// `projectStatusReaderProvider` con la implementación real de la feature de
-/// proyectos, exactamente como hace `main.dart` en producción (`core` no
-/// puede importar `features/projects`, así que ese cableado vive fuera de
-/// ambos). Sin este override, cualquier pantalla que lo consulte —lista de
-/// interesados, sesiones, glosario, sus formularios— lanzaría
-/// `UnimplementedError` en vez de mostrar la app real.
+/// `projectStatusReaderProvider` y `sessionStatusReaderProvider` con sus
+/// implementaciones reales, exactamente como hace `main.dart` en producción
+/// (`core` no puede importar `features/projects` ni `features/sessions`, así
+/// que ese cableado vive fuera de ambos). Sin estos overrides, cualquier
+/// pantalla que los consulte —lista de interesados, sesiones, glosario, sus
+/// formularios, y (incremento 2) la sección de captura de grabación—
+/// lanzaría `UnimplementedError` en vez de mostrar la app real.
+///
+/// [overrides] añade los dobles de hardware/red del incremento 2
+/// (`hardwareOverrides` en `hardware_fakes.dart`) u otros que necesite cada
+/// prueba; se aplican después de los cableados de arriba, así que pueden
+/// sobreescribirlos si hiciera falta.
 ///
 /// El `ProviderScope` se construye como hijo directo de `pumpWidget` (en vez
 /// de devolverlo desde una función y pasarlo después) a propósito: es el
 /// patrón que exime a un `ProviderScope` de la regla `riverpod_lint`
 /// `scoped_providers_should_specify_dependencies`, la misma que `main.dart`
 /// cumple al construirlo como hijo directo de `runApp`.
-Future<void> pumpTestApp(WidgetTester tester, AppDatabase database) {
+Future<void> pumpTestApp(
+  WidgetTester tester,
+  AppDatabase database, {
+  List<Override> overrides = const [],
+}) {
   return tester.pumpWidget(
     ProviderScope(
       overrides: [
@@ -53,6 +67,10 @@ Future<void> pumpTestApp(WidgetTester tester, AppDatabase database) {
         projectStatusReaderProvider.overrideWith(
           (ref) => ProjectStatusReaderImpl(ref.watch(projectRepositoryProvider)),
         ),
+        sessionStatusReaderProvider.overrideWith(
+          (ref) => SessionStatusReaderImpl(ref.watch(sessionRepositoryProvider)),
+        ),
+        ...overrides,
       ],
       child: const UpReqApp(),
     ),
