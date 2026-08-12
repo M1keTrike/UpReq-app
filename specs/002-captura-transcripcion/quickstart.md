@@ -118,6 +118,17 @@ Gana en este incremento un veto explícito a la variante `-gpl` de `ffmpeg_kit_f
 La variante `_min` que entra es LGPL-3.0 y está permitida; la `-gpl` no lo estaría, y una
 actualización futura de `whisper_ggml` podría cambiarla sin que nadie lo note.
 
+**Anclaje de versiones — puerta nueva en este incremento:**
+
+```bash
+dart run tool/check_pinned_versions.dart
+```
+
+Compara las versiones resueltas en `pubspec.lock` contra las que la constitución v1.3.0 ancla
+de forma exacta (los cuatro paquetes de Riverpod y `drift`). Existe porque el anclaje que solo
+vive en el documento no se sostiene: la constitución declaró `drift 2.34.3` mientras el
+proyecto resolvía `2.34.0` durante todo el incremento 1, y ninguna puerta lo comprobaba.
+
 **Auditoría de importaciones:**
 
 Verifica, además de las reglas del incremento 1, que `record`, `whisper_ggml` y `just_audio`
@@ -220,7 +231,8 @@ cero por su cuenta: es la confirmación de que la cola de V4 se procesó.
 
 1. Grabar una entrevista real de al menos 5 minutos, en español, con al menos dos voces y
    ruido de fondo de oficina.
-2. Colocar marcas de los tres tipos durante la conversación.
+2. Colocar marcas de los tres tipos durante la conversación, **usando el avance en vivo** que
+   aparece sobre la barra de marcado para decidir cuándo hacerlo (FR-012).
 3. Cerrar la sesión y esperar la pasada definitiva.
 
 **Esperado**: la transcripción aparece organizada en segmentos con inicio y fin. Mientras se
@@ -241,6 +253,8 @@ reproducción se resalta conforme avanza el audio.
 | Calidad en español con audio de campo | Leer la transcripción y contar los errores por minuto |
 | Aporte del glosario | Repetir con el glosario del proyecto vacío y comparar los términos de dominio |
 | Impacto de la pasada en vivo | Comprobar si la captura se degrada con la pasada en vivo activa |
+| Utilidad real del avance en vivo | ¿El texto llega con retraso suficiente para orientar el marcado, o tan tarde que el momento ya pasó? |
+| Espera tras cerrar la sesión | Cuánto se queda el analista mirando "en proceso". Es el número que decide si conviene persistir la pasada en vivo como borrador legible |
 | Consumo de batería | Porcentaje gastado en los 5 minutos de captura |
 
 Si la pasada definitiva con `small` resulta impracticable, la decisión es bajar a `base`, y se
@@ -282,7 +296,7 @@ comprueba de forma explícita en vez de confiar en que el patrón se aplicó.
 
 El incremento se da por terminado cuando:
 
-- Las seis puertas automáticas pasan.
+- Las siete puertas automáticas pasan.
 - V1 a V9 pasan en un dispositivo Android físico.
 - Las mediciones de V6 están anotadas en [roadmap.md](../../roadmap.md), incluidos los valores
   finales de los modelos y de los tres parámetros del gate de silencio.

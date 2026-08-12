@@ -184,7 +184,11 @@ abstract interface class TranscriptRepository {
   Future<void> upsert(Transcript transcript);
   /// Reemplaza los segmentos de una transcripción en una sola transacción.
   Future<void> replaceSegments(TranscriptId id, List<TranscriptSegment> segments);
-  Future<void> softDelete(TranscriptId id, DateTime at);
+  /// Baja lógica en cascada, invocada ÚNICAMENTE desde la baja de la grabación
+  /// de la que provienen y dentro de esa misma transacción. FR-023 acota este
+  /// incremento a no exponer eliminación individual de transcripciones ni de
+  /// segmentos, así que ninguna pantalla llama a este método.
+  Future<void> softDeleteByRecording(RecordingId id, DateTime at);
 }
 ```
 

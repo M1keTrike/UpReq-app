@@ -52,8 +52,14 @@ class ActiveCapture {
   final Duration elapsed;        // FR-002, tiempo transcurrido
   final int marksPlaced;
   final bool isInterrupted;
+  final String? livePartial;     // FR-012, avance de la pasada en vivo
 }
 ```
+
+`livePartial` es el texto aproximado del modelo rápido. Es `null` cuando el modelo no está
+descargado o la pasada en vivo no arrancó, y en ese caso la captura sigue igual: la grabación
+nunca depende de la transcripción. **No se persiste en ninguna tabla**: vive en el notifier y
+muere al detener.
 
 **El tiempo transcurrido no vive en el estado de pantalla como contador propio.** Viene del
 notifier de captura, que es el mismo que posee el flujo. Duplicarlo en la UI produciría dos
@@ -74,6 +80,22 @@ porque su disponibilidad es la parte fácil de equivocar.
 Un diálogo de confirmación al colocar una marca rompería el propósito entero de la historia 2,
 que es señalar sin interrumpir la conversación. La marca se coloca y se confirma de forma
 pasiva; si estaba mal, se corrige después (FR-009a).
+
+**Sobre la barra va el avance en vivo** (FR-012): una zona de texto de altura acotada que
+muestra las últimas líneas de `active.livePartial`, desplazándose sola conforme llega texto
+nuevo. Es lo que da sentido a la pasada en vivo — el analista lee de reojo lo que se acaba de
+decir y decide si marcar—, y por eso vive pegada a los tres botones y no en otra pantalla.
+
+| Aspecto | Contrato |
+|---|---|
+| Visible | Solo con captura activa y `livePartial != null` |
+| Altura | Acotada: la barra de marcado **nunca** queda fuera de la vista por su culpa |
+| Ausencia | Si `livePartial` es `null` la zona desaparece y los tres botones siguen igual |
+| Interacción | **Ninguna.** No es seleccionable ni tocable: es texto de apoyo, no evidencia |
+
+El texto no se puede tocar a propósito. Es aproximado, sale del modelo rápido y no tiene marca
+de tiempo; permitir seleccionarlo o actuar sobre él invitaría a tratarlo como evidencia, que es
+justo lo que solo la pasada definitiva puede ser.
 
 ### 3. Detalle de grabación — `/projects/:pid/sessions/:sid/recordings/:rid`
 

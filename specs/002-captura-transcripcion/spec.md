@@ -161,8 +161,9 @@ sesión cuenta con una transcripción organizada en segmentos con inicio y fin.
 **Acceptance Scenarios**:
 
 1. **Given** una sesión con audio grabado y el modelo de transcripción disponible, **When**
-   la grabación está activa, **Then** la aplicación produce en segundo plano un avance de
-   transcripción que no bloquea la interfaz ni interrumpe la grabación.
+   la grabación está activa, **Then** la aplicación muestra el avance de la transcripción
+   conforme se habla, sin bloquear la interfaz ni interrumpir la grabación, y ese texto queda
+   disponible para orientar dónde colocar las marcas.
 2. **Given** una sesión con audio grabado, **When** el analista la cierra, **Then** la
    aplicación ejecuta la pasada definitiva de transcripción y produce segmentos con inicio y
    fin que cubren el audio capturado.
@@ -304,7 +305,10 @@ sin que ninguna otra pantalla de la aplicación haya requerido conexión.
 
 - **FR-012**: El sistema MUST ejecutar en el dispositivo, sin conexión, una pasada de
   transcripción orientativa mientras la grabación está activa, sin bloquear la interfaz ni
-  interrumpir la captura de audio.
+  interrumpir la captura de audio, y MUST mostrar su avance en pantalla durante la captura
+  para orientar al analista sobre dónde colocar sus marcas. El texto de esta pasada es
+  aproximado y no se conserva: la lectura definitiva ocurre en la revisión posterior sobre el
+  resultado de la pasada definitiva.
 - **FR-013**: El sistema MUST ejecutar en el dispositivo, sin conexión, una pasada de
   transcripción definitiva al cerrar la sesión, produciendo segmentos de texto ordenados y
   sin solapamiento, cada uno con su instante de inicio y de fin. Los tramos sin habla no
@@ -337,9 +341,12 @@ sin que ninguna otra pantalla de la aplicación haya requerido conexión.
 
 #### Reglas de datos y comportamiento esperado
 
-- **FR-023**: El audio, las marcas en vivo y los segmentos de transcripción MUST seguir el
-  mismo tratamiento de baja lógica que el resto de las entidades del proyecto: ninguno se
-  borra físicamente desde la interfaz de este incremento.
+- **FR-023**: El audio y las marcas en vivo MUST seguir el mismo tratamiento de baja lógica
+  que el resto de las entidades del proyecto: dejan de listarse, el registro se conserva y la
+  operación queda asentada en la bitácora local. Las transcripciones y sus segmentos se
+  conservan siempre y se retiran de la vista únicamente cuando se elimina la grabación de la
+  que provienen; este incremento no expone eliminación individual de transcripciones ni de
+  segmentos. Ninguna entidad se borra físicamente.
 - **FR-024**: Salvo la descarga manual del modelo de transcripción, la aplicación MUST
   funcionar por completo sin conexión a internet.
 - **FR-025**: Toda pantalla de este incremento MUST resolver de forma explícita sus
@@ -394,10 +401,12 @@ sin que ninguna otra pantalla de la aplicación haya requerido conexión.
   sí, priorizando velocidad en la primera y precisión en la segunda; sus valores concretos
   son parámetros técnicos que se fijan y calibran en la planificación de este incremento, no
   en esta especificación.
-- El avance de transcripción en vivo se usa como apoyo interno del etiquetado y no necesita
-  mostrarse como texto corrido en pantalla durante la grabación; la lectura completa del
-  texto transcrito ocurre en la revisión posterior (historia 5), sobre el resultado de la
-  pasada definitiva.
+- El avance de transcripción en vivo se muestra durante la captura para orientar el
+  etiquetado, que es el propósito que le da la constitución, pero **no se persiste**: es texto
+  aproximado del modelo rápido y muere al detener la grabación. La lectura completa del texto
+  transcrito ocurre en la revisión posterior (historia 5), sobre el resultado de la pasada
+  definitiva, que es la única que produce segmentos con marca de tiempo y por tanto la única
+  que sirve como evidencia.
 - El umbral para descartar silencio y otros parámetros finos de captura y transcripción se
   calibran contra audio real durante este mismo incremento, conforme a lo declarado en el
   roadmap del proyecto, y no bloquean esta especificación.

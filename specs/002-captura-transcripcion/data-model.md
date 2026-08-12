@@ -150,11 +150,20 @@ Resultado de una pasada de transcripción sobre una grabación.
 | `deleted_at` | DATETIME? | Baja lógica |
 | `created_at` / `updated_at` | DATETIME | |
 
-**Por qué `pass` distingue en vivo de definitiva en la misma tabla.** Ambas producen lo mismo
-—texto sobre una grabación— y difieren en modelo y en precisión. Separarlas en dos tablas
-duplicaría el esquema y las consultas para expresar una diferencia que cabe en una columna.
-La pasada en vivo, además, es descartable: si el incremento 3 decide que no aporta, se borra
-una fila de configuración, no una tabla.
+**`pass` queda con un solo valor en uso en este incremento: `final`.** La pasada en vivo se
+muestra en pantalla durante la captura (FR-012) pero **no se persiste**: su salida es un
+`Stream<String>` sin marcas de tiempo, así que no puede producir segmentos y por tanto no
+puede ser evidencia de nada. Guardar un texto aproximado que nadie puede anclar al audio sería
+llenar la tabla de contenido con apariencia de evidencia, que es el peor resultado posible en
+una herramienta cuyo índice de procedencia es una métrica del incremento 5.
+
+La columna se declara igualmente, por dos razones. La primera es que el índice único
+`transcripts_one_per_pass` necesita distinguir el par para que una segunda pasada definitiva
+no duplique filas. La segunda es que persistir la pasada en vivo como borrador legible
+mientras la definitiva se procesa es una opción real, y su valor depende por completo de
+cuánto tarde la definitiva en el teléfono — número que mide T117. Si tarda lo bastante como
+para que el analista se quede esperando, la columna ya está lista y el cambio es de una fila
+de configuración, no una migración.
 
 **El estado `pending` es lo que resuelve FR-016.** Una sesión que se cierra sin modelo
 descargado produce un `Transcript` en `pending`, no un error ni la ausencia de registro. El
@@ -251,11 +260,19 @@ que ya son `TEXT` de conjunto abierto:
 |---|---|
 | `recordingDeleted` | Baja lógica de una grabación |
 | `liveMarkDeleted` | Baja lógica de una marca (FR-009a) |
-| `transcriptDeleted` | Baja lógica de una transcripción |
 
 Cada asiento se escribe en la **misma transacción de drift** que la baja que lo produce, igual
 que en el incremento 1. Eso convierte la regla constitucional en un invariante imposible de
 olvidar en vez de en una disciplina.
+
+**Las transcripciones no tienen operación de bitácora propia.** FR-023 acota este incremento a
+no exponer eliminación individual de transcripciones ni de segmentos: se retiran de la vista
+únicamente en cascada, dentro de la misma transacción que da de baja su grabación. El asiento
+`recordingDeleted` ya documenta esa operación por completo, y añadir un `transcriptDeleted`
+redundante por cada cascada llenaría la pantalla de bitácora de ruido derivado en vez de
+hechos. Las columnas `deleted_at` de ambas tablas siguen existiendo y es la cascada quien las
+escribe; el día que una historia futura pida borrar una transcripción suelta, el esquema ya lo
+admite sin migración.
 
 **Lo que no asienta**: iniciar o detener una grabación, colocar una marca, editar el tipo de
 una marca, o completar una pasada de transcripción. La bitácora del incremento 1 registra
