@@ -8,6 +8,14 @@ import 'package:up_req/core/domain/ids.dart';
 /// curso.
 abstract interface class SessionStatusReader {
   Future<SessionSnapshot?> find(SessionId id);
+
+  /// Igual que [find], pero reactivo: emite de nuevo cada vez que la fila de
+  /// la sesión cambia. Lo necesita `sessionCaptureProvider`, cuyo único otro
+  /// stream vigilado (`RecordingRepository.watchBySession`) no se entera de
+  /// que la sesión pasó de planeada a en curso — sin esto, `canRecord` queda
+  /// congelado en el valor de la primera emisión mientras la pantalla de
+  /// detalle siga montada.
+  Stream<SessionSnapshot?> watch(SessionId id);
 }
 
 class SessionSnapshot {

@@ -18,4 +18,15 @@ class SessionStatusReaderImpl implements SessionStatusReader {
       isInProgress: session.status == SessionStatus.inProgress,
     );
   }
+
+  @override
+  Stream<SessionSnapshot?> watch(SessionId id) {
+    return _repository.watchDetail(id).map((detail) {
+      if (detail == null) return null;
+      return SessionSnapshot(
+        projectId: detail.session.projectId,
+        isInProgress: detail.session.status == SessionStatus.inProgress,
+      );
+    });
+  }
 }

@@ -37,6 +37,18 @@ void main() {
     await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
     await tester.pumpAndSettle();
 
+    // Un interesado, requerido por SessionDraft.validate() (data-model.md):
+    // una sesión no se puede guardar sin al menos un participante.
+    await tester.tap(find.text('Interesados'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Nuevo interesado'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(TextField, 'Nombre'), 'Entrevistado Uno');
+    await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+
     await tester.tap(find.text('Sesiones'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Nueva sesión'));
@@ -44,30 +56,8 @@ void main() {
     await tester.enterText(find.widgetWithText(TextField, 'Título'), 'Entrevista Uno');
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();
-    // TODO(device-run 2026-08-12): en dispositivo real (Android 16, API 36),
-    // esta línea falla con `StateError: Bad state: No element` dentro de
-    // `scrollUntilVisible` — `find.widgetWithText(FilledButton, 'Guardar')`
-    // no encuentra NINGÚN elemento en el formulario de "Nueva sesión" (no es
-    // ambigüedad, es ausencia total). Descartado ya: `isReadOnly` no es la
-    // causa — `CreateProject` fija `status: ProjectStatus.active` por
-    // defecto y `ProjectStatusReaderImpl.isActive` lo lee bien, así que
-    // `fieldsEnabled` en `session_form_screen.dart` debería ser `true` y el
-    // botón debería renderizar. Pendiente de investigar en la próxima
-    // sesión, con el dispositivo conectado para poder inspeccionar en vivo:
-    //   1. Confirmar con el árbol de widgets real (`flutter inspector` o un
-    //      `debugDumpApp()` insertado aquí) si el botón existe pero está
-    //      fuera del área que `ensureVisible` puede alcanzar, o si
-    //      simplemente no se construye.
-    //   2. Revisar si `selectableStakeholdersProvider` (el spinner bajo
-    //      "Participantes" en session_form_screen.dart) se queda en
-    //      `AsyncLoading` para siempre en este escenario concreto —
-    //      indeterminado, animaría sin fin y podría estar enmascarando el
-    //      verdadero estado del formulario.
-    //   3. Probar el mismo flujo a mano en el dispositivo (crear proyecto,
-    //      sesión) para ver si el bug es real en la app o es un problema del
-    //      arnés de prueba (temporización, finder equivocado, etc.).
-    // Bloquea T110 (y por herencia cualquier integration_test que cree una
-    // sesión) hasta resolverse.
+    await _tapVisible(tester, find.widgetWithText(CheckboxListTile, 'Entrevistado Uno'));
+    await tester.pumpAndSettle();
     await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
     await tester.pumpAndSettle();
 

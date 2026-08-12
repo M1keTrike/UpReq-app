@@ -98,6 +98,9 @@ class _FakeSessionStatusReader implements SessionStatusReader {
   Future<SessionSnapshot?> find(SessionId id) async {
     return const SessionSnapshot(projectId: ProjectId('project-1'), isInProgress: true);
   }
+
+  @override
+  Stream<SessionSnapshot?> watch(SessionId id) => Stream.fromFuture(find(id));
 }
 
 class _FakeProjectStatusReader implements ProjectStatusReader {

@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:up_req/core/domain/combine_latest.dart';
 import 'package:up_req/core/domain/ids.dart';
 import 'package:up_req/core/domain/project_status_reader.dart';
 import 'package:up_req/core/domain/session_status_reader.dart';
@@ -46,8 +47,12 @@ Stream<SessionCaptureState> sessionCapture(Ref ref, String sessionId) {
 
   final findInterrupted = ref.watch(findInterruptedProvider);
 
-  return recordingRepository.watchBySession(id).asyncMap((recordings) async {
-    final snapshot = await sessionStatusReader.find(id);
+  return combineLatest2(
+    recordingRepository.watchBySession(id),
+    sessionStatusReader.watch(id),
+    (recordings, snapshot) => (recordings, snapshot),
+  ).asyncMap((pair) async {
+    final (recordings, snapshot) = pair;
     final canRecord = snapshot != null &&
         snapshot.isInProgress &&
         await projectStatusReader.isActive(snapshot.projectId);

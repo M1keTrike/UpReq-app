@@ -72,6 +72,9 @@ class _FakeSessionStatusReader implements SessionStatusReader {
 
   @override
   Future<SessionSnapshot?> find(SessionId id) async => snapshot;
+
+  @override
+  Stream<SessionSnapshot?> watch(SessionId id) => Stream.fromFuture(find(id));
 }
 
 class _FakeProjectStatusReader implements ProjectStatusReader {
