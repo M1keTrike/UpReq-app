@@ -7,6 +7,7 @@ import '../domain/usecases/change_mark_kind.dart';
 import '../domain/usecases/delete_live_mark.dart';
 import '../domain/usecases/delete_recording.dart';
 import '../domain/usecases/place_live_mark.dart';
+import '../domain/usecases/seek_to_segment.dart';
 import 'active_capture_notifier.dart';
 
 final startRecording = Mutation<RecordingId>();
@@ -17,6 +18,7 @@ final changeMarkKind = Mutation<void>();
 final deleteLiveMark = Mutation<void>();
 final resumeRecording = Mutation<void>();
 final closeInterruptedRecording = Mutation<void>();
+final seekToSegment = Mutation<void>();
 
 Future<RecordingId> runStartRecording(MutationTarget target, SessionId sessionId) {
   return startRecording.run(target, (tsx) async {
@@ -98,6 +100,16 @@ Future<void> runResumeRecording(MutationTarget target, RecordingId id) {
 Future<void> runCloseInterruptedRecording(MutationTarget target, RecordingId id) {
   return closeInterruptedRecording.run(target, (tsx) async {
     final result = await tsx.get(activeCaptureProvider.notifier).closeInterrupted(id);
+    return switch (result) {
+      Ok() => null,
+      Err(:final failure) => throw failure,
+    };
+  });
+}
+
+Future<void> runSeekToSegment(MutationTarget target, SegmentId id) {
+  return seekToSegment.run(target, (tsx) async {
+    final result = await tsx.get(seekToSegmentProvider)(id);
     return switch (result) {
       Ok() => null,
       Err(:final failure) => throw failure,

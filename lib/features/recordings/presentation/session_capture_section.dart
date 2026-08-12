@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:up_req/core/domain/ids.dart';
 
 import '../domain/entities/recording.dart';
@@ -130,6 +131,10 @@ class _RecordingTile extends ConsumerWidget {
       leading: const Icon(Icons.mic),
       title: Text('Grabación $minutes:$secs'),
       subtitle: Text(_statusLabel(recording.status)),
+      onTap: () => context.go(
+        '/projects/${recording.projectId.value}/sessions/${recording.sessionId.value}'
+        '/recordings/${recording.id.value}',
+      ),
       trailing: isReadOnly
           ? null
           : IconButton(

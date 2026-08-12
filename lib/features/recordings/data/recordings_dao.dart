@@ -35,6 +35,11 @@ class RecordingsDao extends DatabaseAccessor<AppDatabase> with _$RecordingsDaoMi
     return query.getSingleOrNull();
   }
 
+  Stream<Recording?> watchById(String id) {
+    final query = select(recordings)..where((r) => r.id.equals(id) & r.deletedAt.isNull());
+    return query.watchSingleOrNull();
+  }
+
   Future<void> insertRecording(RecordingsCompanion companion) => into(recordings).insert(companion);
 
   Future<void> updateRecording(String id, RecordingsCompanion companion) {

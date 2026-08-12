@@ -25,6 +25,16 @@ class FakeTranscriptRepository implements TranscriptRepository {
   }
 
   @override
+  Future<TranscriptSegment?> findSegmentById(SegmentId id) async {
+    for (final segments in _segmentsByTranscript.values) {
+      for (final segment in segments) {
+        if (segment.id == id) return segment;
+      }
+    }
+    return null;
+  }
+
+  @override
   Future<List<Transcript>> findPending() async {
     return _byId.values.where((t) => t.status == TranscriptStatus.pending).toList();
   }

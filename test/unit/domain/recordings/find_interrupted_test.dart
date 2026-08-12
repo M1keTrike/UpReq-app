@@ -14,6 +14,9 @@ class _FakeRecordingRepository implements RecordingRepository {
   Stream<Recording?> watchActive() => Stream.value(active);
 
   @override
+  Stream<Recording?> watchById(RecordingId id) => throw UnimplementedError();
+
+  @override
   Future<Recording?> findInterrupted() async => interrupted;
 
   @override

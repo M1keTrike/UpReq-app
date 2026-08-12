@@ -5,6 +5,7 @@ import 'package:up_req/features/glossary/presentation/glossary_list_screen.dart'
 import 'package:up_req/features/projects/presentation/project_detail_screen.dart';
 import 'package:up_req/features/projects/presentation/project_form_screen.dart';
 import 'package:up_req/features/projects/presentation/project_list_screen.dart';
+import 'package:up_req/features/recordings/presentation/recording_detail_screen.dart';
 import 'package:up_req/features/sessions/presentation/session_detail_screen.dart';
 import 'package:up_req/features/sessions/presentation/session_form_screen.dart';
 import 'package:up_req/features/sessions/presentation/session_list_screen.dart';
@@ -96,6 +97,12 @@ final appRouter = GoRouter(
                       builder: (context, state) => SessionFormScreen(
                         projectId: state.pathParameters['projectId']!,
                         sessionId: state.pathParameters['sessionId'],
+                      ),
+                    ),
+                    GoRoute(
+                      path: 'recordings/:recordingId',
+                      builder: (context, state) => RecordingDetailScreen(
+                        recordingId: state.pathParameters['recordingId']!,
                       ),
                     ),
                   ],

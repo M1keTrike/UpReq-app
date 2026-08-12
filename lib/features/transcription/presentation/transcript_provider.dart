@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:up_req/core/domain/ids.dart';
+import 'package:up_req/features/recordings/domain/usecases/watch_active_segment.dart';
 
 import '../data/transcript_repository_impl.dart';
 import '../domain/entities/transcript.dart';
@@ -58,4 +59,12 @@ Stream<TranscriptView> transcriptView(Ref ref, String recordingId) {
           .map((segments) => TranscriptReady(transcript: transcript, segments: segments)),
     };
   });
+}
+
+/// FR-019: el segmento que contiene la posición actual del reproductor, o
+/// `null` fuera de todos. `activeSegmentProvider(transcriptId)`.
+@riverpod
+Stream<SegmentId?> activeSegment(Ref ref, String transcriptId) {
+  final watchActiveSegment = ref.watch(watchActiveSegmentProvider);
+  return watchActiveSegment(TranscriptId(transcriptId));
 }

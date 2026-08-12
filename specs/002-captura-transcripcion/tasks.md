@@ -259,18 +259,18 @@ reproducción salta al segundo correspondiente en cada caso.
 
 ### Tests for User Story 5
 
-- [ ] T087 [P] [US5] Prueba de `SeekToSegment` en `test/unit/domain/recordings/seek_to_segment_test.dart` con `FakeAudioPlayback`: resuelve `from_ms` del segmento y salta a esa posición
-- [ ] T088 [P] [US5] Prueba de `WatchActiveSegment` en `test/unit/domain/recordings/active_segment_test.dart`: cruza la posición del reproductor con las ventanas y devuelve `null` fuera de todo segmento
-- [ ] T089 [P] [US5] Prueba de widget en `test/widget/recordings/recording_detail_test.dart`: el reproductor funciona **sin transcripción** (FR-017) y el segmento activo se resalta conforme avanza la posición
+- [X] T087 [P] [US5] Prueba de `SeekToSegment` en `test/unit/domain/recordings/seek_to_segment_test.dart` con `FakeAudioPlayback`: resuelve `from_ms` del segmento y salta a esa posición
+- [X] T088 [P] [US5] Prueba de `WatchActiveSegment` en `test/unit/domain/recordings/active_segment_test.dart`: cruza la posición del reproductor con las ventanas y devuelve `null` fuera de todo segmento
+- [X] T089 [P] [US5] Prueba de widget en `test/widget/recordings/recording_detail_test.dart`: el reproductor funciona **sin transcripción** (FR-017) y el segmento activo se resalta conforme avanza la posición
 
 ### Implementation for User Story 5
 
-- [ ] T090 [US5] Implementar `JustAudioPlayback` en `lib/features/recordings/data/just_audio_player.dart` sobre `just_audio`, resolviendo la ruta relativa contra el sandbox. **Único importador de `package:just_audio`**
-- [ ] T091 [P] [US5] Implementar los casos de uso `LoadRecordingForPlayback`, `SeekToSegment` y `WatchActiveSegment` en `lib/features/recordings/domain/usecases/`
-- [ ] T092 [US5] Implementar `recordingDetailProvider` en `lib/features/recordings/presentation/recording_detail_provider.dart` devolviendo `AsyncValue<RecordingDetailState>` con grabación, marcas, transcripción, estado de reproducción y `isReadOnly`
-- [ ] T093 [US5] Implementar la pantalla de detalle de grabación en `lib/features/recordings/presentation/recording_detail_screen.dart` con reproductor, marcas y transcripción
-- [ ] T094 [US5] Registrar la ruta `/projects/:pid/sessions/:sid/recordings/:rid` en `lib/core/router/app_router.dart`
-- [ ] T095 [US5] Implementar el resaltado del segmento activo a partir del stream de posición, sin temporizador propio, en `lib/features/transcription/presentation/transcript_section.dart`
+- [X] T090 [US5] Implementar `JustAudioPlayback` en `lib/features/recordings/data/just_audio_player.dart` sobre `just_audio`, resolviendo la ruta relativa contra el sandbox. **Único importador de `package:just_audio`**
+- [X] T091 [P] [US5] Implementar los casos de uso `LoadRecordingForPlayback`, `SeekToSegment` y `WatchActiveSegment` en `lib/features/recordings/domain/usecases/`
+- [X] T092 [US5] Implementar `recordingDetailProvider` en `lib/features/recordings/presentation/recording_detail_provider.dart` devolviendo `AsyncValue<RecordingDetailState>` con grabación e `isReadOnly`. Marcas y transcripción quedan fuera a propósito: `LiveMarkList` y `TranscriptSection` ya son secciones autocontenidas con su propio provider (mismo criterio con el que `SessionDetailState` no incluye la captura), y el estado de reproducción vive en `RecordingPlaybackNotifier` (`recording_playback_notifier.dart`), nuevo, `autoDispose`
+- [X] T093 [US5] Implementar la pantalla de detalle de grabación en `lib/features/recordings/presentation/recording_detail_screen.dart` con reproductor, marcas y transcripción. Se añadió navegación desde `_RecordingTile` en `session_capture_section.dart` (`ui-contracts.md` pantalla 1: "Navega a"), que antes no era alcanzable
+- [X] T094 [US5] Registrar la ruta `/projects/:pid/sessions/:sid/recordings/:rid` en `lib/core/router/app_router.dart`
+- [X] T095 [US5] Implementar el resaltado del segmento activo a partir del stream de posición, sin temporizador propio, en `lib/features/transcription/presentation/transcript_section.dart`, vía el nuevo `activeSegmentProvider` en `transcript_provider.dart`. Tocar un segmento dispara `seekToSegment` (nueva `Mutation<void>` en `recording_mutations.dart`)
 
 **Checkpoint**: la transcripción se revisa contra el audio segmento a segmento.
 

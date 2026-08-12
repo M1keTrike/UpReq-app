@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:up_req/core/widgets/async_scaffold_body.dart';
+import 'package:up_req/features/recordings/presentation/recording_mutations.dart';
 
 import '../domain/entities/transcript_segment.dart';
 import 'transcript_provider.dart';
@@ -29,7 +30,8 @@ class TranscriptSection extends ConsumerWidget {
       data: (context, view) => switch (view) {
         TranscriptPending() => const _TranscriptPendingNotice(),
         TranscriptRunning() => const _TranscriptRunningNotice(),
-        TranscriptReady(:final segments) => _TranscriptSegmentList(segments: segments),
+        TranscriptReady(:final transcript, :final segments) =>
+          _TranscriptSegmentList(transcriptId: transcript.id.value, segments: segments),
         TranscriptFailed(:final reason) => _TranscriptFailedNotice(reason: reason),
       },
     );
@@ -92,21 +94,38 @@ class _TranscriptFailedNotice extends StatelessWidget {
   }
 }
 
-class _TranscriptSegmentList extends StatelessWidget {
-  const _TranscriptSegmentList({required this.segments});
+/// Resalta el segmento activo a partir del stream de posición (T095,
+/// FR-019), sin temporizador propio: `activeSegmentProvider` ya recalcula
+/// solo cuando la posición o los segmentos cambian. Tocar un segmento
+/// dispara `seekToSegment` (FR-018).
+class _TranscriptSegmentList extends ConsumerWidget {
+  const _TranscriptSegmentList({required this.transcriptId, required this.segments});
 
+  final String transcriptId;
   final List<TranscriptSegment> segments;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeSegmentId = ref.watch(activeSegmentProvider(transcriptId)).value;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (final segment in segments)
           ListTile(
+            key: Key('segment-${segment.id.value}'),
             dense: true,
+            selected: segment.id == activeSegmentId,
+            selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
             leading: Text(_formatMs(segment.fromMs)),
             title: Text(segment.text),
+            onTap: () async {
+              try {
+                await runSeekToSegment(ref, segment.id);
+              } catch (_) {
+                // El estado de la Mutation (MutationError) ya refleja el fallo.
+              }
+            },
           ),
       ],
     );

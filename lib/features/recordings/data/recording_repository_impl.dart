@@ -29,6 +29,11 @@ class RecordingRepositoryImpl implements RecordingRepository {
   }
 
   @override
+  Stream<domain.Recording?> watchById(RecordingId id) {
+    return _dao.watchById(id.value).map((row) => row == null ? null : _toDomain(row));
+  }
+
+  @override
   Future<domain.Recording?> findInterrupted() async {
     final row = await _dao.findInterrupted();
     return row == null ? null : _toDomain(row);

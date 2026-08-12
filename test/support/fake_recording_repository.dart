@@ -18,6 +18,9 @@ class FakeRecordingRepository implements RecordingRepository {
   Stream<Recording?> watchActive() => Stream.value(active);
 
   @override
+  Stream<Recording?> watchById(RecordingId id) => Stream.value(store[id.value]);
+
+  @override
   Stream<List<Recording>> watchBySession(SessionId id) {
     return Stream.value(store.values.where((r) => r.sessionId == id).toList());
   }

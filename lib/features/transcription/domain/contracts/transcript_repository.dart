@@ -8,6 +8,11 @@ abstract interface class TranscriptRepository {
 
   Stream<List<TranscriptSegment>> watchSegments(TranscriptId id);
 
+  /// Resuelve un segmento suelto por id. Lo usa `SeekToSegment` (US5,
+  /// FR-018): saltar al audio de un segmento solo necesita su `from_ms`, no
+  /// la lista completa de la transcripción.
+  Future<TranscriptSegment?> findSegmentById(SegmentId id);
+
   /// Cola de FR-016: transcripciones `pending` a la espera de que el modelo
   /// llegue.
   Future<List<Transcript>> findPending();

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:up_req/core/domain/ids.dart';
+import 'package:up_req/features/recordings/data/just_audio_player.dart';
 import 'package:up_req/features/transcription/data/transcript_repository_impl.dart';
 import 'package:up_req/features/transcription/domain/contracts/transcriber.dart';
 import 'package:up_req/features/transcription/domain/entities/transcript.dart';
 import 'package:up_req/features/transcription/domain/entities/transcript_segment.dart';
 import 'package:up_req/features/transcription/presentation/transcript_section.dart';
 
+import '../../support/fake_audio_playback.dart';
 import '../../support/fake_transcript_repository.dart';
 
 final _at = DateTime.utc(2026, 1, 1);
@@ -16,7 +18,13 @@ const _recordingId = RecordingId('recording-1');
 Future<void> _pump(WidgetTester tester, FakeTranscriptRepository repository) async {
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [transcriptRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        transcriptRepositoryProvider.overrideWithValue(repository),
+        // El resaltado del segmento activo (T095) cruza la posición del
+        // reproductor: se dobla aquí para que ninguna prueba toque
+        // `just_audio` de verdad.
+        audioPlaybackProvider.overrideWithValue(FakeAudioPlayback()),
+      ],
       child: const MaterialApp(
         home: Scaffold(body: TranscriptSection(recordingId: 'recording-1')),
       ),

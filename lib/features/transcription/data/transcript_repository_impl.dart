@@ -31,6 +31,12 @@ class TranscriptRepositoryImpl implements TranscriptRepository {
   }
 
   @override
+  Future<domain.TranscriptSegment?> findSegmentById(SegmentId id) async {
+    final row = await _dao.findSegmentById(id.value);
+    return row == null ? null : _segmentToDomain(row);
+  }
+
+  @override
   Future<List<domain.Transcript>> findPending() async {
     final rows = await _dao.findPending();
     return rows.map(_toDomain).toList();

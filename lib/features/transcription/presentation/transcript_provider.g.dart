@@ -91,3 +91,91 @@ final class TranscriptViewFamily extends $Family
   @override
   String toString() => r'transcriptViewProvider';
 }
+
+/// FR-019: el segmento que contiene la posición actual del reproductor, o
+/// `null` fuera de todos. `activeSegmentProvider(transcriptId)`.
+
+@ProviderFor(activeSegment)
+final activeSegmentProvider = ActiveSegmentFamily._();
+
+/// FR-019: el segmento que contiene la posición actual del reproductor, o
+/// `null` fuera de todos. `activeSegmentProvider(transcriptId)`.
+
+final class ActiveSegmentProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<SegmentId?>,
+          SegmentId?,
+          Stream<SegmentId?>
+        >
+    with $FutureModifier<SegmentId?>, $StreamProvider<SegmentId?> {
+  /// FR-019: el segmento que contiene la posición actual del reproductor, o
+  /// `null` fuera de todos. `activeSegmentProvider(transcriptId)`.
+  ActiveSegmentProvider._({
+    required ActiveSegmentFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'activeSegmentProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$activeSegmentHash();
+
+  @override
+  String toString() {
+    return r'activeSegmentProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<SegmentId?> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<SegmentId?> create(Ref ref) {
+    final argument = this.argument as String;
+    return activeSegment(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ActiveSegmentProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$activeSegmentHash() => r'12f1b9039f6d63c3dade074e1842264182c68698';
+
+/// FR-019: el segmento que contiene la posición actual del reproductor, o
+/// `null` fuera de todos. `activeSegmentProvider(transcriptId)`.
+
+final class ActiveSegmentFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<SegmentId?>, String> {
+  ActiveSegmentFamily._()
+    : super(
+        retry: null,
+        name: r'activeSegmentProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// FR-019: el segmento que contiene la posición actual del reproductor, o
+  /// `null` fuera de todos. `activeSegmentProvider(transcriptId)`.
+
+  ActiveSegmentProvider call(String transcriptId) =>
+      ActiveSegmentProvider._(argument: transcriptId, from: this);
+
+  @override
+  String toString() => r'activeSegmentProvider';
+}

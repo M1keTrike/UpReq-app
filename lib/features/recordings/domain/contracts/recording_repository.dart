@@ -7,6 +7,8 @@ abstract interface class RecordingRepository {
 
   Stream<Recording?> watchActive(); // invariante R1
 
+  Stream<Recording?> watchById(RecordingId id); // detalle de grabación (US5)
+
   Future<Recording?> findInterrupted(); // FR-011, al arrancar
 
   Future<Recording?> findById(RecordingId id);

@@ -43,6 +43,9 @@ class _FakeRecordingRepository implements RecordingRepository {
   Stream<Recording?> watchActive() => throw UnimplementedError();
 
   @override
+  Stream<Recording?> watchById(RecordingId id) => throw UnimplementedError();
+
+  @override
   Stream<List<Recording>> watchBySession(SessionId id) => throw UnimplementedError();
 
   @override

@@ -25,6 +25,12 @@ class TranscriptsDao extends DatabaseAccessor<AppDatabase> with _$TranscriptsDao
     return query.watch();
   }
 
+  Future<TranscriptSegment?> findSegmentById(String id) {
+    final query = select(transcriptSegments)
+      ..where((s) => s.id.equals(id) & s.deletedAt.isNull());
+    return query.getSingleOrNull();
+  }
+
   /// Cola de FR-016.
   Future<List<Transcript>> findPending() {
     final query = select(transcripts)
