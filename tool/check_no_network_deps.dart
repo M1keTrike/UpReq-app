@@ -1,9 +1,12 @@
-// Verificación estructural de FR-019: ninguna dependencia de la app puede ser
-// un paquete de red. Se restringe a la clausura de `dependencies:` (no
-// `dev_dependencies:`), porque eso es exactamente lo que termina en el binario
-// compilado: el toolchain de build (build_runner, drift_dev...) trae paquetes
-// de red propios (p. ej. web_socket_channel para su build daemon) que nunca
-// llegan a la app y no deben bloquear esta puerta.
+// Verificación estructural de FR-021 (incremento 2, sustituye a FR-019 del
+// incremento 1): la única dependencia de red permitida en la clausura de
+// `dependencies:` es `dio`, y `package:dio` solo puede importarse desde
+// exactamente un archivo de `lib/` — el cliente de descarga del modelo.
+//
+// Se restringe a la clausura de `dependencies:` (no `dev_dependencies:`),
+// porque eso es exactamente lo que termina en el binario compilado: el
+// toolchain de build (build_runner, drift_dev...) trae paquetes de red
+// propios que nunca llegan a la app y no deben bloquear esta puerta.
 //
 // Excepción documentada: `riverpod` (dependencia dura de `flutter_riverpod`,
 // versión fijada por la constitución) declara `test` como dependencia normal
@@ -17,7 +20,6 @@ import 'dart:convert';
 import 'dart:io';
 
 const _bannedPackages = <String>{
-  'dio',
   'http',
   'http_client',
   'cronet_http',
@@ -29,6 +31,11 @@ const _bannedPackages = <String>{
   'connectivity_plus',
 };
 
+/// `dio` es la única excepción de red constitucional (research.md, decisión
+/// 3). Entra en la clausura de `dependencies:` sin bloquear esta puerta,
+/// pero su número de importadores en `lib/` sí se verifica más abajo.
+const _networkExceptionPackage = 'dio';
+
 /// Paquetes vetados que SOLO se toleran si su único camino de entrada es la
 /// arista `riverpod -> test` documentada arriba. Cualquier otro paquete vetado
 /// bloquea CI sin excepción.
@@ -36,6 +43,17 @@ const _tolerableViaRiverpodTest = <String>{
   'web_socket_channel',
   'web_socket',
 };
+
+/// Segunda excepción, del incremento 2: `wakelock_plus` (research.md,
+/// `wakelock_plus` mantiene la pantalla activa durante la captura, T045)
+/// depende de `package_info_plus`, que a su vez depende de `http` — pero
+/// verificado en su código fuente, ese import solo existe en
+/// `package_info_plus_windows.dart` y `package_info_plus_web.dart`. Ninguna
+/// de las dos rutas se ejecuta en Android/iOS, las plataformas de producto
+/// (Technical Context de plan.md); es el mismo patrón que la tolerancia de
+/// `riverpod -> test` de arriba, un paquete alcanzable en el grafo pero
+/// inalcanzable en el runtime real de la app.
+const _tolerableViaPackageInfoPlus = <String>{'http'};
 
 Future<void> main() async {
   final result = await Process.run('dart', ['pub', 'deps', '--json']);
@@ -58,17 +76,30 @@ Future<void> main() async {
   ) as Map<String, dynamic>;
   final mainDirect = (root['directDependencies'] as List).cast<String>();
 
-  final withTest = _closure(mainDirect, byName, skip: const {});
-  final withoutTest = _closure(mainDirect, byName, skip: const {'test'});
+  if (!mainDirect.contains(_networkExceptionPackage)) {
+    stderr.writeln(
+      "FALLO: se esperaba que 'dio' fuera dependencia directa (la excepción "
+      'de red única, research.md decisión 3) y no aparece en dependencies:.',
+    );
+    exitCode = 1;
+    return;
+  }
 
-  final found = withTest.where(_bannedPackages.contains).toList()..sort();
+  final withAll = _closure(mainDirect, byName, skip: const {});
+  final withoutTest = _closure(mainDirect, byName, skip: const {'test'});
+  final withoutPackageInfoPlus =
+      _closure(mainDirect, byName, skip: const {'package_info_plus'});
+
+  final found = withAll.where(_bannedPackages.contains).toList()..sort();
   final blocking = <String>[];
   final tolerated = <String>[];
 
   for (final name in found) {
     final onlyViaTest =
         _tolerableViaRiverpodTest.contains(name) && !withoutTest.contains(name);
-    if (onlyViaTest) {
+    final onlyViaPackageInfoPlus = _tolerableViaPackageInfoPlus.contains(name) &&
+        !withoutPackageInfoPlus.contains(name);
+    if (onlyViaTest || onlyViaPackageInfoPlus) {
       tolerated.add(name);
     } else {
       blocking.add(name);
@@ -77,25 +108,66 @@ Future<void> main() async {
 
   if (tolerated.isNotEmpty) {
     stdout.writeln(
-      'Toleradas (solo alcanzables vía riverpod -> test, nunca ejecutadas '
-      'en runtime): ${tolerated.join(', ')}',
+      'Toleradas (solo alcanzables vía riverpod -> test o wakelock_plus -> '
+      'package_info_plus, nunca ejecutadas en runtime): ${tolerated.join(', ')}',
     );
   }
 
+  // "Exactamente un archivo" es el estado final del incremento (a partir de
+  // T101, el cliente de descarga del modelo). Antes de esa tarea, cero
+  // importadores es válido: lo único que esta puerta no tolera nunca es un
+  // SEGUNDO importador, que es el modo de falla real que motiva el gate
+  // (research.md, decisión 3).
+  final dioImporters = await _findDioImporters();
+  if (dioImporters.length > 1) {
+    stderr.writeln(
+      'FALLO: package:dio debe importarse desde como máximo UN archivo de '
+      'lib/ (el cliente de descarga del modelo). Se encontraron '
+      '${dioImporters.length}:',
+    );
+    for (final f in dioImporters) {
+      stderr.writeln('  - $f');
+    }
+    exitCode = 1;
+    return;
+  }
+  stdout.writeln(
+    dioImporters.isEmpty
+        ? 'OK: package:dio aún sin importador (pendiente del cliente de descarga).'
+        : 'OK: package:dio se importa desde un único archivo: ${dioImporters.single}',
+  );
+
   if (blocking.isEmpty) {
     stdout.writeln(
-      'OK: ninguna dependencia de red bloqueante en la clausura de dependencies: (FR-019).',
+      'OK: ninguna dependencia de red prohibida en la clausura de dependencies: '
+      "salvo la excepción única 'dio' (FR-021).",
     );
     return;
   }
 
   stderr.writeln(
-    'FALLO: se encontraron dependencias de red prohibidas por FR-019:',
+    'FALLO: se encontraron dependencias de red prohibidas por FR-021:',
   );
   for (final name in blocking) {
     stderr.writeln('  - $name');
   }
   exitCode = 1;
+}
+
+Future<List<String>> _findDioImporters() async {
+  final libDir = Directory('lib');
+  final importers = <String>[];
+  final pattern = RegExp('''import\\s+['"]package:dio/''');
+
+  await for (final entity in libDir.list(recursive: true, followLinks: false)) {
+    if (entity is! File || !entity.path.endsWith('.dart')) continue;
+    final content = await entity.readAsString();
+    if (pattern.hasMatch(content)) {
+      importers.add(entity.path.replaceAll('\\', '/'));
+    }
+  }
+  importers.sort();
+  return importers;
 }
 
 Set<String> _closure(

@@ -43,6 +43,17 @@ dependencies:
   # dependencias de red, no reintroduce sqlite3_flutter_libs.
   path_provider: ^2.1.5
 
+  # Captura y transcripción (incremento 2). Versiones ancladas por la
+  # constitución v1.3.0, Principio II.
+  record: 7.1.1
+  whisper_ggml: 2.6.0
+  just_audio: 0.10.6
+  # ÚNICA excepción de red constitucional: descarga manual del modelo GGML
+  # desde ajustes. Confinado a un solo importador, verificado por
+  # tool/check_no_network_deps.dart.
+  dio: 5.11.0
+  wakelock_plus: ^1.7.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

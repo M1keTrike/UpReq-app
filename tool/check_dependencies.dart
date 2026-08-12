@@ -55,6 +55,15 @@ Future<void> main() async {
       final entry = packagesByName[name];
       if (entry == null) continue;
 
+      // Veto explícito a la variante GPL de ffmpeg_kit_flutter: whisper_ggml
+      // arrastra la variante `_min` (LGPL-3.0, permitida); la variante
+      // `-gpl`/`_gpl` del mismo paquete SÍ incumpliría la constitución y una
+      // actualización futura podría introducirla sin que nadie lo note
+      // (research.md, decisión 7).
+      if (name.endsWith('-gpl') || name.endsWith('_gpl')) {
+        violations.add('$name $version: variante GPL de un paquete vetada explícitamente');
+      }
+
       // Null safety: el lenguaje 2.12 es cuando Dart introdujo sound null safety.
       final languageVersion = entry['languageVersion'] as String?;
       if (languageVersion != null && !_hasNullSafety(languageVersion)) {

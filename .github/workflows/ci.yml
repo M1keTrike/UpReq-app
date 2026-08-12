@@ -47,11 +47,17 @@ jobs:
       - name: flutter test --coverage
         run: flutter test --coverage
 
-      - name: Verificar dependencias de red (FR-019)
+      - name: Verificar dependencias de red (FR-021)
         run: dart run tool/check_no_network_deps.dart
 
-      - name: Verificar dependencias prohibidas (null safety, licencia, antigüedad)
+      - name: Verificar dependencias prohibidas (null safety, licencia, antigüedad, variante GPL)
         run: dart run tool/check_dependencies.dart
+
+      - name: Verificar anclaje de versiones contra la constitución
+        run: dart run tool/check_pinned_versions.dart
+
+      - name: Auditoría de importaciones (domain sin Flutter, paquetes nativos confinados)
+        run: dart run tool/check_import_boundaries.dart
 
       - name: Verificar cobertura de domain (mínimo 80%)
         run: dart run tool/check_coverage.dart --min 80

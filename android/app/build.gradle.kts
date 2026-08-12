@@ -19,7 +19,10 @@ android {
         applicationId = "com.upreq.up_req"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // minSdkVersion sube a 24 en el incremento 2: lo exige
+        // ffmpeg_kit_flutter_new_min (research.md, decisión 7). Sigue muy por
+        // debajo de Android 10 (API 29), el objetivo de producto.
+        minSdk = 24
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

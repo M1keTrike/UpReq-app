@@ -1,4 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Captura de audio (incremento 2, Principio II). -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Único uso: descarga manual del modelo GGML desde ajustes (FR-021),
+         más el permiso que just_audio declara para su reproductor (research.md,
+         decisión 6). Ninguna otra pantalla depende de la red. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="up_req"
         android:name="${applicationName}"
