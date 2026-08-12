@@ -1,5 +1,60 @@
 <!--
-Sync Impact Report — v1.2.0 (enmienda vigente)
+Sync Impact Report — v1.3.0 (enmienda vigente)
+- Version change: 1.2.0 → 1.3.0
+- Motivo: el Principio I fijaba drift 2.34.3, una versión que las demás anclas de este mismo
+  documento hacen inalcanzable. Verificado el 2026-08-11 con `flutter pub get` y `flutter test`:
+  drift_dev >= 2.34.1+1 exige analyzer ^13.0.0 y riverpod_lint 3.1.4 exige analyzer ^12.0.0, de
+  modo que el resolutor topa drift_dev en 2.34.0 e informa la incompatibilidad de forma
+  literal. La combinación mixta drift 2.34.3 + drift_dev 2.34.0 resuelve y genera código, pero
+  test/drift/schema_v1_test.dart deja de compilar: drift 2.34.3 retira `allSchemaEntities` de
+  `GeneratedDatabase` y añade `schema` abstracto, y el `SchemaVerifier` de drift_dev 2.34.0
+  está escrito contra la API anterior. No existía ninguna combinación que cumpliera el
+  documento anterior.
+
+- Modified principles:
+  - I. Plataforma y Arquitectura (título sin cambios; una regla actualizada, dos añadidas)
+    - Persistencia: drift 2.34.3 → 2.34.0, que es la única versión realizable.
+
+- Added sections:
+  - Principio I, viñeta nueva: "El mismo techo alcanza a drift". Documenta la segunda cadena
+    de incompatibilidad, prohíbe explícitamente la combinación mixta drift/drift_dev y exige
+    que ambos se muevan juntos, con `flutter test` en verde incluida la prueba de esquema.
+  - Principio I, viñeta nueva: "Verificación automática del anclaje". Exige que CI compare las
+    versiones de este documento contra `pubspec.lock`. Es la regla que faltaba: la discrepancia
+    de drift sobrevivió a todo el incremento 1 y a la enmienda v1.2.0 porque nada la comprobaba.
+
+- Removed sections: n/a
+
+- Verificaciones que sostienen la corrección:
+  - `flutter pub get` con drift_dev ^2.34.3: falla con "riverpod_lint 3.1.4 is incompatible
+    with drift_dev >=2.34.1+1".
+  - `flutter pub get` con drift 2.34.3 y drift_dev ^2.34.0: resuelve, y `build_runner` genera
+    416 salidas sin error.
+  - `flutter test` sobre esa combinación mixta: 138 pruebas pasan y schema_v1_test.dart falla
+    al compilar.
+  - Revertido a drift 2.34.0: 139/139 pruebas en verde.
+
+- Bump rationale: MINOR y no PATCH. Corregir 2.34.3 → 2.34.0 por sí solo habría sido PATCH,
+  como lo fue el ajuste de toolchain de v1.1.1. Lo que eleva el bump son las dos viñetas
+  nuevas, que introducen obligaciones normativas que antes no existían: drift y drift_dev deben
+  moverse juntos con la prueba de esquema en verde, y CI debe verificar el anclaje contra
+  pubspec.lock. No es MAJOR porque ninguna regla se elimina ni se invierte y ningún código
+  previo queda fuera de cumplimiento: el proyecto ya resolvía 2.34.0.
+
+- Templates requiring updates: los templates dependientes leen la constitución en tiempo de
+  ejecución; no se modifican desde este comando.
+
+- Follow-up TODOs:
+  - La viñeta de verificación automática exige una puerta de CI que todavía no existe. Queda
+    pendiente escribir `tool/check_pinned_versions.dart` y añadirla a .github/workflows/ci.yml.
+    Está previsto como tarea del incremento 2 y no se implementa desde este comando por el
+    guard de alcance.
+  - specs/002-captura-transcripcion/plan.md declara "drift 2.34.0" en Technical Context, que
+    esta enmienda vuelve correcto; no requiere cambio.
+-->
+
+<!--
+Sync Impact Report — v1.2.0 (histórico)
 - Version change: 1.1.1 → 1.2.0
 - Motivo: las versiones de Riverpod que el Principio I fijaba son irrealizables junto a drift.
   Verificado el 2026-08-10 con `flutter pub get`: riverpod_generator 4.0.6+ exige analyzer 13,
@@ -159,6 +214,23 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
   enmienda correspondiente a este documento. La restricción se revisa cuando `test` publique
   soporte de analyzer 13. Nadie sube estas versiones porque pub informe de que existen más
   recientes: informará de ello en cada resolución y seguirá sin ser motivo suficiente.
+- El mismo techo alcanza a drift, por una segunda cadena verificada el 2026-08-11:
+  drift_dev 2.34.1+1 o superior exige analyzer 13, mientras riverpod_lint 3.1.4 exige
+  analyzer 12; `flutter pub get` falla de forma explícita y deja drift_dev topado en 2.34.0.
+  La combinación mixta —drift 2.34.3 en runtime con drift_dev 2.34.0— sí resuelve y genera
+  código sin error, pero **rompe la verificación de esquema**: drift 2.34.3 retira
+  `allSchemaEntities` de `GeneratedDatabase` y añade `schema` como miembro abstracto, y el
+  `SchemaVerifier` de drift_dev 2.34.0 no compila contra esa API. Como esa utilidad es lo que
+  hace verificable la exigencia de migraciones explícitas de este mismo principio, la
+  combinación mixta queda prohibida: drift y drift_dev MUST moverse juntos. Subir cualquiera
+  de los dos MUST ir acompañado de una resolución completa, de `flutter test` en verde
+  incluida la prueba de esquema, y de la enmienda correspondiente. La restricción se revisa
+  cuando riverpod_lint admita analyzer 13.
+- Verificación automática del anclaje: las versiones exactas que fija este principio MUST
+  comprobarse en CI contra las resueltas en `pubspec.lock`. El anclaje que solo vive en este
+  documento no se sostiene: entre el 2026-08-10 y el 2026-08-11 la constitución declaró
+  drift 2.34.3 mientras el proyecto resolvía 2.34.0, y nada lo detectó porque ninguna puerta
+  lo comprobaba.
 - Dependencia experimental aceptada de forma consciente: la API de mutaciones de Riverpod está
   marcada como experimental por su documentación oficial y puede romper sin cambio de versión
   mayor. El proyecto la acepta porque es lo único que mantiene el progreso de una escritura
@@ -171,7 +243,7 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
   local drift, el transcriptor y el cliente LLM. presentation contiene pantallas, widgets y
   providers. La dependencia apunta siempre hacia domain y ninguna feature importa carpetas
   internas de otra.
-- Persistencia: SQLite mediante drift 2.34.3 como única fuente de verdad, con esquema versionado
+- Persistencia: SQLite mediante drift 2.34.0 como única fuente de verdad, con esquema versionado
   y migraciones explícitas. Audio e imágenes en el sandbox de la app. Respaldo y restauración
   mediante exportación e importación de un archivo local cifrado, iniciada por el usuario.
 
@@ -323,4 +395,4 @@ funcionalidad opera sin conexión salvo las llamadas explícitas al LLM.
   Calidad verifican el cumplimiento de los principios y prohibiciones aquí definidos. Cualquier
   desviación DEBE justificarse por escrito o corregirse antes del merge.
 
-**Version**: 1.2.0 | **Ratified**: 2026-08-10 | **Last Amended**: 2026-08-10
+**Version**: 1.3.0 | **Ratified**: 2026-08-10 | **Last Amended**: 2026-08-11

@@ -73,7 +73,7 @@ final class StakeholderListProvider
   }
 }
 
-String _$stakeholderListHash() => r'494eb68a77b4289daad25859193d5eb17bd5f44d';
+String _$stakeholderListHash() => r'92c2ac6563a79693963deab4fc45558ef57caa2a';
 
 /// Único provider que consume la pantalla de lista de interesados
 /// (ui-contracts.md, pantalla 4).

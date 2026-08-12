@@ -73,7 +73,7 @@ final class GlossaryListProvider
   }
 }
 
-String _$glossaryListHash() => r'8f4efc88eb92f840f64a2cce067bb87c799b19af';
+String _$glossaryListHash() => r'549cb70844a81743c2e392677243eea7fe6e286f';
 
 /// Único provider que consume la pantalla de lista de glosario
 /// (ui-contracts.md, pantalla 7).

@@ -71,7 +71,7 @@ final class SessionListProvider
   }
 }
 
-String _$sessionListHash() => r'5e00fc59708d192320de38bd54809beeb1da7c3c';
+String _$sessionListHash() => r'6d2e3b969bc29e13d72b9bef8eafa7200a7038cd';
 
 /// Único provider que consume la pantalla de lista de sesiones
 /// (ui-contracts.md, pantalla 5).

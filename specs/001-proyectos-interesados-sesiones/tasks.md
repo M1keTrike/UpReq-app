@@ -316,7 +316,7 @@ historia **solo lee** y no expone ninguna mutación.
 - [X] T114 [P] Prueba de aislamiento en `integration_test/project_isolation_test.dart` (validación V6): con dos proyectos poblados, ningún listado cruza datos
 - [X] T115 Auditoría de importaciones: verificar que ningún archivo bajo `lib/features/*/domain/` importa `package:flutter`, que ningún widget importa `drift` ni DTOs, y que ninguna feature importa carpetas internas de otra
 - [X] T116 Verificar la cobertura de `domain` con `dart run tool/check_coverage.dart --min 80` y completar las pruebas que falten hasta superar el umbral
-- [ ] T117 Ejecutar la validación manual completa del [quickstart.md](quickstart.md) (V1 a V8) en un dispositivo Android físico con modo avión activado
+- [X] T117 Ejecutar la validación manual completa del [quickstart.md](quickstart.md) (V1 a V8) en un dispositivo Android físico con modo avión activado
 - [X] T118 [P] Documentar en `README.md` los comandos de puesta en marcha, generación de código y pruebas
 
 ---

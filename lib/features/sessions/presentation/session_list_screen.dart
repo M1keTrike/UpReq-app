@@ -18,7 +18,7 @@ class SessionListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Sesiones')),
-      floatingActionButton: state.value?.isReadOnly ?? false
+      floatingActionButton: state.value?.isReadOnly ?? true
           ? null
           : FloatingActionButton(
               onPressed: () => context.go('/projects/$projectId/sessions/new'),

@@ -50,7 +50,7 @@ final class StakeholderFormProvider
   }
 }
 
-String _$stakeholderFormHash() => r'71bbf2fcbefe6a2ddd8be7b434427ba7707219f6';
+String _$stakeholderFormHash() => r'6be436587b53c4f74fbdd29b57d5352ec056a52c';
 
 final class StakeholderFormFamily extends $Family
     with

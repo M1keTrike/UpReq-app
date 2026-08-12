@@ -18,7 +18,7 @@ Un incremento no se especifica hasta que el anterior corre en un dispositivo fí
 
 | #   | Incremento                        | Estado    |
 | --- | --------------------------------- | --------- |
-| 1   | Proyectos, interesados y sesiones | En curso  |
+| 1   | Proyectos, interesados y sesiones | Hecho     |
 | 2   | Captura y transcripción           | Pendiente |
 | 3   | Extracción con LLM                | Pendiente |
 | 4   | Recomendaciones y antes/después   | Pendiente |
@@ -45,6 +45,8 @@ Los incrementos 1 a 3 producen ya una herramienta usable en una entrevista real.
 - Las fechas se guardan en UTC como epoch en milisegundos y se formatean solo en `presentation`.
 
 **Qué aprendizaje aporta.** Confirma que la estructura por feature y la disciplina de Riverpod generado son sostenibles antes de que haya complejidad real.
+
+**Aprendido en validación V3 (dispositivo físico).** El patrón `state.value?.isReadOnly ?? false` en un `FloatingActionButton` condicionado por `AsyncValue` abre en falso mientras el provider carga: el botón de agregar aparece brevemente en proyectos cerrados y desaparece al llegar el dato real. El fallback correcto para cualquier control condicionado por un estado de solo lectura aún no resuelto es `?? true` (fail-closed), no `?? false`. Corregido en `stakeholder_list_screen.dart`, `glossary_list_screen.dart` y `session_list_screen.dart`; tenerlo presente en el incremento 2 y siguientes para cualquier control nuevo que dependa de `isReadOnly` mientras el estado está en `loading`.
 
 ---
 
