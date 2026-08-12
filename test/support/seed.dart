@@ -142,6 +142,120 @@ GlossaryTermsCompanion seedGlossaryTerm({
   );
 }
 
+RecordingsCompanion seedRecording({
+  required DateTime at,
+  required String sessionId,
+  required String projectId,
+  String id = 'recording-1',
+  String filePath = 'recordings/recording-1.wav',
+  String status = 'recording',
+  int durationMs = 0,
+  int sampleRate = 16000,
+  int channels = 1,
+  DateTime? startedAt,
+  DateTime? stoppedAt,
+  DateTime? deletedAt,
+}) {
+  return RecordingsCompanion.insert(
+    id: id,
+    sessionId: sessionId,
+    projectId: projectId,
+    filePath: filePath,
+    status: Value(status),
+    durationMs: Value(durationMs),
+    sampleRate: Value(sampleRate),
+    channels: Value(channels),
+    startedAt: startedAt ?? at,
+    stoppedAt: Value(stoppedAt),
+    deletedAt: Value(deletedAt),
+    createdAt: at,
+    updatedAt: at,
+  );
+}
+
+LiveMarksCompanion seedLiveMark({
+  required DateTime at,
+  required String recordingId,
+  required String sessionId,
+  required String projectId,
+  String id = 'mark-1',
+  String kind = 'requirement',
+  int atMs = 0,
+  DateTime? deletedAt,
+}) {
+  return LiveMarksCompanion.insert(
+    id: id,
+    recordingId: recordingId,
+    sessionId: sessionId,
+    projectId: projectId,
+    kind: kind,
+    atMs: atMs,
+    deletedAt: Value(deletedAt),
+    createdAt: at,
+    updatedAt: at,
+  );
+}
+
+TranscriptsCompanion seedTranscript({
+  required DateTime at,
+  required String recordingId,
+  required String sessionId,
+  required String projectId,
+  String id = 'transcript-1',
+  String pass = 'final',
+  String status = 'pending',
+  String modelId = 'small',
+  String? body,
+  String? failureReason,
+  DateTime? completedAt,
+  DateTime? deletedAt,
+}) {
+  return TranscriptsCompanion.insert(
+    id: id,
+    recordingId: recordingId,
+    sessionId: sessionId,
+    projectId: projectId,
+    pass: pass,
+    status: Value(status),
+    modelId: modelId,
+    body: Value(body),
+    failureReason: Value(failureReason),
+    completedAt: Value(completedAt),
+    deletedAt: Value(deletedAt),
+    createdAt: at,
+    updatedAt: at,
+  );
+}
+
+TranscriptSegmentsCompanion seedTranscriptSegment({
+  required DateTime at,
+  required String transcriptId,
+  required String recordingId,
+  required String sessionId,
+  required String projectId,
+  required int fromMs,
+  required int toMs,
+  required int position,
+  String id = 'segment-1',
+  String body = 'Segmento de prueba',
+  DateTime? deletedAt,
+}) {
+  return TranscriptSegmentsCompanion.insert(
+    id: id,
+    transcriptId: transcriptId,
+    recordingId: recordingId,
+    sessionId: sessionId,
+    projectId: projectId,
+    fromMs: fromMs,
+    toMs: toMs,
+    position: position,
+    body: body,
+    deletedAt: Value(deletedAt),
+    createdAt: at,
+    updatedAt: at,
+  );
+}
+
 AuditEntriesCompanion seedAuditEntry({
   required DateTime at,
   required String projectId,

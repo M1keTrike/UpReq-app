@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:up_req/core/domain/ids.dart';
 import 'package:up_req/core/widgets/async_scaffold_body.dart';
+import 'package:up_req/features/recordings/presentation/session_capture_section.dart';
 
 import 'script_point_list.dart';
 import 'script_point_mutations.dart';
@@ -93,6 +94,8 @@ class _SessionDetailViewState extends ConsumerState<_SessionDetailView> {
           'Guion: ${data.counters.pending} pendientes · '
           '${data.counters.covered} cubiertos · ${data.counters.skipped} omitidos',
         ),
+        const Divider(height: 32),
+        SessionCaptureSection(sessionId: widget.sessionId),
         const Divider(height: 32),
         Text('Guion', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),

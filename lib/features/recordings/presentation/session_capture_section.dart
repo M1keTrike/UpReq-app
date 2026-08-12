@@ -1,0 +1,116 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:up_req/core/domain/ids.dart';
+
+import '../domain/entities/recording.dart';
+import 'active_capture_notifier.dart';
+import 'recording_mutations.dart';
+import 'session_capture_provider.dart';
+
+/// Sección de captura del detalle de sesión (ui-contracts.md, pantalla 1).
+/// Fail-closed: mientras el provider carga, `canRecord` es `false` — el
+/// control de grabar no debe parpadear ni un instante con proyecto cerrado
+/// o sesión planeada (aprendizaje del incremento 1, anotado en el roadmap).
+class SessionCaptureSection extends ConsumerWidget {
+  const SessionCaptureSection({required this.sessionId, super.key});
+
+  final String sessionId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(sessionCaptureProvider(sessionId));
+    final canRecord = state.value?.canRecord ?? false;
+    final active = state.value?.active;
+    final recordings = state.value?.recordings ?? const [];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Grabación', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        if (active != null)
+          _ActiveCaptureView(active: active)
+        else if (canRecord)
+          FilledButton.icon(
+            key: const Key('start-recording-button'),
+            icon: const Icon(Icons.fiber_manual_record),
+            label: const Text('Grabar entrevista'),
+            onPressed: () => runStartRecording(ref, SessionId(sessionId)),
+          ),
+        if (recordings.isEmpty && active == null && canRecord)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Text('Todavía no hay grabaciones. Toca «Grabar entrevista» para empezar.'),
+          )
+        else
+          for (final recording in recordings)
+            _RecordingTile(recording: recording, isReadOnly: !canRecord),
+      ],
+    );
+  }
+}
+
+class _ActiveCaptureView extends ConsumerWidget {
+  const _ActiveCaptureView({required this.active});
+
+  final ActiveCapture active;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final minutes = active.elapsed.inMinutes.toString().padLeft(2, '0');
+    final seconds = (active.elapsed.inSeconds % 60).toString().padLeft(2, '0');
+
+    return Card(
+      color: Theme.of(context).colorScheme.errorContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            const Icon(Icons.fiber_manual_record, color: Colors.red),
+            const SizedBox(width: 8),
+            Text('Grabando · $minutes:$seconds'),
+            const Spacer(),
+            OutlinedButton(
+              key: const Key('stop-recording-button'),
+              onPressed: () => runStopRecording(ref),
+              child: const Text('Detener'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RecordingTile extends ConsumerWidget {
+  const _RecordingTile({required this.recording, required this.isReadOnly});
+
+  final Recording recording;
+  final bool isReadOnly;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final seconds = recording.durationMs ~/ 1000;
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+
+    return ListTile(
+      leading: const Icon(Icons.mic),
+      title: Text('Grabación $minutes:$secs'),
+      subtitle: Text(_statusLabel(recording.status)),
+      trailing: isReadOnly
+          ? null
+          : IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: 'Eliminar grabación',
+              onPressed: () => runDeleteRecording(ref, recording.id),
+            ),
+    );
+  }
+
+  static String _statusLabel(RecordingStatus status) => switch (status) {
+        RecordingStatus.recording => 'En curso',
+        RecordingStatus.stopped => 'Detenida',
+        RecordingStatus.interrupted => 'Interrumpida',
+      };
+}
