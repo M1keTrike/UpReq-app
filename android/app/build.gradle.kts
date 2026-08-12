@@ -6,8 +6,15 @@ plugins {
 
 android {
     namespace = "com.upreq.up_req"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // compileSdk/ndkVersion explícitos (incremento 2): flutter.compileSdkVersion
+    // resuelve a 34 con Flutter 3.44.9, pero ffmpeg_kit_flutter_new_min
+    // (dependencia transitiva de whisper_ggml) exige compilar contra la API 35
+    // o superior, y whisper_ggml exige NDK 29.0.13113456. flutter.ndkVersion
+    // resuelve a 28.2.13676358, insuficiente. Descubierto al compilar en
+    // dispositivo real; research.md/quickstart.md solo documentaron el alza
+    // de minSdk a 24.
+    compileSdk = 36
+    ndkVersion = "29.0.13113456"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

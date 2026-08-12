@@ -34,6 +34,7 @@ Thumbs.db
 .pub-cache/
 .pub/
 /build/
+/android/build/
 coverage/
 
 # El código generado por build_runner (*.g.dart) SÍ se versiona a propósito:
