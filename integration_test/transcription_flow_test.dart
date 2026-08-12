@@ -17,6 +17,23 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
   await tester.tap(finder);
 }
 
+/// Crea un interesado, requerido por `SessionDraft.validate()`
+/// (data-model.md): una sesión no se puede guardar sin al menos un
+/// participante. Deja al usuario en la pestaña "Sesiones" al terminar.
+Future<void> _createStakeholder(WidgetTester tester, String name) async {
+  await tester.tap(find.text('Interesados'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byTooltip('Nuevo interesado'));
+  await tester.pumpAndSettle();
+  await tester.enterText(find.widgetWithText(TextField, 'Nombre'), name);
+  await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byType(BackButton));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Sesiones'));
+  await tester.pumpAndSettle();
+}
+
 /// Crea un proyecto, una sesión llevada a "en curso" y una grabación
 /// completa (con una trama de audio y detenida), lista para que la prueba
 /// cierre la sesión y dispare la pasada definitiva.
@@ -27,12 +44,14 @@ Future<void> _recordAndStop(WidgetTester tester, FakeAudioRecorder recorder, {re
   await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
   await tester.pumpAndSettle();
 
-  await tester.tap(find.text('Sesiones'));
-  await tester.pumpAndSettle();
+  await _createStakeholder(tester, 'Entrevistado');
+
   await tester.tap(find.byTooltip('Nueva sesión'));
   await tester.pumpAndSettle();
   await tester.enterText(find.widgetWithText(TextField, 'Título'), 'Entrevista');
   FocusManager.instance.primaryFocus?.unfocus();
+  await tester.pumpAndSettle();
+  await _tapVisible(tester, find.widgetWithText(CheckboxListTile, 'Entrevistado'));
   await tester.pumpAndSettle();
   await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
   await tester.pumpAndSettle();

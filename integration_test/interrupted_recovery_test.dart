@@ -11,13 +11,36 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
   await tester.tap(finder);
 }
 
+/// Crea un interesado, requerido por `SessionDraft.validate()`
+/// (data-model.md): una sesión no se puede guardar sin al menos un
+/// participante. Deja al usuario en la pestaña "Sesiones" al terminar.
+Future<void> _createStakeholder(WidgetTester tester, String name) async {
+  await tester.tap(find.text('Interesados'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byTooltip('Nuevo interesado'));
+  await tester.pumpAndSettle();
+  await tester.enterText(find.widgetWithText(TextField, 'Nombre'), name);
+  await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byType(BackButton));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Sesiones'));
+  await tester.pumpAndSettle();
+}
+
 /// Deja la app en una sesión "en curso" con una grabación activa, lista
 /// para que la prueba simule la interrupción sobre [recorder].
-Future<void> _startSessionAndRecording(WidgetTester tester, {required String sessionTitle}) async {
+Future<void> _startSessionAndRecording(
+  WidgetTester tester, {
+  required String sessionTitle,
+  required String stakeholderName,
+}) async {
   await tester.tap(find.byTooltip('Nueva sesión'));
   await tester.pumpAndSettle();
   await tester.enterText(find.widgetWithText(TextField, 'Título'), sessionTitle);
   FocusManager.instance.primaryFocus?.unfocus();
+  await tester.pumpAndSettle();
+  await _tapVisible(tester, find.widgetWithText(CheckboxListTile, stakeholderName));
   await tester.pumpAndSettle();
   await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
   await tester.pumpAndSettle();
@@ -52,10 +75,13 @@ void main() {
     await tester.enterText(find.widgetWithText(TextField, 'Nombre'), 'Proyecto Interrupciones');
     await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Sesiones'));
-    await tester.pumpAndSettle();
+    await _createStakeholder(tester, 'Entrevistado Reanudable');
 
-    await _startSessionAndRecording(tester, sessionTitle: 'Sesión Reanudable');
+    await _startSessionAndRecording(
+      tester,
+      sessionTitle: 'Sesión Reanudable',
+      stakeholderName: 'Entrevistado Reanudable',
+    );
 
     // Interrupción: una pausa que el notifier no pidió.
     recorder.emitSystemPause();
@@ -90,10 +116,13 @@ void main() {
     await tester.enterText(find.widgetWithText(TextField, 'Nombre'), 'Proyecto Interrupciones 2');
     await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Sesiones'));
-    await tester.pumpAndSettle();
+    await _createStakeholder(tester, 'Entrevistado Cerrable');
 
-    await _startSessionAndRecording(tester, sessionTitle: 'Sesión Cerrable');
+    await _startSessionAndRecording(
+      tester,
+      sessionTitle: 'Sesión Cerrable',
+      stakeholderName: 'Entrevistado Cerrable',
+    );
 
     recorder.emitSystemPause();
     await tester.pumpAndSettle();

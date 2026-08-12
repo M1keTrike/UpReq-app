@@ -60,7 +60,13 @@ Stream<SessionCaptureState> sessionCapture(Ref ref, String sessionId) {
     // Promueve y reporta cualquier grabación `recording` huérfana de un
     // proceso anterior (T060), pero solo se muestra si pertenece a ESTA
     // sesión: la hoja de recuperación es propia de la pantalla que se abre.
-    final anyInterrupted = await findInterrupted();
+    // Si `active` no es nulo, este mismo proceso posee la grabación que
+    // sigue en `recording` en la base — no es huérfana, así que ni siquiera
+    // se consulta: `findInterrupted()` promueve escribiendo en la base, y
+    // llamarla aquí marcaría como interrumpida una grabación que se está
+    // capturando en este instante (bug real encontrado en dispositivo:
+    // el tick de `elapsed` reconstruye este stream cada segundo).
+    final anyInterrupted = active == null ? await findInterrupted() : null;
     final interrupted = anyInterrupted?.sessionId == id ? anyInterrupted : null;
 
     return SessionCaptureState(

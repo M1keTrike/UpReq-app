@@ -30,12 +30,26 @@ void main() {
     await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
     await tester.pumpAndSettle();
 
+    // Un interesado, requerido por SessionDraft.validate() (data-model.md):
+    // una sesión no se puede guardar sin al menos un participante.
+    await tester.tap(find.text('Interesados'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Nuevo interesado'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(TextField, 'Nombre'), 'Entrevistado Cerrado');
+    await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Sesiones'));
     await tester.pumpAndSettle();
+
     await tester.tap(find.byTooltip('Nueva sesión'));
     await tester.pumpAndSettle();
     await tester.enterText(find.widgetWithText(TextField, 'Título'), 'Sesión En Proyecto Cerrado');
     FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pumpAndSettle();
+    await _tapVisible(tester, find.widgetWithText(CheckboxListTile, 'Entrevistado Cerrado'));
     await tester.pumpAndSettle();
     await _tapVisible(tester, find.widgetWithText(FilledButton, 'Guardar'));
     await tester.pumpAndSettle();

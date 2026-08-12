@@ -10,6 +10,7 @@ import 'package:up_req/core/database/app_database.dart';
 import 'package:up_req/core/database/database_provider.dart';
 import 'package:up_req/core/domain/project_status_reader.dart';
 import 'package:up_req/core/domain/session_status_reader.dart';
+import 'package:up_req/core/router/app_router.dart';
 import 'package:up_req/features/projects/data/project_repository_impl.dart';
 import 'package:up_req/features/projects/data/project_status_reader_impl.dart';
 import 'package:up_req/features/sessions/data/session_repository_impl.dart';
@@ -60,6 +61,14 @@ Future<void> pumpTestApp(
   AppDatabase database, {
   List<Override> overrides = const [],
 }) {
+  // `appRouter` es un singleton a nivel de módulo (app_router.dart):
+  // sobrevive entre `testWidgets` del mismo archivo, así que sin este reset
+  // el segundo test de un archivo con varios arranca donde el primero lo
+  // dejó (p. ej. dentro de una sesión que ya no existe en la base nueva de
+  // este test), en vez de en la lista de proyectos (bug real encontrado en
+  // dispositivo al ejecutar T111: `find.byTooltip('Nuevo proyecto')` no
+  // encontraba nada porque la app seguía en la ruta del test anterior).
+  appRouter.go('/');
   return tester.pumpWidget(
     ProviderScope(
       overrides: [
