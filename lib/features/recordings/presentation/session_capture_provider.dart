@@ -47,6 +47,19 @@ Stream<SessionCaptureState> sessionCapture(Ref ref, String sessionId) {
 
   final findInterrupted = ref.watch(findInterruptedProvider);
 
+  // `findInterrupted()` documenta su propio invariante como "al arrancar":
+  // como mucho una vez por cada tramo en que este proceso no posee ninguna
+  // captura activa, no en cada emisión de `watchBySession`. Sin este
+  // candado, `ActiveCaptureNotifier.start()` — que inserta la fila
+  // `recording` **antes** de fijar su propio `state` (abre el archivo WAV y
+  // el micrófono entre medio) — dispara una emisión de `watchBySession` que
+  // todavía ve `active == null` en este cierre, y `findInterrupted()` la
+  // marca `interrupted` en el mismo segundo en que empieza a grabarse (bug
+  // real encontrado en dispositivo). El candado se reinicia solo cuando
+  // `active` cambia de verdad (nueva ejecución de esta función), que es
+  // exactamente cuándo tiene sentido volver a comprobar.
+  var interruptionChecked = false;
+
   return combineLatest2(
     recordingRepository.watchBySession(id),
     sessionStatusReader.watch(id),
@@ -60,13 +73,11 @@ Stream<SessionCaptureState> sessionCapture(Ref ref, String sessionId) {
     // Promueve y reporta cualquier grabación `recording` huérfana de un
     // proceso anterior (T060), pero solo se muestra si pertenece a ESTA
     // sesión: la hoja de recuperación es propia de la pantalla que se abre.
-    // Si `active` no es nulo, este mismo proceso posee la grabación que
-    // sigue en `recording` en la base — no es huérfana, así que ni siquiera
-    // se consulta: `findInterrupted()` promueve escribiendo en la base, y
-    // llamarla aquí marcaría como interrumpida una grabación que se está
-    // capturando en este instante (bug real encontrado en dispositivo:
-    // el tick de `elapsed` reconstruye este stream cada segundo).
-    final anyInterrupted = active == null ? await findInterrupted() : null;
+    Recording? anyInterrupted;
+    if (active == null && !interruptionChecked) {
+      interruptionChecked = true;
+      anyInterrupted = await findInterrupted();
+    }
     final interrupted = anyInterrupted?.sessionId == id ? anyInterrupted : null;
 
     return SessionCaptureState(

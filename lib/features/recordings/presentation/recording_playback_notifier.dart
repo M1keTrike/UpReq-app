@@ -33,24 +33,47 @@ final class PlaybackState {
 @riverpod
 class RecordingPlaybackNotifier extends _$RecordingPlaybackNotifier {
   StreamSubscription<Duration>? _positionSubscription;
+  StreamSubscription<void>? _completedSubscription;
 
   @override
   PlaybackState build(String recordingId) {
-    ref.onDispose(() => _positionSubscription?.cancel());
+    // `audioPlaybackProvider` es autoDispose: sin este `watch`, nada lo
+    // mantiene vivo entre el `ref.read` de `_load` y el de `play()`, y
+    // Riverpod lo destruye (cierra el `AudioPlayer`) apenas termina de
+    // crearse. `play()` entonces opera sobre un reproductor nuevo sin
+    // archivo cargado y no suena nada.
+    ref.watch(audioPlaybackProvider);
+    ref.onDispose(() {
+      _positionSubscription?.cancel();
+      _completedSubscription?.cancel();
+    });
     unawaited(_load(recordingId));
     return const PlaybackState(isPlaying: false, position: Duration.zero);
   }
 
   Future<void> _load(String recordingId) async {
     await ref.read(loadRecordingForPlaybackProvider)(RecordingId(recordingId));
-    _positionSubscription = ref.read(audioPlaybackProvider).position.listen((position) {
+    final playback = ref.read(audioPlaybackProvider);
+    _positionSubscription = playback.position.listen((position) {
       state = state.copyWith(position: position);
+    });
+    // Al llegar sola al final, `just_audio` deja la posición en el punto
+    // final y no reinicia por su cuenta: sin este rebobinado, tocar
+    // "reproducir" de nuevo no suena nada. Hay que pausar **antes** de
+    // rebobinar: `just_audio` conserva internamente "reproduciendo=true"
+    // tras terminar solo (a diferencia de una pausa pedida por el
+    // usuario), así que un `seek` sin pausar antes reanuda la
+    // reproducción sola desde el segundo 0.
+    _completedSubscription = playback.completed.listen((_) async {
+      await playback.pause();
+      await playback.seek(Duration.zero);
+      state = state.copyWith(isPlaying: false, position: Duration.zero);
     });
   }
 
   Future<void> play() async {
-    await ref.read(audioPlaybackProvider).play();
     state = state.copyWith(isPlaying: true);
+    await ref.read(audioPlaybackProvider).play();
   }
 
   Future<void> pause() async {

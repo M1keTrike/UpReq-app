@@ -22,8 +22,15 @@ class JustAudioPlayback implements AudioPlayback {
     await _player.setFilePath(absolutePath);
   }
 
+  // El `Future` de `just_audio` no se resuelve al iniciar la reproducción:
+  // se resuelve cuando esta se pausa o termina (comportamiento documentado
+  // del paquete). Esperarlo aquí congelaría a quien llama hasta que el
+  // audio deje de sonar, así que se dispara sin esperarlo.
   @override
-  Future<void> play() => _player.play();
+  Future<void> play() {
+    unawaited(_player.play());
+    return Future.value();
+  }
 
   @override
   Future<void> pause() => _player.pause();
@@ -33,6 +40,11 @@ class JustAudioPlayback implements AudioPlayback {
 
   @override
   Stream<Duration> get position => _player.positionStream;
+
+  @override
+  Stream<void> get completed => _player.playerStateStream
+      .where((state) => state.processingState == pkg.ProcessingState.completed)
+      .map((_) {});
 
   @override
   Future<void> dispose() => _player.dispose();

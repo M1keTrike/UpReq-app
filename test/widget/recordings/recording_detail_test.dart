@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -162,5 +164,43 @@ void main() {
       tester.widget<ListTile>(find.byKey(const Key('segment-segment-2'))).selected,
       isTrue,
     );
+  });
+
+  testWidgets(
+    'tocar reproducir cambia el icono a pausa de inmediato, sin esperar a que termine el audio',
+    (tester) async {
+      final playback = await _pump(tester, transcriptRepository: FakeTranscriptRepository());
+      await tester.pumpAndSettle();
+      // `just_audio.play()` real no resuelve hasta que la reproducción se
+      // pausa o termina; este gate nunca se completa en la prueba, así que
+      // si el icono cambia igual, es porque el notifier no lo espera.
+      playback.playGate = Completer<void>();
+
+      await tester.tap(find.byKey(const Key('playback-toggle-button')));
+      await tester.pump();
+
+      expect(find.byIcon(Icons.pause), findsOneWidget);
+      expect(find.byIcon(Icons.play_arrow), findsNothing);
+    },
+  );
+
+  testWidgets('al terminar sola la reproducción, rebobina y permite repetir', (tester) async {
+    final playback = await _pump(tester, transcriptRepository: FakeTranscriptRepository());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('playback-toggle-button')));
+    await tester.pump();
+    expect(find.byIcon(Icons.pause), findsOneWidget);
+
+    playback.emitPosition(const Duration(milliseconds: 4000));
+    playback.emitCompleted();
+    await tester.pump();
+
+    expect(find.byIcon(Icons.play_arrow), findsOneWidget);
+    expect(playback.lastSeek, Duration.zero);
+    // Debe pausar antes de rebobinar: si el rebobinado llegara con
+    // `playing` aún en `true`, un `just_audio` real reanudaría solo desde
+    // el segundo 0 en vez de esperar a que el usuario toque "reproducir".
+    expect(playback.playing, isFalse);
   });
 }
