@@ -43,7 +43,13 @@ final class RecoverInterrupted {
     switch (choice) {
       case RecoveryChoice.resume:
         await _repository.updateStatus(id, RecordingStatus.recording, now);
-        return Ok(recording.copyWith(status: RecordingStatus.recording, updatedAt: now));
+        // `durationMs` no se persiste aquí: la base solo lo actualiza al
+        // detener de verdad (`setStopped`), que siempre recalcula desde la
+        // cabecera real del archivo. Devolverlo en el `Recording` (sin
+        // guardarlo) es solo para que `ActiveCaptureNotifier.resumeInterrupted`
+        // pueda retomar el cronómetro en pantalla donde se quedó, en vez de
+        // reiniciarlo a cero.
+        return Ok(recording.copyWith(status: RecordingStatus.recording, durationMs: durationMs, updatedAt: now));
       case RecoveryChoice.closeKeeping:
         await _repository.setStopped(id, durationMs, now);
         return Ok(

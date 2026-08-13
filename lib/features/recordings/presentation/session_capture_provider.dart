@@ -60,6 +60,21 @@ Stream<SessionCaptureState> sessionCapture(Ref ref, String sessionId) {
   // exactamente cuándo tiene sentido volver a comprobar.
   var interruptionChecked = false;
 
+  // Id de la grabación que `findInterrupted()` promovió, si la había,
+  // sobrevive a las emisiones posteriores de este mismo stream. La propia
+  // escritura de `findInterrupted()` (`updateStatus`) hace que
+  // `watchBySession` reaccione y vuelva a emitir casi de inmediato — si el
+  // hallazgo solo se guardara en la emisión donde se detecta, esa segunda
+  // emisión (con `interruptionChecked` ya en `true`) lo pisaría con `null`
+  // antes de que la pantalla llegara a construirse con el valor real, y la
+  // hoja de recuperación nunca se dispararía (bug real encontrado en
+  // dispositivo: la grabación quedaba `interrupted` en la base sin que la
+  // hoja apareciera nunca, así que tampoco se reparaba la cabecera ni la
+  // duración). Guardar el id y releerlo de `recordings` en cada emisión
+  // mantiene el valor estable mientras siga `interrupted` de verdad, y lo
+  // limpia solo cuando el analista lo resuelve.
+  RecordingId? interruptedId;
+
   return combineLatest2(
     recordingRepository.watchBySession(id),
     sessionStatusReader.watch(id),
@@ -73,12 +88,21 @@ Stream<SessionCaptureState> sessionCapture(Ref ref, String sessionId) {
     // Promueve y reporta cualquier grabación `recording` huérfana de un
     // proceso anterior (T060), pero solo se muestra si pertenece a ESTA
     // sesión: la hoja de recuperación es propia de la pantalla que se abre.
-    Recording? anyInterrupted;
     if (active == null && !interruptionChecked) {
       interruptionChecked = true;
-      anyInterrupted = await findInterrupted();
+      final found = await findInterrupted();
+      if (found != null && found.sessionId == id) interruptedId = found.id;
     }
-    final interrupted = anyInterrupted?.sessionId == id ? anyInterrupted : null;
+
+    Recording? interrupted;
+    final currentInterruptedId = interruptedId;
+    if (currentInterruptedId != null) {
+      for (final recording in recordings) {
+        if (recording.id == currentInterruptedId && recording.status == RecordingStatus.interrupted) {
+          interrupted = recording;
+        }
+      }
+    }
 
     return SessionCaptureState(
       recordings: recordings,

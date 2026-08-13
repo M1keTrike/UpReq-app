@@ -30,6 +30,15 @@ class AsyncScaffoldBody<T> extends StatelessWidget {
     return switch (value) {
       AsyncData<T>(:final value) =>
         isEmpty(value) ? empty(context) : data(context, value),
+      // Un provider que se reconstruye entero por un `ref.watch` sobre algo
+      // que cambia seguido (p. ej. el progreso de una descarga) pasa por
+      // `AsyncLoading` en cada reconstrucción aunque ya tuviera datos
+      // (Riverpod los conserva vía `copyWithPrevious`). Sin esta rama, la
+      // pantalla parpadeaba entre el spinner y el contenido en cada tick de
+      // progreso (bug real, ajustes de modelo durante una descarga) — el
+      // valor previo sigue siendo válido mientras se resuelve el nuevo.
+      AsyncLoading<T>() when value.hasValue =>
+        isEmpty(value.requireValue) ? empty(context) : data(context, value.requireValue),
       AsyncError<T>(:final error, :final stackTrace) =>
         (this.error ?? _defaultError)(context, error, stackTrace),
       AsyncLoading<T>() => (loading ?? _defaultLoading)(context),

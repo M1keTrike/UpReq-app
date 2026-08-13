@@ -53,6 +53,12 @@ class _RaceableRecordingRepository implements RecordingRepository {
     statusUpdates.add(status);
     final current = store[id.value]!;
     store[id.value] = current.copyWith(status: status, updatedAt: at);
+    // Un `drift` real reacciona a cualquier escritura sobre la tabla que un
+    // `watch()` observa, sin que importa qué consulta hizo la escritura:
+    // esto reproduce esa reactividad para poder atrapar la carrera de
+    // `session_capture_provider.dart` donde la propia escritura de
+    // `findInterrupted()` retroalimenta `watchBySession`.
+    emitSessionSnapshot(current.sessionId);
   }
 
   @override
@@ -173,6 +179,50 @@ void main() {
         repository.statusUpdates,
         isEmpty,
         reason: 'findInterrupted() no debería promover nada: no hay ninguna fila huérfana',
+      );
+    },
+  );
+
+  test(
+    'una grabación huérfana de un proceso anterior sigue reportada como interrupted tras la '
+    'reemisión que la propia escritura de findInterrupted() dispara (bug real: la hoja de '
+    'recuperación nunca aparecía en dispositivo porque esa reemisión pisaba el hallazgo con null)',
+    () async {
+      final repository = _RaceableRecordingRepository()
+        ..insertSilently(_recording('recording-1', RecordingStatus.recording));
+      final container = buildTestContainer(
+        overrides: [
+          recordingRepositoryProvider.overrideWithValue(repository),
+          sessionStatusReaderProvider.overrideWithValue(_FakeSessionStatusReader()),
+          projectStatusReaderProvider.overrideWithValue(_FakeProjectStatusReader()),
+          activeCaptureProvider.overrideWith(_NullActiveCaptureNotifier.new),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final states = <SessionCaptureState>[];
+      final sub = container.listen(
+        sessionCaptureProvider(_sessionId.value),
+        (previous, next) {
+          final value = next.value;
+          if (value != null) states.add(value);
+        },
+        fireImmediately: true,
+      );
+      addTearDown(sub.close);
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(
+        repository.store['recording-1']!.status,
+        RecordingStatus.interrupted,
+        reason: 'findInterrupted() sí debe promover una fila huérfana de un proceso anterior',
+      );
+      expect(
+        states.last.interrupted?.id,
+        const RecordingId('recording-1'),
+        reason: 'el último estado emitido debe seguir reportando la interrupción, no perderla '
+            'en la reemisión que la propia promoción disparó sobre watchBySession',
       );
     },
   );

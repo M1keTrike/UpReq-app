@@ -28,12 +28,28 @@ class TranscriptSection extends ConsumerWidget {
         child: Text('La transcripción no produjo segmentos con habla.'),
       ),
       data: (context, view) => switch (view) {
+        TranscriptNotStarted() => const _TranscriptNotStartedNotice(),
         TranscriptPending() => const _TranscriptPendingNotice(),
         TranscriptRunning() => const _TranscriptRunningNotice(),
         TranscriptReady(:final transcript, :final segments) =>
           _TranscriptSegmentList(transcriptId: transcript.id.value, segments: segments),
         TranscriptFailed(:final reason) => _TranscriptFailedNotice(reason: reason),
       },
+    );
+  }
+}
+
+class _TranscriptNotStartedNotice extends StatelessWidget {
+  const _TranscriptNotStartedNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Card(
+      child: ListTile(
+        leading: Icon(Icons.schedule_outlined),
+        title: Text('Todavía no hay transcripción'),
+        subtitle: Text('Se genera automáticamente al cerrar la sesión.'),
+      ),
     );
   }
 }

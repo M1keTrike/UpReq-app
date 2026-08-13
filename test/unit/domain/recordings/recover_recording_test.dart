@@ -110,6 +110,10 @@ void main() {
     expect(wavSink.repairedPath, 'recordings/recording-1.wav');
     final recording = (result as Ok<Recording>).value;
     expect(recording.status, RecordingStatus.recording);
+    // Lo ya grabado antes del corte viaja en el `Recording` devuelto (sin
+    // persistirse) para que el notifier pueda retomar el cronómetro en
+    // pantalla donde se quedó, en vez de reiniciarlo a 00:00.
+    expect(recording.durationMs, 30000);
 
     final stored = repository.store['recording-1']!;
     expect(stored.status, RecordingStatus.recording);

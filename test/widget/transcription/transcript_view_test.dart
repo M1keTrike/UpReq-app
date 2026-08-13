@@ -33,6 +33,25 @@ Future<void> _pump(WidgetTester tester, FakeTranscriptRepository repository) asy
 }
 
 void main() {
+  testWidgets(
+    'sin ninguna fila Transcript (sesión aún no cerrada) avisa que falta cerrar la sesión, no que '
+    'falta el modelo',
+    (tester) async {
+      final repository = FakeTranscriptRepository();
+
+      await _pump(tester, repository);
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text('Todavía no hay transcripción'), findsOneWidget);
+      expect(find.text('Se genera automáticamente al cerrar la sesión.'), findsOneWidget);
+      // No debe decir que falta el modelo: sería engañoso si el modelo ya
+      // está descargado y la sesión sencillamente sigue en curso.
+      expect(find.text('Transcripción pendiente'), findsNothing);
+      expect(find.text('Ir a ajustes'), findsNothing);
+    },
+  );
+
   testWidgets('TranscriptPending se presenta como aviso con acción hacia ajustes, nunca como error', (
     tester,
   ) async {

@@ -87,6 +87,12 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
   /// `_recorderStatesSubscription` interpreta como interrupción (US3).
   bool _ownPause = false;
 
+  /// Lo ya grabado antes de esta captura, para que el cronómetro en pantalla
+  /// retome donde se quedó al reanudar una interrupción, en vez de volver a
+  /// 00:00 mientras el archivo sigue anexando desde el segundo real (FR-011).
+  /// Cero en una grabación nueva.
+  Duration _baseElapsed = Duration.zero;
+
   /// Bifurcador del flujo PCM (research.md, decisión 4 / T041): alimenta al
   /// escritor WAV y deja este stream como segundo suscriptor libre para la
   /// pasada en vivo de US4.
@@ -139,7 +145,7 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
       sampleRate: recording.sampleRate,
       channels: recording.channels,
     );
-    await _beginCapture(id);
+    await _beginCapture(id, baseElapsed: Duration(milliseconds: recording.durationMs));
 
     return const Ok(null);
   }
@@ -156,7 +162,7 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
     };
   }
 
-  Future<void> _beginCapture(RecordingId id) async {
+  Future<void> _beginCapture(RecordingId id, {Duration baseElapsed = Duration.zero}) async {
     final recorder = ref.read(audioRecorderProvider);
     final wavSink = ref.read(wavSinkProvider);
     final pcmStream = await recorder.start();
@@ -168,10 +174,11 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
     });
     _recorderStatesSubscription = recorder.states.listen(_onRecorderState);
 
+    _baseElapsed = baseElapsed;
     _stopwatch
       ..reset()
       ..start();
-    state = ActiveCapture(id: id, elapsed: Duration.zero, marksPlaced: 0, isInterrupted: false);
+    state = ActiveCapture(id: id, elapsed: baseElapsed, marksPlaced: 0, isInterrupted: false);
 
     unawaited(_enableWakelock());
 
@@ -208,7 +215,7 @@ class ActiveCaptureNotifier extends _$ActiveCaptureNotifier {
   void _tick() {
     final current = state;
     if (current == null) return;
-    state = current.copyWith(elapsed: _stopwatch.elapsed);
+    state = current.copyWith(elapsed: _baseElapsed + _stopwatch.elapsed);
   }
 
   Future<Result<void>> stop() async {

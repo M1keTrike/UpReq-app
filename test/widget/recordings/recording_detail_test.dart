@@ -88,7 +88,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('playback-toggle-button')), findsOneWidget);
-    expect(find.text('Transcripción pendiente'), findsOneWidget);
+    expect(find.text('Todavía no hay transcripción'), findsOneWidget);
   });
 
   testWidgets('el segmento activo se resalta conforme avanza la posición', (tester) async {

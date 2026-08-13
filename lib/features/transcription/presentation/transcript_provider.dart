@@ -21,6 +21,17 @@ final class TranscriptPending extends TranscriptView {
   const TranscriptPending();
 }
 
+/// La sesión de esta grabación todavía no se cerró: `RunFinalPass` (FR-013)
+/// solo se dispara al cerrar, así que todavía no existe ninguna fila
+/// `Transcript`, ni siquiera `pending`. Distinto de [TranscriptPending]: aquí
+/// el modelo puede estar perfectamente descargado — el motivo de no haber
+/// transcripción es otro, y decir "falta el modelo" sería engañoso (bug
+/// real: la pantalla de detalle de grabación es alcanzable con la sesión
+/// todavía en curso desde `_RecordingTile`, T093).
+final class TranscriptNotStarted extends TranscriptView {
+  const TranscriptNotStarted();
+}
+
 /// FR-015: la pasada definitiva se está procesando; no bloquea el resto de
 /// la interfaz.
 final class TranscriptRunning extends TranscriptView {
@@ -47,7 +58,7 @@ Stream<TranscriptView> transcriptView(Ref ref, String recordingId) {
   final id = RecordingId(recordingId);
 
   return repository.watchByRecordingAndPass(id, TranscriptPass.finalPass).asyncExpand((transcript) {
-    if (transcript == null) return Stream.value(const TranscriptPending());
+    if (transcript == null) return Stream.value(const TranscriptNotStarted());
 
     return switch (transcript.status) {
       TranscriptStatus.pending => Stream.value(const TranscriptPending()),

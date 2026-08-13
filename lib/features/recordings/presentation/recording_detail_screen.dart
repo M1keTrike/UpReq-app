@@ -31,6 +31,7 @@ class RecordingDetailScreen extends ConsumerWidget {
         data: (context, data) => _RecordingDetailView(
           recordingId: recordingId,
           recording: data.recording,
+          isReadOnly: data.isReadOnly,
         ),
       ),
     );
@@ -38,10 +39,15 @@ class RecordingDetailScreen extends ConsumerWidget {
 }
 
 class _RecordingDetailView extends StatelessWidget {
-  const _RecordingDetailView({required this.recordingId, required this.recording});
+  const _RecordingDetailView({
+    required this.recordingId,
+    required this.recording,
+    required this.isReadOnly,
+  });
 
   final String recordingId;
   final Recording recording;
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +60,7 @@ class _RecordingDetailView extends StatelessWidget {
         const Divider(height: 32),
         Text('Marcas', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        LiveMarkList(recordingId: RecordingId(recordingId)),
+        LiveMarkList(recordingId: RecordingId(recordingId), isReadOnly: isReadOnly),
         const Divider(height: 32),
         Text('Transcripción', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),

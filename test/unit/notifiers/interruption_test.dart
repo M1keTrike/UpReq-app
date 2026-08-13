@@ -95,6 +95,15 @@ class _FakeWavSink implements WavSink {
   }
 }
 
+class _ResumeFakeWavSink extends _FakeWavSink {
+  int repairedDurationMs = 0;
+
+  @override
+  Future<int> repairExisting(String relativePath, {int sampleRate = 16000, int channels = 1}) async {
+    return repairedDurationMs;
+  }
+}
+
 class _FakeSessionStatusReader implements SessionStatusReader {
   @override
   Future<SessionSnapshot?> find(SessionId id) async {
@@ -173,5 +182,55 @@ void main() {
     await notifier.stop();
 
     expect(repository.store[id.value]!.status, RecordingStatus.stopped);
+  });
+
+  test('reanudar retoma el cronómetro donde se quedó, no desde 00:00', () async {
+    final recorder = FakeAudioRecorder();
+    final wavSink = _ResumeFakeWavSink()..repairedDurationMs = 30000;
+    final repository = _FakeRecordingRepository()
+      ..store['recording-1'] = Recording(
+        id: const RecordingId('recording-1'),
+        sessionId: const SessionId('session-1'),
+        projectId: const ProjectId('project-1'),
+        filePath: 'recordings/recording-1.wav',
+        status: RecordingStatus.interrupted,
+        durationMs: 0,
+        sampleRate: 16000,
+        channels: 1,
+        startedAt: DateTime.utc(2026, 1, 1),
+        createdAt: DateTime.utc(2026, 1, 1),
+        updatedAt: DateTime.utc(2026, 1, 1),
+      );
+
+    final container = buildTestContainer(
+      overrides: [
+        audioRecorderProvider.overrideWithValue(recorder),
+        wavSinkProvider.overrideWithValue(wavSink),
+        recordingRepositoryProvider.overrideWithValue(repository),
+        sessionStatusReaderProvider.overrideWithValue(_FakeSessionStatusReader()),
+        projectStatusReaderProvider.overrideWithValue(_FakeProjectStatusReader()),
+        modelRepositoryProvider.overrideWithValue(FakeModelRepository()),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final notifier = container.read(activeCaptureProvider.notifier);
+    final result = await notifier.resumeInterrupted(const RecordingId('recording-1'));
+    expect(result, isA<Ok<void>>());
+
+    final active = container.read(activeCaptureProvider);
+    expect(
+      active!.elapsed,
+      const Duration(milliseconds: 30000),
+      reason: 'debe arrancar en los 30s que ya tenía, no en 00:00',
+    );
+
+    await Future<void>.delayed(const Duration(milliseconds: 1100));
+    final ticking = container.read(activeCaptureProvider);
+    expect(
+      ticking!.elapsed,
+      greaterThan(const Duration(milliseconds: 30000)),
+      reason: 'debe seguir avanzando desde donde retomó, no reiniciar el conteo',
+    );
   });
 }
